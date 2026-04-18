@@ -68,11 +68,12 @@ func replayPoints():
 				SMSCamPoint.InterpolationTypes.Linear:
 					curPos = interpolateLinear(fromPos, toPos, lerpPow)
 					curTarget = interpolateLinear(fromTarget, toTarget, lerpPow)
-				SMSCamPoint.InterpolationTypes.Spheric:
-					curPos = interpolateCubic(fromPos, toPos, lerpPow)
-					curTarget = interpolateCubic(fromTarget, toTarget, lerpPow)
+				SMSCamPoint.InterpolationTypes.Cubic:
+					curPos = interpolateSmooth(fromPos, toPos, lerpPow)
+					curTarget = interpolateSmooth(fromTarget, toTarget, lerpPow)
 				_:
 					print("uh oh")
+					push_error("Invalid interpolation type!")
 			
 			GDInterface.writeCamData(curPos, curTarget)
 			
@@ -86,6 +87,11 @@ func interpolateLinear(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
 
 func interpolateCubic(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:	# TODO: actually figure this out lol
 	return from.cubic_interpolate(to, to * 1.5, to * 0.75, lerpPow)
+
+
+func interpolateSmooth(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
+	lerpPow = smoothstep(0, 1, lerpPow)
+	return from.lerp(to, lerpPow)
 
 
 var lastState := false	# TODO: make a real state machine... sigh
@@ -194,9 +200,9 @@ func save():
 	saveFile.saveFile()
 
 
-func open():
+func open(path: String):
 	
-	var file: SaveFile = ResourceLoader.load("user://save.tres", "", ResourceLoader.CACHE_MODE_IGNORE)
+	var file: SaveFile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 	
 	resetPoints()
 	print("file size: ", file.positions.size())
@@ -217,10 +223,6 @@ func open():
 
 func _on_replay_points_pressed() -> void:
 	replayPoints()
-
-
-func _on_reset_points_pressed() -> void:
-	resetPoints()
 
 
 func _on_cur_point_field_value_changed(value: float) -> void:
@@ -252,7 +254,7 @@ func _on_file_menu(id: int) -> void:
 		FileOptions.NEW:
 			resetPoints()
 		FileOptions.OPEN:
-			open()
+			$OpenFile.visible = true
 		FileOptions.SAVE:
 			save()
 		FileOptions.QUIT:
@@ -268,3 +270,7 @@ func _on_preview_point_pressed() -> void:
 
 func _on_interpolation_option_item_selected(index: int) -> void:
 	pointArray[%CurPointField.value - 1].interpolation = index
+
+
+func _on_open_file_file_selected(path: String) -> void:
+	open(path)

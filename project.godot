@@ -19,6 +19,7 @@ config/icon="res://Resources/Images/icon.svg"
 
 window/size/viewport_width=600
 window/size/viewport_height=600
+window/subwindows/embed_subwindows=false
 
 [editor_plugins]
 
