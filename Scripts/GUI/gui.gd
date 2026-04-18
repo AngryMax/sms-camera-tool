@@ -208,6 +208,21 @@ func duplicatePoint():
 	pointArray[-1] = pointArray[%CurPointField.value - 1]
 
 
+func deletePoint():
+	
+	var curPointIdx: int = %CurPointField.value - 1
+	
+	if pointNum == 1:
+		resetPoints()
+		return
+	
+	pointArray.pop_at(curPointIdx)
+	updatePointEdit(0)
+	%CurPointField.value = 0
+	%CurPointField.max_value = pointNum - 1
+	pointNum -= 1
+
+
 func save(path: String):
 	
 	var saveFile := SaveFile.new()
@@ -339,10 +354,13 @@ func _on_duplicate_point_pressed() -> void:
 
 
 func _on_grab_from_target_toggled(toggled_on: bool) -> void:
-	print("mario ", toggled_on)
 	copyFromTarget()
 
 
 func _on_grab_from_camera_toggled(toggled_on: bool) -> void:
-	print("camera ", toggled_on)
 	copyFromCamPos()
+
+
+
+func _on_delete_button_pressed() -> void:
+	deletePoint()
