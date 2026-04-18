@@ -7,6 +7,7 @@ var pointNum: int	## The number of points
 
 var lockApply := false	## Keeps settings from being applied
 var previewMode := false
+var linkTransforms := false
 
 
 func _ready() -> void:
@@ -361,6 +362,17 @@ func _on_grab_from_camera_toggled(toggled_on: bool) -> void:
 	copyFromCamPos()
 
 
-
 func _on_delete_button_pressed() -> void:
 	deletePoint()
+
+# TODO: perhaps make the below button it's own object? As in a button with auto-icon toggling?
+var linkIcon: Texture2D = load("res://Resources/Images/link_icon.png")
+var unlinkIcon: Texture2D = load("res://Resources/Images/unlink_icon.png")
+func _on_link_transforms_button_toggled(toggled_on: bool) -> void:
+	
+	if toggled_on:
+		%LinkTransformsButton.icon = linkIcon
+	else:
+		%LinkTransformsButton.icon = unlinkIcon
+	
+	linkTransforms = toggled_on
