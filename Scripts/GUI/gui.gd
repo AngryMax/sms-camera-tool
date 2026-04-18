@@ -55,9 +55,15 @@ func replayPoints():
 		print("Going to ", toPos)
 		print("Going to look at ", toTarget)
 		
+		var lastTime := 0.0
 		while true:
 			
 			var curTime: float = Time.get_ticks_msec() / 1000.0
+			
+			if curTime - lastTime <= 1 / 60:	# Bootleg 60 ticks per second system
+				continue
+			
+			lastTime = curTime
 			
 			var lerpPow: = curTime - startTime
 			lerpPow /= pointArray[i].transitionTime

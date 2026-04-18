@@ -224,7 +224,7 @@ visible = false
 [node name="OpenFile" type="FileDialog" parent="." unique_id=670733717]
 unique_name_in_owner = true
 oversampling_override = 1.0
-title = "Open"
+title = "Open a File"
 initial_position = 2
 file_mode = 0
 display_mode = 1
