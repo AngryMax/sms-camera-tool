@@ -262,8 +262,10 @@ func copyFromTarget() -> void:
 			button.button_pressed = false
 			var parent: HBoxContainer = button.get_parent()
 			var input: SpinBox = parent.find_child("Input")
-			var callable := Callable(GDInterface, "getCamTarget" + parent.name)
-			input.value = callable.call()
+			var getCamTarget := Callable(GDInterface, "getCamTarget" + parent.name)
+			input.value = getCamTarget.call()
+			
+	applyPointChanges()
 
 
 func copyFromCamPos() -> void:
@@ -272,8 +274,10 @@ func copyFromCamPos() -> void:
 			button.button_pressed = false
 			var parent: HBoxContainer = button.get_parent()
 			var input: SpinBox = parent.find_child("Input")
-			var callable := Callable(GDInterface, "getCamPos" + parent.name)
-			input.value = callable.call()
+			var getCamPos := Callable(GDInterface, "getCamPos" + parent.name)
+			input.value = getCamPos.call()
+	
+	applyPointChanges()
 
 
 ### SIGNALS ###
