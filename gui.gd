@@ -1,0 +1,247 @@
+extends Control
+
+var GDInterface: Node
+
+var pointArray: Array[SMSCamPoint]
+var pointNum: int	## The number of points
+
+var lockApply := false	## Keeps settings from being applied
+var previewMode := false
+
+
+func _ready() -> void:
+	GDInterface = %GDInterface
+	GDInterface.Hook()
+	addPoint()
+	%File.get_popup().id_pressed.connect(_on_file_menu)
+
+
+func _process(delta: float) -> void:
+	
+	previewPoint()
+
+
+func replayPoints():
+	
+	%PreviewPoint.button_pressed = false
+	%PreviewPoint.emit_signal("pressed")
+	
+	GDInterface.nopOutCameraCode()
+	GDInterface.writeCamData(pointArray.front().position, pointArray.front().target)
+	await get_tree().create_timer(0.5).timeout
+	print(pointArray.size())
+	
+	for i in pointNum:
+		
+		var fromPos: Vector3 = pointArray[i].position
+		var curPos := fromPos
+		var toPos: Vector3
+		var fromTarget: Vector3 = pointArray[i].target
+		var curTarget := fromTarget
+		var toTarget: Vector3
+		
+		if i == pointNum - 1:		# If we're on the last point
+			toPos = pointArray.back().position
+			toTarget = pointArray.back().target
+		else:
+			toPos = pointArray[i + 1].position
+			toTarget = pointArray[i + 1].target
+		
+		var startTime: float = Time.get_ticks_msec() / 1000.0
+		
+		print("Processing point ", i)
+		print("Currently at ", curPos)
+		print("Currently looking at ", curTarget)
+		print("Going to ", toPos)
+		print("Going to look at ", toTarget)
+		
+		while true:
+			
+			var curTime: float = Time.get_ticks_msec() / 1000.0
+			
+			var lerpPow: = curTime - startTime
+			lerpPow /= pointArray[i].transitionTime
+			if lerpPow >= 1.0:
+				lerpPow = 1.0
+			
+			curPos = fromPos.lerp(toPos, lerpPow)
+			curTarget = fromTarget.lerp(toTarget, lerpPow)
+			
+			GDInterface.writeCamData(curPos, curTarget)
+			
+			if curPos.distance_to(toPos) <= 0.001 and curTarget.distance_to(toTarget) <= 0.001:	# float imprecision bet hedging
+				break
+
+
+var lastState := false	# TODO: make a real state machine... sigh
+func previewPoint():
+	
+	if lastState == true and previewMode == false:
+		GDInterface.restoreCameraCode()
+		lastState = false
+	
+	if not previewMode:
+		return
+	
+	lastState = true
+	
+	var curPoint: int = %CurPointField.value
+	curPoint -= 1
+	
+	GDInterface.nopOutCameraCode()
+	GDInterface.writeCamData(pointArray[curPoint].position, pointArray[curPoint].target)
+
+
+func resetPoints():
+	pointArray.clear()
+	pointNum = 0
+	addPoint()
+
+
+## Updates all the GUI values to the selected point
+func updatePointEdit(point: int):
+	
+	lockApply = true
+	
+	point -= 1
+	
+	%Pos.find_child("X").value = pointArray[point].position.x
+	%Pos.find_child("Y").value = pointArray[point].position.y
+	%Pos.find_child("Z").value = pointArray[point].position.z
+	
+	%Target.find_child("X").value = pointArray[point].target.x
+	%Target.find_child("Y").value = pointArray[point].target.y
+	%Target.find_child("Z").value = pointArray[point].target.z
+	
+	lockApply = false
+	
+	%TravelTimeInput.value = pointArray[point].transitionTime
+
+
+## Sets backend values from what's been entered in the GUI
+func applyPointChanges():
+	
+	if lockApply:
+		return
+	
+	var point = %CurPointField.value - 1
+	
+	pointArray[point].position = Vector3(%Pos.find_child("X").value, 
+										 %Pos.find_child("Y").value,
+										 %Pos.find_child("Z").value)
+							
+	pointArray[point].target = Vector3(%Target.find_child("X").value,
+									   %Target.find_child("Y").value,
+									   %Target.find_child("Z").value)
+	
+	pointArray[point].transitionTime = %TravelTimeInput.value
+
+
+func grabFromCam():
+	
+	%Pos.find_child("X").value = GDInterface.getCamPosX()
+	%Pos.find_child("Y").value = GDInterface.getCamPosY()
+	%Pos.find_child("Z").value = GDInterface.getCamPosZ()
+	
+	%Target.find_child("X").value = GDInterface.getCamTargetX()
+	%Target.find_child("Y").value = GDInterface.getCamTargetY()
+	%Target.find_child("Z").value = GDInterface.getCamTargetZ()
+	
+	applyPointChanges()
+
+
+func addPoint():
+	
+	pointNum += 1
+	
+	var point := SMSCamPoint.new()
+	pointArray.append(point)
+	
+	%CurPointField.max_value = pointNum
+	%CurPointField.min_value = 1.0
+	%CurPointField.editable = true
+
+
+func save():
+	
+	var saveFile := SaveFile.new()
+	
+	for i in pointNum:
+		saveFile.positions.append(pointArray[i].position)
+		saveFile.targets.append(pointArray[i].target)
+		saveFile.times.append(pointArray[i].transitionTime)
+		saveFile.interps.append(pointArray[i].interpolation)
+	
+	saveFile.saveFile()
+
+
+func open():
+	
+	var file: SaveFile = ResourceLoader.load("user://save.tres", "", ResourceLoader.CACHE_MODE_IGNORE)
+	
+	resetPoints()
+	print("file size: ", file.positions.size())
+	for i in file.positions.size():
+		if i != 0:	# b/c resetPoints() a couple of lines about auto-appends a single point
+			pointArray.append(SMSCamPoint.new())
+			pointNum += 1
+		pointArray[i].position = file.positions[i]
+		pointArray[i].target = file.targets[i]
+		pointArray[i].transitionTime = file.times[i]
+		pointArray[i].interpolation = file.interps[i]
+	
+	%CurPointField.max_value = pointNum
+	updatePointEdit(%CurPointField.value)
+
+
+### SIGNALS ###
+
+func _on_replay_points_pressed() -> void:
+	replayPoints()
+
+
+func _on_reset_points_pressed() -> void:
+	resetPoints()
+
+
+func _on_cur_point_field_value_changed(value: float) -> void:
+	updatePointEdit(value)
+
+
+func _on_grab_from_cam_pressed() -> void:
+	grabFromCam()
+
+
+func _on_add_point_pressed() -> void:
+	addPoint()
+
+
+func _on_any_point_field_changed(_value: float) -> void:
+	applyPointChanges()
+
+
+func _on_restore_camera_pressed() -> void:
+	GDInterface.restoreCameraCode()
+
+
+enum FileOptions {ABOUT, NEW, OPEN, SAVE, QUIT}
+func _on_file_menu(id: int) -> void:
+	
+	match id:
+		FileOptions.ABOUT:
+			%About.visible = true
+		FileOptions.NEW:
+			resetPoints()
+		FileOptions.OPEN:
+			open()
+		FileOptions.SAVE:
+			save()
+		FileOptions.QUIT:
+			get_tree().quit()
+		_:
+			pass
+
+
+func _on_preview_point_pressed() -> void:
+	previewMode = %PreviewPoint.button_pressed
+	print(previewMode)

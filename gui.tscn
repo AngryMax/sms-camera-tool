@@ -1,0 +1,236 @@
+[gd_scene format=3 uid="uid://b0t1cqynrh1xk"]
+
+[ext_resource type="Script" uid="uid://dowdp54ogwq5b" path="res://gui.gd" id="1_80edf"]
+[ext_resource type="Script" path="res://PyScripts/GDInterface.py" id="2_6lon5"]
+[ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://about.tscn" id="3_q8o8l"]
+
+[node name="GUI" type="Control" unique_id=700733280]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_80edf")
+
+[node name="BG" type="ColorRect" parent="." unique_id=87747716]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2159017, 0.21590173, 0.2159017, 1)
+
+[node name="Toolbar" type="HBoxContainer" parent="." unique_id=1755090135]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="File" type="MenuButton" parent="Toolbar" unique_id=1764005180]
+unique_name_in_owner = true
+layout_mode = 2
+text = "File"
+item_count = 5
+popup/item_0/text = "About"
+popup/item_0/id = 0
+popup/item_1/text = "New"
+popup/item_1/id = 1
+popup/item_2/text = "Open"
+popup/item_2/id = 2
+popup/item_3/text = "Save"
+popup/item_3/id = 3
+popup/item_4/text = "Quit"
+popup/item_4/id = 4
+
+[node name="VSplitContainer" type="VSplitContainer" parent="." unique_id=96502764]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -42.0
+offset_top = -20.0
+offset_right = 42.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offsets = PackedInt32Array(320, 363, 375, 418, 430, 473)
+split_offset = 320
+
+[node name="PointEdit" type="VBoxContainer" parent="VSplitContainer" unique_id=450155661]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="CurPoint" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1148527782]
+layout_mode = 2
+size_flags_horizontal = 4
+split_offsets = PackedInt32Array(0, 0)
+
+[node name="Label" type="Label" parent="VSplitContainer/PointEdit/CurPoint" unique_id=502225898]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Current Point:"
+horizontal_alignment = 2
+
+[node name="CurPointField" type="SpinBox" parent="VSplitContainer/PointEdit/CurPoint" unique_id=460760319]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 0.0
+rounded = true
+editable = false
+
+[node name="AddPoint" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1966676548]
+layout_mode = 2
+text = "Add Point"
+
+[node name="PosEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1075222597]
+layout_mode = 2
+split_offsets = PackedInt32Array(67)
+split_offset = 67
+
+[node name="Label" type="Label" parent="VSplitContainer/PointEdit/PosEdit" unique_id=991476986]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Position:"
+
+[node name="Pos" type="VBoxContainer" parent="VSplitContainer/PointEdit/PosEdit" unique_id=276968196]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="X" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=947241130]
+layout_mode = 2
+theme_override_constants/field_and_buttons_separation = 2
+min_value = -1000000.0
+max_value = 1000000.0
+step = 0.001
+
+[node name="Y" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=336885338]
+layout_mode = 2
+min_value = -1000000.0
+max_value = 1000000.0
+step = 0.001
+
+[node name="Z" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=983836358]
+layout_mode = 2
+min_value = -1000000.0
+max_value = 1000000.0
+step = 0.001
+
+[node name="TargetEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=514734251]
+layout_mode = 2
+split_offsets = PackedInt32Array(67)
+split_offset = 67
+
+[node name="Label" type="Label" parent="VSplitContainer/PointEdit/TargetEdit" unique_id=545577735]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Target:   "
+
+[node name="Target" type="VBoxContainer" parent="VSplitContainer/PointEdit/TargetEdit" unique_id=1702046148]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="X" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=204598496]
+layout_mode = 2
+min_value = -1000000.0
+max_value = 1000000.0
+step = 0.001
+
+[node name="Y" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=1754902426]
+layout_mode = 2
+min_value = -1000000.0
+max_value = 1000000.0
+step = 0.001
+
+[node name="Z" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=1273512836]
+layout_mode = 2
+min_value = -1000000.0
+max_value = 1000000.0
+step = 0.001
+
+[node name="GrabFromCam" type="Button" parent="VSplitContainer/PointEdit" unique_id=500420642]
+layout_mode = 2
+text = "Grab From Camera"
+
+[node name="Control" type="Control" parent="VSplitContainer/PointEdit" unique_id=820113058]
+layout_mode = 2
+
+[node name="TimeEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1841613776]
+layout_mode = 2
+split_offsets = PackedInt32Array(67, 165)
+split_offset = 67
+
+[node name="Label" type="Label" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=1825153809]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Transition Time:"
+
+[node name="TravelTimeInput" type="SpinBox" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=539251501]
+unique_name_in_owner = true
+layout_mode = 2
+step = 0.1
+value = 1.0
+
+[node name="IsLerp" type="CheckBox" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=1971734152]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Slerp"
+
+[node name="PreviewPoint" type="CheckButton" parent="VSplitContainer" unique_id=1934424326]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Preview Point:"
+
+[node name="Control" type="Control" parent="VSplitContainer" unique_id=1580373194]
+layout_mode = 2
+
+[node name="ReplayPoints" type="Button" parent="VSplitContainer" unique_id=901089833]
+layout_mode = 2
+text = "Replay Points!"
+
+[node name="Control2" type="Control" parent="VSplitContainer" unique_id=1172388522]
+layout_mode = 2
+
+[node name="RestoreCamera" type="Button" parent="VSplitContainer" unique_id=458215804]
+layout_mode = 2
+text = "Restore Camera"
+
+[node name="ResetPoints" type="Button" parent="VSplitContainer" unique_id=1805269502]
+layout_mode = 2
+text = "⚠Reset Points⚠"
+
+[node name="GDInterface" type="Node" parent="." unique_id=82272569]
+unique_name_in_owner = true
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+script = ExtResource("2_6lon5")
+
+[node name="About" parent="." unique_id=1166068054 instance=ExtResource("3_q8o8l")]
+unique_name_in_owner = true
+position = Vector2i(153, 196)
+visible = false
+
+[connection signal="value_changed" from="VSplitContainer/PointEdit/CurPoint/CurPointField" to="." method="_on_cur_point_field_value_changed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/AddPoint" to="." method="_on_add_point_pressed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/X" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Y" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Z" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/X" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Y" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Z" to="." method="_on_any_point_field_changed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/GrabFromCam" to="." method="_on_grab_from_cam_pressed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/TimeEdit/TravelTimeInput" to="." method="_on_any_point_field_changed"]
+[connection signal="pressed" from="VSplitContainer/PreviewPoint" to="." method="_on_preview_point_pressed"]
+[connection signal="pressed" from="VSplitContainer/ReplayPoints" to="." method="_on_replay_points_pressed"]
+[connection signal="pressed" from="VSplitContainer/RestoreCamera" to="." method="_on_restore_camera_pressed"]
+[connection signal="pressed" from="VSplitContainer/ResetPoints" to="." method="_on_reset_points_pressed"]
