@@ -11,8 +11,11 @@ config_version=5
 [application]
 
 config/name="SMS-Camera-Tool"
+config/version="b1.0"
 run/main_scene="uid://b0t1cqynrh1xk"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+run/max_fps=60
+run/low_processor_mode=true
 config/icon="res://Resources/Images/icon.svg"
 
 [display]
