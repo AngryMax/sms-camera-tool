@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dowdp54ogwq5b" path="res://Scripts/GUI/gui.gd" id="1_80edf"]
 [ext_resource type="Script" path="res://PyScripts/GDInterface.py" id="2_6lon5"]
+[ext_resource type="Texture2D" uid="uid://bycf4itydc703" path="res://Resources/Images/target_icon.png" id="2_wi63h"]
+[ext_resource type="Texture2D" uid="uid://2afrsxxu7trg" path="res://Resources/Images/camera_icon.png" id="3_d1lea"]
 [ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://GUI Scenes/about.tscn" id="3_q8o8l"]
 
 [node name="GUI" type="Control" unique_id=700733280]
@@ -118,21 +120,88 @@ text = "Position:"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="X" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=947241130]
+[node name="X" type="HBoxContainer" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=997250879]
 layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Input" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos/X" unique_id=947241130]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/field_and_buttons_separation = 2
 min_value = -1000000.0
 max_value = 1000000.0
+step = 0.001
+custom_arrow_step = 1.0
 
-[node name="Y" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=336885338]
+[node name="GrabFromMario" type="Button" parent="VSplitContainer/PointEdit/PosEdit/Pos/X" unique_id=302417735 groups=["GrabFromMario"]]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Copy from camera target's position"
+toggle_mode = true
+icon = ExtResource("2_wi63h")
+icon_alignment = 1
+
+[node name="GrabFromCamera" type="Button" parent="VSplitContainer/PointEdit/PosEdit/Pos/X" unique_id=202158486 groups=["GrabFromCamera"]]
+layout_mode = 2
+tooltip_text = "Copy from camera's position"
+toggle_mode = true
+icon = ExtResource("3_d1lea")
+icon_alignment = 1
+
+[node name="Y" type="HBoxContainer" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=1750578416]
+layout_mode = 2
+
+[node name="Input" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos/Y" unique_id=336885338]
+layout_mode = 2
+size_flags_horizontal = 3
 min_value = -1000000.0
 max_value = 1000000.0
+step = 0.001
+custom_arrow_step = 1.0
 
-[node name="Z" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=983836358]
+[node name="GrabFromMario" type="Button" parent="VSplitContainer/PointEdit/PosEdit/Pos/Y" unique_id=489481807 groups=["GrabFromMario"]]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Copy from camera target's position"
+toggle_mode = true
+icon = ExtResource("2_wi63h")
+icon_alignment = 1
+
+[node name="GrabFromCamera" type="Button" parent="VSplitContainer/PointEdit/PosEdit/Pos/Y" unique_id=2054828738 groups=["GrabFromCamera"]]
+layout_mode = 2
+tooltip_text = "Copy from camera's position"
+toggle_mode = true
+icon = ExtResource("3_d1lea")
+icon_alignment = 1
+
+[node name="Z" type="HBoxContainer" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=1657371543]
+layout_mode = 2
+
+[node name="Input" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos/Z" unique_id=983836358]
+layout_mode = 2
+size_flags_horizontal = 3
 min_value = -1000000.0
 max_value = 1000000.0
+step = 0.001
+custom_arrow_step = 1.0
+
+[node name="GrabFromMario" type="Button" parent="VSplitContainer/PointEdit/PosEdit/Pos/Z" unique_id=785631487 groups=["GrabFromMario"]]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Copy from camera target's position"
+toggle_mode = true
+icon = ExtResource("2_wi63h")
+icon_alignment = 1
+
+[node name="GrabFromCamera" type="Button" parent="VSplitContainer/PointEdit/PosEdit/Pos/Z" unique_id=418106312 groups=["GrabFromCamera"]]
+layout_mode = 2
+tooltip_text = "Copy from camera's position"
+toggle_mode = true
+icon = ExtResource("3_d1lea")
+icon_alignment = 1
 
 [node name="TargetEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=514734251]
 layout_mode = 2
@@ -148,20 +217,87 @@ text = "Target:   "
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="X" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=204598496]
+[node name="X" type="HBoxContainer" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=500544319]
 layout_mode = 2
-min_value = -1000000.0
-max_value = 1000000.0
+size_flags_vertical = 4
 
-[node name="Y" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=1754902426]
+[node name="Input" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target/X" unique_id=204598496]
 layout_mode = 2
+size_flags_horizontal = 3
 min_value = -1000000.0
 max_value = 1000000.0
+step = 0.001
+custom_arrow_step = 1.0
 
-[node name="Z" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=1273512836]
+[node name="GrabFromMario" type="Button" parent="VSplitContainer/PointEdit/TargetEdit/Target/X" unique_id=1120587551 groups=["GrabFromMario"]]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Copy from camera target's position"
+toggle_mode = true
+icon = ExtResource("2_wi63h")
+icon_alignment = 1
+
+[node name="GrabFromCamera" type="Button" parent="VSplitContainer/PointEdit/TargetEdit/Target/X" unique_id=775894490 groups=["GrabFromCamera"]]
+layout_mode = 2
+tooltip_text = "Copy from camera's position"
+toggle_mode = true
+icon = ExtResource("3_d1lea")
+icon_alignment = 1
+
+[node name="Y" type="HBoxContainer" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=469481980]
+layout_mode = 2
+
+[node name="Input" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target/Y" unique_id=1754902426]
+layout_mode = 2
+size_flags_horizontal = 3
 min_value = -1000000.0
 max_value = 1000000.0
+step = 0.001
+custom_arrow_step = 1.0
+
+[node name="GrabFromMario" type="Button" parent="VSplitContainer/PointEdit/TargetEdit/Target/Y" unique_id=1725919472 groups=["GrabFromMario"]]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Copy from camera target's position"
+toggle_mode = true
+icon = ExtResource("2_wi63h")
+icon_alignment = 1
+
+[node name="GrabFromCamera" type="Button" parent="VSplitContainer/PointEdit/TargetEdit/Target/Y" unique_id=1563988029 groups=["GrabFromCamera"]]
+layout_mode = 2
+tooltip_text = "Copy from camera's position"
+toggle_mode = true
+icon = ExtResource("3_d1lea")
+icon_alignment = 1
+
+[node name="Z" type="HBoxContainer" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=242305078]
+layout_mode = 2
+
+[node name="Input" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target/Z" unique_id=1273512836]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -1000000.0
+max_value = 1000000.0
+step = 0.001
+custom_arrow_step = 1.0
+
+[node name="GrabFromMario" type="Button" parent="VSplitContainer/PointEdit/TargetEdit/Target/Z" unique_id=1231969682 groups=["GrabFromMario"]]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Copy from camera target's position"
+toggle_mode = true
+icon = ExtResource("2_wi63h")
+icon_alignment = 1
+
+[node name="GrabFromCamera" type="Button" parent="VSplitContainer/PointEdit/TargetEdit/Target/Z" unique_id=111876864 groups=["GrabFromCamera"]]
+layout_mode = 2
+tooltip_text = "Copy from camera's position"
+toggle_mode = true
+icon = ExtResource("3_d1lea")
+icon_alignment = 1
 
 [node name="GrabFromCam" type="Button" parent="VSplitContainer/PointEdit" unique_id=500420642]
 layout_mode = 2
@@ -252,12 +388,12 @@ filters = PackedStringArray("*.tres")
 [connection signal="value_changed" from="VSplitContainer/PointEdit/CurPoint/CurPointField" to="." method="_on_cur_point_field_value_changed"]
 [connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/AddPoint" to="." method="_on_add_point_pressed"]
 [connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/DuplicatePoint" to="." method="_on_duplicate_point_pressed"]
-[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/X" to="." method="_on_any_point_field_changed"]
-[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Y" to="." method="_on_any_point_field_changed"]
-[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Z" to="." method="_on_any_point_field_changed"]
-[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/X" to="." method="_on_any_point_field_changed"]
-[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Y" to="." method="_on_any_point_field_changed"]
-[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Z" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/X/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Y/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Z/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/X/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Y/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Z/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="pressed" from="VSplitContainer/PointEdit/GrabFromCam" to="." method="_on_grab_from_cam_pressed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/TimeEdit/TravelTimeInput" to="." method="_on_any_point_field_changed"]
 [connection signal="item_selected" from="VSplitContainer/PointEdit/TimeEdit/InterpolationOption" to="." method="_on_interpolation_option_item_selected"]

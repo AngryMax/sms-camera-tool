@@ -15,9 +15,15 @@ func _ready() -> void:
 	addPoint()
 	%File.get_popup().id_pressed.connect(_on_file_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
+	
+	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
+		button.toggled.connect(_on_grab_from_target_toggled)
+	for button: Button in get_tree().get_nodes_in_group("GrabFromCamera"):
+		button.toggled.connect(_on_grab_from_camera_toggled)
+	
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	previewPoint()
 
@@ -135,13 +141,13 @@ func updatePointEdit(point: int):
 	
 	point -= 1
 	
-	%Pos.find_child("X").value = pointArray[point].position.x
-	%Pos.find_child("Y").value = pointArray[point].position.y
-	%Pos.find_child("Z").value = pointArray[point].position.z
+	%Pos.find_child("X").find_child("Input").value = pointArray[point].position.x
+	%Pos.find_child("Y").find_child("Input").value = pointArray[point].position.y
+	%Pos.find_child("Z").find_child("Input").value = pointArray[point].position.z
 	
-	%Target.find_child("X").value = pointArray[point].target.x
-	%Target.find_child("Y").value = pointArray[point].target.y
-	%Target.find_child("Z").value = pointArray[point].target.z
+	%Target.find_child("X").find_child("Input").value = pointArray[point].target.x
+	%Target.find_child("Y").find_child("Input").value = pointArray[point].target.y
+	%Target.find_child("Z").find_child("Input").value = pointArray[point].target.z
 	
 	lockApply = false
 	
@@ -158,13 +164,13 @@ func applyPointChanges():
 	
 	var point = %CurPointField.value - 1
 	
-	pointArray[point].position = Vector3(%Pos.find_child("X").value, 
-										 %Pos.find_child("Y").value,
-										 %Pos.find_child("Z").value)
+	pointArray[point].position = Vector3(%Pos.find_child("X").find_child("Input").value, 
+										 %Pos.find_child("Y").find_child("Input").value,
+										 %Pos.find_child("Z").find_child("Input").value)
 							
-	pointArray[point].target = Vector3(%Target.find_child("X").value,
-									   %Target.find_child("Y").value,
-									   %Target.find_child("Z").value)
+	pointArray[point].target = Vector3(%Target.find_child("X").find_child("Input").value,
+									   %Target.find_child("Y").find_child("Input").value,
+									   %Target.find_child("Z").find_child("Input").value)
 	
 	pointArray[point].transitionTime = %TravelTimeInput.value
 	
@@ -173,13 +179,13 @@ func applyPointChanges():
 
 func grabFromCam():
 	
-	%Pos.find_child("X").value = GDInterface.getCamPosX()
-	%Pos.find_child("Y").value = GDInterface.getCamPosY()
-	%Pos.find_child("Z").value = GDInterface.getCamPosZ()
+	%Pos.find_child("X").find_child("Input").value = GDInterface.getCamPosX()
+	%Pos.find_child("Y").find_child("Input").value = GDInterface.getCamPosY()
+	%Pos.find_child("Z").find_child("Input").value = GDInterface.getCamPosZ()
 	
-	%Target.find_child("X").value = GDInterface.getCamTargetX()
-	%Target.find_child("Y").value = GDInterface.getCamTargetY()
-	%Target.find_child("Z").value = GDInterface.getCamTargetZ()
+	%Target.find_child("X").find_child("Input").value = GDInterface.getCamTargetX()
+	%Target.find_child("Y").find_child("Input").value = GDInterface.getCamTargetY()
+	%Target.find_child("Z").find_child("Input").value = GDInterface.getCamTargetZ()
 	
 	applyPointChanges()
 
@@ -232,6 +238,26 @@ func open(path: String):
 	
 	%CurPointField.max_value = pointNum
 	updatePointEdit(%CurPointField.value)
+
+
+func copyFromTarget() -> void:
+	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
+		if button.button_pressed:
+			button.button_pressed = false
+			var parent: HBoxContainer = button.get_parent()
+			var input: SpinBox = parent.find_child("Input")
+			var callable := Callable(GDInterface, "getCamTarget" + parent.name)
+			input.value = callable.call()
+
+
+func copyFromCamPos() -> void:
+	for button: Button in get_tree().get_nodes_in_group("GrabFromCamera"):
+		if button.button_pressed:
+			button.button_pressed = false
+			var parent: HBoxContainer = button.get_parent()
+			var input: SpinBox = parent.find_child("Input")
+			var callable := Callable(GDInterface, "getCamPos" + parent.name)
+			input.value = callable.call()
 
 
 ### SIGNALS ###
@@ -310,3 +336,13 @@ func _on_save_file_file_selected(path: String) -> void:
 
 func _on_duplicate_point_pressed() -> void:
 	duplicatePoint()
+
+
+func _on_grab_from_target_toggled(toggled_on: bool) -> void:
+	print("mario ", toggled_on)
+	copyFromTarget()
+
+
+func _on_grab_from_camera_toggled(toggled_on: bool) -> void:
+	print("camera ", toggled_on)
+	copyFromCamPos()
