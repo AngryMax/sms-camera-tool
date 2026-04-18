@@ -131,6 +131,8 @@ func updatePointEdit(point: int):
 	lockApply = false
 	
 	%TravelTimeInput.value = pointArray[point].transitionTime
+	
+	%InterpolationOption.selected = pointArray[point].interpolation
 
 
 ## Sets backend values from what's been entered in the GUI
@@ -150,6 +152,8 @@ func applyPointChanges():
 									   %Target.find_child("Z").value)
 	
 	pointArray[point].transitionTime = %TravelTimeInput.value
+	
+	pointArray[point].interpolation = %InterpolationOption.selected
 
 
 func grabFromCam():

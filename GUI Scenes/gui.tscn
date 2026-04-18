@@ -176,12 +176,13 @@ step = 0.1
 value = 1.0
 
 [node name="InterpolationOption" type="OptionButton" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=1280472836]
+unique_name_in_owner = true
 layout_mode = 2
 selected = 0
 item_count = 2
 popup/item_0/text = "Linear"
 popup/item_0/id = 0
-popup/item_1/text = "Spheric"
+popup/item_1/text = "Cubic"
 popup/item_1/id = 1
 
 [node name="PreviewPoint" type="CheckButton" parent="VSplitContainer" unique_id=1934424326]
