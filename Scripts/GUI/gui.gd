@@ -61,7 +61,7 @@ func replayPoints():
 			
 			var curTime: float = Time.get_ticks_msec() / 1000.0
 			
-			if curTime - lastTime <= 1 / 60:	# Bootleg 60 ticks per second system
+			if curTime - lastTime <= 1.0 / 60.0:	# Bootleg 60 ticks per second system
 				continue
 			
 			lastTime = curTime
