@@ -13,7 +13,8 @@ func _ready() -> void:
 	GDInterface = %GDInterface
 	GDInterface.Hook()
 	addPoint()
-	%File.get_popup().id_pressed.connect(_on_file_menu)	
+	%File.get_popup().id_pressed.connect(_on_file_menu)
+	%Help.get_popup().id_pressed.connect(_on_help_menu)
 
 
 func _process(delta: float) -> void:
@@ -253,12 +254,10 @@ func _on_restore_camera_pressed() -> void:
 	GDInterface.restoreCameraCode()
 
 
-enum FileOptions {ABOUT, NEW, OPEN, SAVE, QUIT}
+enum FileOptions {NEW, OPEN, SAVE, QUIT}
 func _on_file_menu(id: int) -> void:
 	
 	match id:
-		FileOptions.ABOUT:
-			%About.visible = true
 		FileOptions.NEW:
 			resetPoints()
 		FileOptions.OPEN:
@@ -268,7 +267,23 @@ func _on_file_menu(id: int) -> void:
 		FileOptions.QUIT:
 			get_tree().quit()
 		_:
-			pass
+			push_error("Invalid file menu id!")
+
+
+enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
+func _on_help_menu(id: int) -> void:
+	
+	match id:
+		HelpOptions.BUG:
+			OS.shell_open("https://github.com/AngryMax/sms-camera-tool/issues")
+		HelpOptions.GUIDE:
+			OS.shell_open("https://github.com/AngryMax/sms-camera-tool")	# TODO: make this link directly to the readme
+		HelpOptions.LICENSE:
+			OS.shell_open("https://github.com/AngryMax/sms-camera-tool/blob/main/LICENSE")
+		HelpOptions.ABOUT:
+			%About.visible = true
+		_:
+			push_error("Invalid help menu id!")
 
 
 func _on_preview_point_pressed() -> void:
