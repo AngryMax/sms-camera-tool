@@ -117,6 +117,8 @@ func resetPoints():
 	pointArray.clear()
 	pointNum = 0
 	addPoint()
+	updatePointEdit(0)
+	applyPointChanges()
 
 
 ## Updates all the GUI values to the selected point
@@ -187,7 +189,7 @@ func addPoint():
 	%CurPointField.editable = true
 
 
-func save():
+func save(path: String):
 	
 	var saveFile := SaveFile.new()
 	
@@ -197,7 +199,7 @@ func save():
 		saveFile.times.append(pointArray[i].transitionTime)
 		saveFile.interps.append(pointArray[i].interpolation)
 	
-	saveFile.saveFile()
+	saveFile.saveFile(path)
 
 
 func open(path: String):
@@ -256,7 +258,7 @@ func _on_file_menu(id: int) -> void:
 		FileOptions.OPEN:
 			$OpenFile.visible = true
 		FileOptions.SAVE:
-			save()
+			$SaveAsFile.visible = true
 		FileOptions.QUIT:
 			get_tree().quit()
 		_:
@@ -274,3 +276,7 @@ func _on_interpolation_option_item_selected(index: int) -> void:
 
 func _on_open_file_file_selected(path: String) -> void:
 	open(path)
+
+
+func _on_save_file_file_selected(path: String) -> void:
+	save(path)

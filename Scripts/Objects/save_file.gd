@@ -20,7 +20,7 @@ func _reset() -> void:
 	interps.clear
 
 
-func saveFile() -> void:
-	ResourceSaver.save(self, "user://save.tres")
+func saveFile(path: String) -> void:
+	ResourceSaver.save(self, path)
 	_reset()
 	
