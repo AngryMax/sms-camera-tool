@@ -196,6 +196,12 @@ func addPoint():
 	%CurPointField.editable = true
 
 
+func duplicatePoint():
+	
+	addPoint()
+	pointArray[-1] = pointArray[%CurPointField.value - 1]
+
+
 func save(path: String):
 	
 	var saveFile := SaveFile.new()
@@ -288,7 +294,6 @@ func _on_help_menu(id: int) -> void:
 
 func _on_preview_point_pressed() -> void:
 	previewMode = %PreviewPoint.button_pressed
-	print(previewMode)
 
 
 func _on_interpolation_option_item_selected(index: int) -> void:
@@ -301,3 +306,7 @@ func _on_open_file_file_selected(path: String) -> void:
 
 func _on_save_file_file_selected(path: String) -> void:
 	save(path)
+
+
+func _on_duplicate_point_pressed() -> void:
+	duplicatePoint()

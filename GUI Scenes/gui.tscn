@@ -80,7 +80,7 @@ theme_override_constants/separation = 5
 [node name="CurPoint" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1148527782]
 layout_mode = 2
 size_flags_horizontal = 4
-split_offsets = PackedInt32Array(0, 0)
+split_offsets = PackedInt32Array(0, 0, 0)
 
 [node name="Label" type="Label" parent="VSplitContainer/PointEdit/CurPoint" unique_id=502225898]
 layout_mode = 2
@@ -99,6 +99,10 @@ editable = false
 [node name="AddPoint" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1966676548]
 layout_mode = 2
 text = "Add Point"
+
+[node name="DuplicatePoint" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1488294071]
+layout_mode = 2
+text = "Duplicate Point"
 
 [node name="PosEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1075222597]
 layout_mode = 2
@@ -119,19 +123,16 @@ layout_mode = 2
 theme_override_constants/field_and_buttons_separation = 2
 min_value = -1000000.0
 max_value = 1000000.0
-step = 0.001
 
 [node name="Y" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=336885338]
 layout_mode = 2
 min_value = -1000000.0
 max_value = 1000000.0
-step = 0.001
 
 [node name="Z" type="SpinBox" parent="VSplitContainer/PointEdit/PosEdit/Pos" unique_id=983836358]
 layout_mode = 2
 min_value = -1000000.0
 max_value = 1000000.0
-step = 0.001
 
 [node name="TargetEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=514734251]
 layout_mode = 2
@@ -151,19 +152,16 @@ layout_mode = 2
 layout_mode = 2
 min_value = -1000000.0
 max_value = 1000000.0
-step = 0.001
 
 [node name="Y" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=1754902426]
 layout_mode = 2
 min_value = -1000000.0
 max_value = 1000000.0
-step = 0.001
 
 [node name="Z" type="SpinBox" parent="VSplitContainer/PointEdit/TargetEdit/Target" unique_id=1273512836]
 layout_mode = 2
 min_value = -1000000.0
 max_value = 1000000.0
-step = 0.001
 
 [node name="GrabFromCam" type="Button" parent="VSplitContainer/PointEdit" unique_id=500420642]
 layout_mode = 2
@@ -185,7 +183,6 @@ text = "Transition Time:"
 [node name="TravelTimeInput" type="SpinBox" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=539251501]
 unique_name_in_owner = true
 layout_mode = 2
-step = 0.1
 value = 1.0
 
 [node name="InterpolationOption" type="OptionButton" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=1280472836]
@@ -254,6 +251,7 @@ filters = PackedStringArray("*.tres")
 
 [connection signal="value_changed" from="VSplitContainer/PointEdit/CurPoint/CurPointField" to="." method="_on_cur_point_field_value_changed"]
 [connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/AddPoint" to="." method="_on_add_point_pressed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/DuplicatePoint" to="." method="_on_duplicate_point_pressed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/X" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Y" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Z" to="." method="_on_any_point_field_changed"]
