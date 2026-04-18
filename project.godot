@@ -13,11 +13,7 @@ config_version=5
 config/name="SMS-Camera-Tool"
 run/main_scene="uid://b0t1cqynrh1xk"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
-
-[autoload]
-
-CamPoint="*uid://c87buq0dyfbf5"
+config/icon="res://Resources/Images/icon.svg"
 
 [display]
 

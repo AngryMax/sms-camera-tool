@@ -1,7 +1,7 @@
 
 class_name SMSCamPoint
 
-enum InterpolationTypes {Linear, Spheric}
+enum InterpolationTypes {Linear, Spheric}	## Linear = 0, Spheric = 1
 
 var position: Vector3
 var target: Vector3

@@ -13,7 +13,7 @@ func _ready() -> void:
 	GDInterface = %GDInterface
 	GDInterface.Hook()
 	addPoint()
-	%File.get_popup().id_pressed.connect(_on_file_menu)
+	%File.get_popup().id_pressed.connect(_on_file_menu)	
 
 
 func _process(delta: float) -> void:
@@ -64,13 +64,28 @@ func replayPoints():
 			if lerpPow >= 1.0:
 				lerpPow = 1.0
 			
-			curPos = fromPos.lerp(toPos, lerpPow)
-			curTarget = fromTarget.lerp(toTarget, lerpPow)
+			match pointArray[i].interpolation:
+				SMSCamPoint.InterpolationTypes.Linear:
+					curPos = interpolateLinear(fromPos, toPos, lerpPow)
+					curTarget = interpolateLinear(fromTarget, toTarget, lerpPow)
+				SMSCamPoint.InterpolationTypes.Spheric:
+					curPos = interpolateCubic(fromPos, toPos, lerpPow)
+					curTarget = interpolateCubic(fromTarget, toTarget, lerpPow)
+				_:
+					print("uh oh")
 			
 			GDInterface.writeCamData(curPos, curTarget)
 			
-			if curPos.distance_to(toPos) <= 0.001 and curTarget.distance_to(toTarget) <= 0.001:	# float imprecision bet hedging
+			if lerpPow >= 1.0:
 				break
+
+
+func interpolateLinear(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
+	return from.lerp(to, lerpPow)
+
+
+func interpolateCubic(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:	# TODO: actually figure this out lol
+	return from.cubic_interpolate(to, to * 1.5, to * 0.75, lerpPow)
 
 
 var lastState := false	# TODO: make a real state machine... sigh
@@ -182,7 +197,7 @@ func open():
 	resetPoints()
 	print("file size: ", file.positions.size())
 	for i in file.positions.size():
-		if i != 0:	# b/c resetPoints() a couple of lines about auto-appends a single point
+		if i != 0:	# b/c resetPoints() a couple of lines above auto-appends a single point
 			pointArray.append(SMSCamPoint.new())
 			pointNum += 1
 		pointArray[i].position = file.positions[i]
@@ -245,3 +260,7 @@ func _on_file_menu(id: int) -> void:
 func _on_preview_point_pressed() -> void:
 	previewMode = %PreviewPoint.button_pressed
 	print(previewMode)
+
+
+func _on_interpolation_option_item_selected(index: int) -> void:
+	pointArray[%CurPointField.value - 1].interpolation = index

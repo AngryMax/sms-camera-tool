@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b0t1cqynrh1xk"]
 
-[ext_resource type="Script" uid="uid://dowdp54ogwq5b" path="res://gui.gd" id="1_80edf"]
+[ext_resource type="Script" uid="uid://dowdp54ogwq5b" path="res://Scripts/GUI/gui.gd" id="1_80edf"]
 [ext_resource type="Script" path="res://PyScripts/GDInterface.py" id="2_6lon5"]
-[ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://about.tscn" id="3_q8o8l"]
+[ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://GUI Scenes/about.tscn" id="3_q8o8l"]
 
 [node name="GUI" type="Control" unique_id=700733280]
 layout_mode = 3
@@ -161,8 +161,8 @@ layout_mode = 2
 
 [node name="TimeEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1841613776]
 layout_mode = 2
-split_offsets = PackedInt32Array(67, 165)
-split_offset = 67
+split_offsets = PackedInt32Array(125, 259)
+split_offset = 125
 
 [node name="Label" type="Label" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=1825153809]
 layout_mode = 2
@@ -175,10 +175,14 @@ layout_mode = 2
 step = 0.1
 value = 1.0
 
-[node name="IsLerp" type="CheckBox" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=1971734152]
-unique_name_in_owner = true
+[node name="InterpolationOption" type="OptionButton" parent="VSplitContainer/PointEdit/TimeEdit" unique_id=1280472836]
 layout_mode = 2
-text = "Slerp"
+selected = 0
+item_count = 2
+popup/item_0/text = "Linear"
+popup/item_0/id = 0
+popup/item_1/text = "Spheric"
+popup/item_1/id = 1
 
 [node name="PreviewPoint" type="CheckButton" parent="VSplitContainer" unique_id=1934424326]
 unique_name_in_owner = true
@@ -230,6 +234,7 @@ visible = false
 [connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Z" to="." method="_on_any_point_field_changed"]
 [connection signal="pressed" from="VSplitContainer/PointEdit/GrabFromCam" to="." method="_on_grab_from_cam_pressed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/TimeEdit/TravelTimeInput" to="." method="_on_any_point_field_changed"]
+[connection signal="item_selected" from="VSplitContainer/PointEdit/TimeEdit/InterpolationOption" to="." method="_on_interpolation_option_item_selected"]
 [connection signal="pressed" from="VSplitContainer/PreviewPoint" to="." method="_on_preview_point_pressed"]
 [connection signal="pressed" from="VSplitContainer/ReplayPoints" to="." method="_on_replay_points_pressed"]
 [connection signal="pressed" from="VSplitContainer/RestoreCamera" to="." method="_on_restore_camera_pressed"]
