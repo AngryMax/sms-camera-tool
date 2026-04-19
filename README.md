@@ -9,7 +9,7 @@ even if it's modded (as long as the mod doesn't do anythign *too* funky with the
 
 ## How to use
 
-If you'd prefer to watch a video, here's a tutorial on how to use SMSCT: (insert link here)
+If you'd prefer to watch a video, [here's a tutorial on how to use SMSCT](https://youtu.be/fE53T9BcNkA)
 
 ## Launch
 First, you need to launch your legally obtained copy of Sunshine via Dolphin Emulator. Once you're in the game, you can then run SMS-Camera-Tool.exe. As of current version, it *must* be in this order.
@@ -70,8 +70,8 @@ Up top, there's a standard toolbar with saving and loading functionality, as wel
 
 
 ## Building
-This is a Godot 4.6.2 project. Download the project, then import it through the Godot launcher. You will need to install the [https://github.com/niklas2902/py4godot
-](Py4Godot) addon. You should then be able to build it like any normal Godot project, but if that's not the case, please open an issue here on the Github.
+This is a Godot 4.6.2 project. Download the project, then import it through the Godot launcher. You will need to install the [Py4Godot
+](https://github.com/niklas2902/py4godot) addon. You should then be able to build it like any normal Godot project, but if that's not the case, please open an issue here on the Github.
 
 ## Planned Features
 I'd like to work more on this project. If I do, here's what you can expect: <br/>
