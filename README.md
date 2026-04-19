@@ -72,3 +72,13 @@ Up top, there's a standard toolbar with saving and loading functionality, as wel
 ## Building
 This is a Godot 4.6.2 project. Download the project, then import it through the Godot launcher. You will need to install the [https://github.com/niklas2902/py4godot
 ](Py4Godot) addon. You should then be able to build it like any normal Godot project, but if that's not the case, please open an issue here on the Github.
+
+## Planned Features
+I'd like to work more on this project. If I do, here's what you can expect: <br/>
+- Cleaned up, easier to read GUI <br/>
+- A Point list to replace the Current Point selection box. You will also be able to visually re-order the Points from the list.
+- A "Camera Control Mode." When enabled, the program will accept keyboard inputs to move the camera around, similar to Dolphin's free cam feature.
+- An Undo/Redo button and Undo history
+- A Spline-based system to potentially replace the Point system (needs more research)
+- A 3D, editable view of your Points
+- Longshot, but perhaps a way to extract the current level's geometry data for the 3D view
