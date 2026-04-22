@@ -314,9 +314,9 @@ func _on_file_menu(id: int) -> void:
 		FileOptions.NEW:
 			resetPoints()
 		FileOptions.OPEN:
-			$OpenFile.visible = true
+			%OpenFile.visible = true
 		FileOptions.SAVE:
-			$SaveAsFile.visible = true
+			%SaveAsFile.visible = true
 		FileOptions.QUIT:
 			get_tree().quit()
 		_:

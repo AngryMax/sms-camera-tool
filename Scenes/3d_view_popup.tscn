@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b8sfaynxouwx0"]
 
-[ext_resource type="PackedScene" uid="uid://rirt1n4a4udb" path="res://GUI Scenes/3d_view.tscn" id="1_3gsl6"]
+[ext_resource type="PackedScene" uid="uid://rirt1n4a4udb" path="res://Scenes/3d_view.tscn" id="1_3gsl6"]
 
 [node name="3DViewPopup" type="Popup" unique_id=1356701562]
 process_mode = 4
