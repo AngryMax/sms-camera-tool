@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://rirt1n4a4udb"]
+
+[ext_resource type="Script" uid="uid://dwxic6kpw8bwk" path="res://Scripts/test.gd" id="1_o6pwk"]
+
+[sub_resource type="Environment" id="Environment_kmq1t"]
+background_mode = 1
+background_color = Color(0.4869188, 0.71186876, 1, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.4862745, 0.70980394, 1, 1)
+ambient_light_energy = 0.34
+reflected_light_source = 1
+
+[node name="Node3D" type="Node3D" unique_id=917104174]
+script = ExtResource("1_o6pwk")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1733699341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6983998, 0, -2)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1623102963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1967015, 0, 1.7992971)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=1387261192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8279464, 0, -0.3255961)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=540177063]
+unique_name_in_owner = true
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D" unique_id=1374815113]
+transform = Transform3D(0.9461249, -0.28452212, 0.15457936, 0, 0.4773888, 0.87869215, -0.32380182, -0.83135253, 0.45166942, 0, 2.7552252, 0)
+light_color = Color(1, 1, 0.9372549, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1801204254]
+environment = SubResource("Environment_kmq1t")

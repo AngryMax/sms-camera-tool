@@ -16,6 +16,7 @@ func _ready() -> void:
 	addPoint()
 	%File.get_popup().id_pressed.connect(_on_file_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
+	%View.get_popup().id_pressed.connect(_on_view_menu)
 	
 	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
 		button.toggled.connect(_on_grab_from_target_toggled)
@@ -336,6 +337,16 @@ func _on_help_menu(id: int) -> void:
 			%About.visible = true
 		_:
 			push_error("Invalid help menu id!")
+
+enum ViewOptions {VIEW_3D}
+func _on_view_menu(id: int) -> void:
+	
+	match id:
+		ViewOptions.VIEW_3D:
+			%"3DViewPopup".visible = true
+			%"3DViewPopup".process_mode = Node.PROCESS_MODE_ALWAYS	# TODO: perhaps do visiblity change and process_mode change through a variable set?
+		_:
+			push_error("Invalid view menu id!")
 
 
 func _on_preview_point_pressed() -> void:
