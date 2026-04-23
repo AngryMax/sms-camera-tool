@@ -14,9 +14,11 @@ func _ready() -> void:
 	GDInterface = %GDInterface
 	GDInterface.Hook()
 	addPoint()
-	%File.get_popup().id_pressed.connect(_on_file_menu)
-	%Help.get_popup().id_pressed.connect(_on_help_menu)
-	%View.get_popup().id_pressed.connect(_on_view_menu)
+	
+	# TODO: this is VERY bad practice, this needs to be refactored asap!!!!!!! That probably beings with making pointArray belong to the parent...
+	get_parent().find_child("Toolbar").find_child("File").get_popup().id_pressed.connect(_on_file_menu)
+	get_parent().find_child("Toolbar").find_child("Help").get_popup().id_pressed.connect(_on_help_menu)
+	get_parent().find_child("Toolbar").find_child("View").get_popup().id_pressed.connect(_on_view_menu)
 	
 	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
 		button.toggled.connect(_on_grab_from_target_toggled)
@@ -357,8 +359,10 @@ func _on_interpolation_option_item_selected(index: int) -> void:
 	pointArray[%CurPointField.value - 1].interpolation = index
 
 
+signal new_points
 func _on_open_file_file_selected(path: String) -> void:
 	open(path)
+	new_points.emit()
 
 
 func _on_save_file_file_selected(path: String) -> void:

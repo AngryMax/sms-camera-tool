@@ -12,17 +12,19 @@ config_version=5
 
 config/name="SMS-Camera-Tool"
 config/version="b1.0.1"
-run/main_scene="uid://b0t1cqynrh1xk"
+run/main_scene="uid://rirt1n4a4udb"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 run/max_fps=60
 run/low_processor_mode=true
 boot_splash/image="uid://demnxnydfbq8w"
 config/icon="uid://2afrsxxu7trg"
+run/size/viewport_height=540
+run/size/viewport_width=960
 
 [display]
 
-window/size/viewport_width=600
-window/size/viewport_height=600
+window/size/viewport_width=960
+window/size/viewport_height=540
 window/energy_saving/keep_screen_on=false
 window/subwindows/embed_subwindows=false
 window/per_pixel_transparency/allowed=true

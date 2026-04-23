@@ -2,14 +2,10 @@ extends Node3D
 
 @export var pointDisplayDivScaler := 1000
 
-const pointSpriteTex := preload("res://Resources/Images/3d view sprites/point2.png")
+func _ready() -> void:
+	$GUI.connect("new_points", _on_points_loaded)
 
 func _process(_delta: float) -> void:
-	
-	if get_parent().visible == false:
-		get_parent().process_mode = Node.PROCESS_MODE_DISABLED
-		return
-	
 	_control()
 
 
@@ -42,14 +38,14 @@ func _control() -> void:
 	if Input.is_action_pressed("move_slow"):
 		movementVector *= 2.0
 	
-	movementVector /= 2.0
+	movementVector /= 4.0
 	
 	%Camera3D.position += movementVector
 
 
 func _getPoints() -> Array[Vector3]:
 	
-	var pointArray: Array[SMSCamPoint] = get_parent().get_parent().pointArray
+	var pointArray: Array[SMSCamPoint] = $GUI.pointArray
 	var posArray: Array[Vector3]
 	
 	for point in pointArray:
@@ -61,12 +57,10 @@ func _getPoints() -> Array[Vector3]:
 func _placePoints(posArray: Array[Vector3]) -> void:
 	
 	for point in posArray:
-		var pointSprite := Sprite3D.new()
-		pointSprite.texture = pointSpriteTex
-		pointSprite.position = point
-		pointSprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-		%Points.add_child(pointSprite)
-		
+		var clickPoint := ClickPoint.new()
+		clickPoint.position = point
+		%Points.add_child(clickPoint)
+		clickPoint.connect("clicked", _on_clicked)
 		%Path3D.curve.add_point(point)
 
 
@@ -87,9 +81,16 @@ func _setCamera(posArray: Array[Vector3]) -> void:
 	%Camera3D.position.y = highestY + 20
 	%Camera3D.position.z = avgXZPos.y
 
+
 ### Signals ###
 
-func _on_d_view_popup_visibility_changed() -> void:
+func _on_points_loaded() -> void:
 	var pointArray := _getPoints()
 	_placePoints(pointArray)
 	_setCamera(pointArray)
+
+
+func _on_clicked(clickObj: ClickPoint) -> void:
+	print(clickObj)
+
+	
