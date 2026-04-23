@@ -12,12 +12,17 @@ var isActive: bool:
 		targetSprite.visible = value
 		print(value)
 
+var _isMouseHovered := false		## If the mouse is currently hovering this ClickPoint
+var _clickedOnPoint := false		## If there's currently a mouse click, tracks if that specific mouse click was on this ClickPoint
+var _isBeingDragged := false		## If this ClickPoint is currently being dragged
+
+
 func _ready() -> void:
 	
 	var colShape := CollisionShape3D.new()
 	colShape.shape = SphereShape3D.new()
-	#colShape.debug_fill = true
-	#colShape.debug_color = Color(0.62, 0.0, 0.035, 1.0)
+	colShape.debug_fill = true
+	colShape.debug_color = Color(0.62, 0.0, 0.035, 1.0)
 	colShape.shape.radius = 0.25
 	
 	var body := StaticBody3D.new()
@@ -41,7 +46,45 @@ func _ready() -> void:
 	body.add_child(targetSprite)
 	
 	body.connect("input_event", signalPassthrough)
+	body.connect("mouse_entered", _on_mouse_entered)
+	body.connect("mouse_exited", _on_mouse_exited)
 
+
+func _process(_delta: float) -> void:
+	_movePointByMouse()
+
+
+func _movePointByMouse() -> void:
+	
+	if not _isBeingDragged:
+	
+		if not _isMouseHovered:
+			return
+
+		if Input.is_action_just_pressed("mouse_click_left"):
+			_isBeingDragged = true
+			_clickedOnPoint = true
+
+		if not _clickedOnPoint:
+			return
+
+	if not Input.is_action_pressed("mouse_click_left"):
+		_isBeingDragged = false
+		return
+	
+	var camera := get_viewport().get_camera_3d()
+	var mousePos := get_viewport().get_mouse_position()
+	var from = camera.project_ray_origin(mousePos)
+	var magnitude = from.distance_to(position)
+	var to = from + camera.project_ray_normal(mousePos) * magnitude
+	position.x = to.x
+	position.z = to.z
+	
+	# TODO: Add translate arrows instead of dragging the point around for the eventual move to true 3D
+	
+
+
+### Signals ###
 
 ## Since the "input_event" signal that belongs to StaticBody3D doesn't seem to pass the object that's being
 ## clicked as a parameter, we go through the whole process of making this ClickObj and passing a processed
@@ -59,3 +102,13 @@ func signalPassthrough(_camera: Node, event: InputEvent, _event_position: Vector
 	if mouseButtonEvent.pressed and mouseButtonEvent.button_mask == 1:
 		clicked.emit(self)
 		isActive = not isActive
+
+
+func _on_mouse_entered() -> void:
+	print("mouse entered! :D")
+	_isMouseHovered = true
+
+
+func _on_mouse_exited() -> void:
+	_isMouseHovered = false
+	_clickedOnPoint = false
