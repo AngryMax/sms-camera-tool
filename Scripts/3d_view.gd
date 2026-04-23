@@ -43,7 +43,7 @@ func _control() -> void:
 	%Camera3D.position += movementVector
 
 
-func _getPoints() -> Array[Vector3]:
+func _getPointPositions() -> Array[Vector3]:
 	
 	var pointArray: Array[SMSCamPoint] = $GUI.pointArray
 	var posArray: Array[Vector3]
@@ -54,14 +54,26 @@ func _getPoints() -> Array[Vector3]:
 	return posArray
 
 
-func _placePoints(posArray: Array[Vector3]) -> void:
+func _getPointTargets() -> Array[Vector3]:
 	
-	for point in posArray:
+	var pointArray: Array[SMSCamPoint] = $GUI.pointArray
+	var targetArray: Array[Vector3]
+	
+	for point in pointArray:
+		targetArray.append(point.target / pointDisplayDivScaler)
+	
+	return targetArray
+
+
+func _placePoints(posArray: Array[Vector3], targetArray: Array[Vector3]) -> void:
+	
+	for i in len(posArray):
 		var clickPoint := ClickPoint.new()
-		clickPoint.position = point
+		clickPoint.position = posArray[i]
+		clickPoint.targetPos = targetArray[i]
 		%Points.add_child(clickPoint)
 		clickPoint.connect("clicked", _on_clicked)
-		%Path3D.curve.add_point(point)
+		%Path3D.curve.add_point(posArray[i])
 
 
 func _setCamera(posArray: Array[Vector3]) -> void:
@@ -85,12 +97,11 @@ func _setCamera(posArray: Array[Vector3]) -> void:
 ### Signals ###
 
 func _on_points_loaded() -> void:
-	var pointArray := _getPoints()
-	_placePoints(pointArray)
-	_setCamera(pointArray)
+	var posArray := _getPointPositions()
+	var targetArray := _getPointTargets()
+	_placePoints(posArray, targetArray)
+	_setCamera(posArray)
 
 
 func _on_clicked(clickObj: ClickPoint) -> void:
 	print(clickObj)
-
-	

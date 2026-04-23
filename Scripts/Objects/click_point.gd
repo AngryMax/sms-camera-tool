@@ -2,7 +2,15 @@ extends Node3D
 class_name ClickPoint
 
 signal clicked(clickObj: ClickPoint)
-const pointTex := preload("res://Resources/Images/3d view sprites/point2.png")
+const pointTex := preload("res://Resources/Images/3d view sprites/point3.png")
+
+var targetPos: Vector3
+var targetSprite: Sprite3D
+var isActive: bool:
+	set(value):
+		isActive = value
+		targetSprite.visible = value
+		print(value)
 
 func _ready() -> void:
 	
@@ -16,11 +24,21 @@ func _ready() -> void:
 	body.add_child(colShape)
 	add_child(body)
 	
-	var pointSprite := Sprite3D.new()
-	pointSprite.texture = pointTex
-	pointSprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	pointSprite.scale = Vector3(2, 2, 2)
-	body.add_child(pointSprite)
+	var posSprite := Sprite3D.new()
+	posSprite.texture = pointTex
+	posSprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	posSprite.scale = Vector3(2, 2, 2)
+	posSprite.modulate = Color(1.0, 0.0, 0.0, 1.0)
+	body.add_child(posSprite)
+	
+	targetSprite = Sprite3D.new()
+	targetSprite.texture = pointTex
+	targetSprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	targetSprite.scale = Vector3(2, 2, 2)
+	targetSprite.modulate = Color(0.076, 0.441, 0.0, 1.0)
+	targetSprite.position = to_local(targetPos)
+	targetSprite.visible = false
+	body.add_child(targetSprite)
 	
 	body.connect("input_event", signalPassthrough)
 
@@ -40,3 +58,4 @@ func signalPassthrough(_camera: Node, event: InputEvent, _event_position: Vector
 	
 	if mouseButtonEvent.pressed and mouseButtonEvent.button_mask == 1:
 		clicked.emit(self)
+		isActive = not isActive
