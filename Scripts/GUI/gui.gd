@@ -340,13 +340,12 @@ func _on_help_menu(id: int) -> void:
 		_:
 			push_error("Invalid help menu id!")
 
-enum ViewOptions {VIEW_3D}
+enum ViewOptions {RESET_CAM}
 func _on_view_menu(id: int) -> void:
 	
 	match id:
-		ViewOptions.VIEW_3D:
-			%"3DViewPopup".visible = true
-			%"3DViewPopup".process_mode = Node.PROCESS_MODE_ALWAYS	# TODO: perhaps do visiblity change and process_mode change through a variable set?
+		ViewOptions.RESET_CAM:
+			print("reset cam!")	# TODO: make this work when I get to refactoring the toolbar code
 		_:
 			push_error("Invalid view menu id!")
 
