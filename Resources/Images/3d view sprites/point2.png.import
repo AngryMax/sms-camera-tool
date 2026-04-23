@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0btyciqlv8ky"
-path.s3tc="res://.godot/imported/link_icon.png-ce85dc0adf49bc9ac6dedcd5a1432564.s3tc.ctex"
+uid="uid://dnfoqq2ag7ihd"
+path="res://.godot/imported/point2.png-f80f4ecd3b18b5016b744ec6a98e5b25.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Images/link_icon.png"
-dest_files=["res://.godot/imported/link_icon.png-ce85dc0adf49bc9ac6dedcd5a1432564.s3tc.ctex"]
+source_file="res://Resources/Images/3d view sprites/point2.png"
+dest_files=["res://.godot/imported/point2.png-f80f4ecd3b18b5016b744ec6a98e5b25.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

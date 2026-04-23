@@ -10,8 +10,6 @@ ambient_light_color = Color(0.4862745, 0.70980394, 1, 1)
 ambient_light_energy = 0.34
 reflected_light_source = 1
 
-[sub_resource type="Curve3D" id="Curve3D_o6pwk"]
-
 [node name="3DView" type="Node3D" unique_id=917104174]
 script = ExtResource("1_o6pwk")
 
@@ -19,7 +17,6 @@ script = ExtResource("1_o6pwk")
 unique_name_in_owner = true
 transform = Transform3D(1.1924881e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, -1.1924881e-08, -5.2125306e-16, 0, 20, 0)
 current = true
-far = 40000.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1801204254]
 environment = SubResource("Environment_kmq1t")
@@ -31,7 +28,4 @@ light_color = Color(1, 1, 0.9372549, 1)
 [node name="Points" type="Node3D" parent="." unique_id=1419874683]
 unique_name_in_owner = true
 
-[node name="Path3D" type="Path3D" parent="." unique_id=479842117]
-unique_name_in_owner = true
-curve = SubResource("Curve3D_o6pwk")
-debug_custom_color = Color(1, 0, 0, 1)
+[node name="CSGBox3D" type="CSGBox3D" parent="Points" unique_id=2003021812]

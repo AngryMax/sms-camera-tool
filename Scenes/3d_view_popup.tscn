@@ -11,5 +11,9 @@ visible = true
 unresizable = false
 borderless = false
 sharp_corners = true
+minimize_disabled = false
+maximize_disabled = false
 
-[node name="Node3D" parent="." unique_id=917104174 instance=ExtResource("1_3gsl6")]
+[node name="3DView" parent="." unique_id=917104174 instance=ExtResource("1_3gsl6")]
+
+[connection signal="visibility_changed" from="." to="3DView" method="_on_d_view_popup_visibility_changed"]
