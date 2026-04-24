@@ -7,6 +7,8 @@ extends Node3D
 
 var _SMSCamera: SMSCameraInterface
 var GDInterface: Node
+var _axis: axisGizmo
+var _grid: gridGizmo
 
 ### Override Funcs ###
 
@@ -14,6 +16,13 @@ func _ready() -> void:
 	_connectGUISignals()
 	_SMSCamera = %SMSCameraInterface
 	_addPoint()
+	
+	_axis = axisGizmo.new()
+	add_child(_axis.mi)
+	# TODO: call _axis.toggleVisible() using the toolbar view menu
+	
+	_grid = gridGizmo.new()
+	add_child(_grid.mi)
 
 func _process(_delta: float) -> void:
 	_control()
@@ -148,8 +157,6 @@ func _setCamera(posArray: Array[Vector3]) -> void:
 
 func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
 	%GUI.keyframe = keyframe
-	print("position: ", keyframe.position, "\n target: ", keyframe._targetPos, "\nsmsPosition: ", keyframe.smsPosition, "\nsmsTarget: ", keyframe.smsTarget)
-	print("\n--------------\n")
 
 
 func _on_add_point_pressed() -> void:
