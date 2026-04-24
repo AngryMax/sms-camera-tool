@@ -33,9 +33,9 @@ var _fromKeyframe: CamKeyframe	## The keyframe we're lerping from. Set through _
 var _toKeyframe: CamKeyframe	## The keyframe we're lerping to. Set through _keyframeIdx's setter
 var _keyframeIdx := 0:
 	set(value):
-		value = clampi(value, 1, _keyframes.size() - 1)
+		value = clampi(value, 0, _keyframes.size() - 1)
 		if _toKeyframe == null:
-			_fromKeyframe = _keyframes[value]
+			_fromKeyframe = _keyframes[0]
 		else: _fromKeyframe = _toKeyframe
 		_toKeyframe = _keyframes[value]
 		_keyframeIdx = value
@@ -72,7 +72,6 @@ func _replayKeyframes(delta: float):
 	
 	GDInterface.writeCamData(curPos, curTarget)
 	
-	
 	const WAIT_AT_START_TIMER = 0.5
 	if _playbackStartTimer > WAIT_AT_START_TIMER:	# Hold 0.5 seconds on the first keyframe before moving
 		_lerpPow += delta	# It's kinda weird but we want to add on delta AFTER doing our lerping
@@ -93,6 +92,8 @@ func _preparePlayback() -> void:
 	# Set our keyframe array
 	for i in camKeyframesNode.get_child_count():
 		_keyframes.append(camKeyframesNode.get_child(i))
+	
+	print(_keyframes)
 	
 	# Misc prep work
 	GDInterface.nopOutCameraCode()
