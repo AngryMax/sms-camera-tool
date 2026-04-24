@@ -7,7 +7,7 @@ extends Resource
 @export var positions: Array[Vector3]
 @export var targets: Array[Vector3]
 @export var times: Array[float]
-@export var interps: Array[SMSCamPoint.InterpolationTypes]
+@export var interps: Array[CamKeyframe.InterpolationTypes]
 
 func _init() -> void:
 	_reset()
@@ -17,7 +17,7 @@ func _reset() -> void:
 	positions.clear()
 	targets.clear()
 	times.clear()
-	interps.clear
+	interps.clear()
 
 
 func saveFile(path: String) -> void:

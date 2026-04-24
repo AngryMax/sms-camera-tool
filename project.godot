@@ -33,6 +33,10 @@ window/per_pixel_transparency/allowed=true
 
 enabled=PackedStringArray("res://addons/py4godot/plugin.cfg")
 
+[global_group]
+
+CamKeyframes=""
+
 [input]
 
 move_forward={

@@ -1,19 +1,12 @@
 extends Control
 
-var GDInterface: Node
-
-var pointArray: Array[SMSCamPoint]
-var pointNum: int	## The number of points
 
 var lockApply := false	## Keeps settings from being applied
-var previewMode := false
 var linkTransforms := false
+signal _updateCurrentKeyframe(posToUpdate: Vector3, targetToUpdate: Vector3)	## 0 on each axis = don't update, 1 = do update
 
 
 func _ready() -> void:
-	GDInterface = %GDInterface
-	GDInterface.Hook()
-	addPoint()
 	
 	# TODO: this is VERY bad practice, this needs to be refactored asap!!!!!!! That probably beings with making pointArray belong to the parent...
 	get_parent().find_child("Toolbar").find_child("File").get_popup().id_pressed.connect(_on_file_menu)
@@ -24,140 +17,26 @@ func _ready() -> void:
 		button.toggled.connect(_on_grab_from_target_toggled)
 	for button: Button in get_tree().get_nodes_in_group("GrabFromCamera"):
 		button.toggled.connect(_on_grab_from_camera_toggled)
-	
 
 
-func _process(_delta: float) -> void:
-	
-	previewPoint()
-
-
-func replayPoints():
-	
-	%PreviewPoint.button_pressed = false
-	%PreviewPoint.emit_signal("pressed")
-	
-	GDInterface.nopOutCameraCode()
-	GDInterface.writeCamData(pointArray.front().position, pointArray.front().target)
-	await get_tree().create_timer(0.5).timeout
-	print(pointArray.size())
-	
-	for i in pointNum:
-		
-		var fromPos: Vector3 = pointArray[i].position
-		var curPos := fromPos
-		var toPos: Vector3
-		var fromTarget: Vector3 = pointArray[i].target
-		var curTarget := fromTarget
-		var toTarget: Vector3
-		
-		if i == pointNum - 1:		# If we're on the last point
-			toPos = pointArray.back().position
-			toTarget = pointArray.back().target
-		else:
-			toPos = pointArray[i + 1].position
-			toTarget = pointArray[i + 1].target
-		
-		var startTime: float = Time.get_ticks_msec() / 1000.0
-		
-		print("Processing point ", i)
-		print("Currently at ", curPos)
-		print("Currently looking at ", curTarget)
-		print("Going to ", toPos)
-		print("Going to look at ", toTarget)
-		
-		var lastTime := 0.0
-		while true:
-			
-			var curTime: float = Time.get_ticks_msec() / 1000.0
-			
-			if curTime - lastTime <= 1.0 / 60.0:	# Bootleg 60 ticks per second system
-				continue
-			
-			lastTime = curTime
-			
-			var lerpPow: = curTime - startTime
-			lerpPow /= pointArray[i].transitionTime
-			if lerpPow >= 1.0:
-				lerpPow = 1.0
-			
-			match pointArray[i].interpolation:
-				SMSCamPoint.InterpolationTypes.Linear:
-					curPos = interpolateLinear(fromPos, toPos, lerpPow)
-					curTarget = interpolateLinear(fromTarget, toTarget, lerpPow)
-				SMSCamPoint.InterpolationTypes.Cubic:
-					curPos = interpolateSmooth(fromPos, toPos, lerpPow)
-					curTarget = interpolateSmooth(fromTarget, toTarget, lerpPow)
-				_:
-					print("uh oh")
-					push_error("Invalid interpolation type!")
-			
-			GDInterface.writeCamData(curPos, curTarget)
-			
-			if lerpPow >= 1.0:
-				break
-
-
-func interpolateLinear(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
-	return from.lerp(to, lerpPow)
-
-
-func interpolateCubic(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:	# TODO: actually figure this out lol
-	return from.cubic_interpolate(to, to * 1.5, to * 0.75, lerpPow)
-
-
-func interpolateSmooth(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
-	lerpPow = smoothstep(0, 1, lerpPow)
-	return from.lerp(to, lerpPow)
-
-
-var lastState := false	# TODO: make a real state machine... sigh
-func previewPoint():
-	
-	if lastState == true and previewMode == false:
-		GDInterface.restoreCameraCode()
-		lastState = false
-	
-	if not previewMode:
-		return
-	
-	lastState = true
-	
-	var curPoint: int = %CurPointField.value
-	curPoint -= 1
-	
-	GDInterface.nopOutCameraCode()
-	GDInterface.writeCamData(pointArray[curPoint].position, pointArray[curPoint].target)
-
-
-func resetPoints():
-	pointArray.clear()
-	pointNum = 0
-	addPoint()
-	updatePointEdit(0)
-	applyPointChanges()
-
-
-## Updates all the GUI values to the selected point
-func updatePointEdit(point: int):
+## Updates all the GUI values to the selected keyframe
+func updatePointEdit(keyframe: CamKeyframe):
 	
 	lockApply = true
 	
-	point -= 1
+	%Pos.find_child("X").find_child("Input").value = keyframe.position.x
+	%Pos.find_child("Y").find_child("Input").value = keyframe.position.y
+	%Pos.find_child("Z").find_child("Input").value = keyframe.position.z
 	
-	%Pos.find_child("X").find_child("Input").value = pointArray[point].position.x
-	%Pos.find_child("Y").find_child("Input").value = pointArray[point].position.y
-	%Pos.find_child("Z").find_child("Input").value = pointArray[point].position.z
-	
-	%Target.find_child("X").find_child("Input").value = pointArray[point].target.x
-	%Target.find_child("Y").find_child("Input").value = pointArray[point].target.y
-	%Target.find_child("Z").find_child("Input").value = pointArray[point].target.z
+	%Target.find_child("X").find_child("Input").value = keyframe.target.x
+	%Target.find_child("Y").find_child("Input").value = keyframe.target.y
+	%Target.find_child("Z").find_child("Input").value = keyframe.target.z
 	
 	lockApply = false
 	
-	%TravelTimeInput.value = pointArray[point].transitionTime
+	%TravelTimeInput.value = keyframe.transitionTime
 	
-	%InterpolationOption.selected = pointArray[point].interpolation
+	%InterpolationOption.selected = keyframe.interpolation
 
 
 ## Sets backend values from what's been entered in the GUI
@@ -181,17 +60,6 @@ func applyPointChanges():
 	pointArray[point].interpolation = %InterpolationOption.selected
 
 
-func grabFromCam():
-	
-	%Pos.find_child("X").find_child("Input").value = GDInterface.getCamPosX()
-	%Pos.find_child("Y").find_child("Input").value = GDInterface.getCamPosY()
-	%Pos.find_child("Z").find_child("Input").value = GDInterface.getCamPosZ()
-	
-	%Target.find_child("X").find_child("Input").value = GDInterface.getCamTargetX()
-	%Target.find_child("Y").find_child("Input").value = GDInterface.getCamTargetY()
-	%Target.find_child("Z").find_child("Input").value = GDInterface.getCamTargetZ()
-	
-	applyPointChanges()
 
 
 func addPoint():
@@ -286,7 +154,7 @@ func copyFromCamPos() -> void:
 ### SIGNALS ###
 
 func _on_replay_points_pressed() -> void:
-	replayPoints()
+	pass
 
 
 func _on_cur_point_field_value_changed(value: float) -> void:
@@ -294,7 +162,7 @@ func _on_cur_point_field_value_changed(value: float) -> void:
 
 
 func _on_grab_from_cam_pressed() -> void:
-	grabFromCam()
+	_updateCurrentKeyframe.emit(Vector3.ONE, Vector3.ONE)
 
 
 func _on_add_point_pressed() -> void:

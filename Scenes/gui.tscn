@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b0t1cqynrh1xk"]
 
-[ext_resource type="Script" uid="uid://dowdp54ogwq5b" path="res://Scripts/GUI/gui.gd" id="1_80edf"]
-[ext_resource type="Script" path="res://PyScripts/GDInterface.py" id="2_6lon5"]
+[ext_resource type="Script" uid="uid://orw6sv2lcwjb" path="res://Scripts/GUI/gui_new.gd" id="1_3w84o"]
 [ext_resource type="Texture2D" uid="uid://bycf4itydc703" path="res://Resources/Images/target_icon.png" id="2_wi63h"]
 [ext_resource type="Texture2D" uid="uid://2afrsxxu7trg" path="res://Resources/Images/camera_icon.png" id="3_d1lea"]
 [ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://Scenes/about.tscn" id="3_q8o8l"]
@@ -21,7 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_80edf")
+script = ExtResource("1_3w84o")
 
 [node name="VSplitContainer" type="VSplitContainer" parent="." unique_id=96502764]
 layout_mode = 1
@@ -54,15 +53,18 @@ horizontal_alignment = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-max_value = 0.0
+min_value = 1.0
+max_value = 1.0
+value = 1.0
 rounded = true
-editable = false
 
-[node name="AddPoint" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1966676548]
+[node name="AddPointButton" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1966676548]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Add Point"
 
-[node name="DuplicatePoint" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1488294071]
+[node name="DuplicatePointButton" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1488294071]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Duplicate Point"
 
@@ -259,7 +261,8 @@ toggle_mode = true
 icon = ExtResource("3_d1lea")
 icon_alignment = 1
 
-[node name="GrabFromCam" type="Button" parent="VSplitContainer/PointEdit" unique_id=500420642]
+[node name="CopyFromGameButton" type="Button" parent="VSplitContainer/PointEdit" unique_id=500420642]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Copy ALL From Game"
 
@@ -303,6 +306,7 @@ size_flags_horizontal = 4
 text = "Preview Point:"
 
 [node name="DeleteButton" type="Button" parent="VSplitContainer/HBoxContainer" unique_id=1384828627]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Delete Point"
@@ -312,7 +316,8 @@ icon_alignment = 2
 [node name="Control" type="Control" parent="VSplitContainer" unique_id=1580373194]
 layout_mode = 2
 
-[node name="ReplayPoints" type="Button" parent="VSplitContainer" unique_id=901089833]
+[node name="ReplayPointsButton" type="Button" parent="VSplitContainer" unique_id=901089833]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Replay Points!"
 
@@ -322,17 +327,6 @@ layout_mode = 2
 [node name="RestoreCamera" type="Button" parent="VSplitContainer" unique_id=458215804]
 layout_mode = 2
 text = "Restore Camera"
-
-[node name="GDInterface" type="Node" parent="." unique_id=82272569]
-unique_name_in_owner = true
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
-script = ExtResource("2_6lon5")
 
 [node name="About" parent="." unique_id=1166068054 instance=ExtResource("3_q8o8l")]
 unique_name_in_owner = true
@@ -373,20 +367,20 @@ toggle_mode = true
 icon = ExtResource("7_chfyp")
 
 [connection signal="value_changed" from="VSplitContainer/PointEdit/CurPoint/CurPointField" to="." method="_on_cur_point_field_value_changed"]
-[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/AddPoint" to="." method="_on_add_point_pressed"]
-[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/DuplicatePoint" to="." method="_on_duplicate_point_pressed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/AddPointButton" to="." method="_on_add_point_pressed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/DuplicatePointButton" to="." method="_on_duplicate_point_pressed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/X/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Y/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Z/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/X/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Y/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/TargetEdit/Target/Z/Input" to="." method="_on_any_point_field_changed"]
-[connection signal="pressed" from="VSplitContainer/PointEdit/GrabFromCam" to="." method="_on_grab_from_cam_pressed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/CopyFromGameButton" to="." method="_on_grab_from_cam_pressed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/TimeEdit/TravelTimeInput" to="." method="_on_any_point_field_changed"]
 [connection signal="item_selected" from="VSplitContainer/PointEdit/TimeEdit/InterpolationOption" to="." method="_on_interpolation_option_item_selected"]
 [connection signal="pressed" from="VSplitContainer/HBoxContainer/PreviewPoint" to="." method="_on_preview_point_pressed"]
 [connection signal="pressed" from="VSplitContainer/HBoxContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
-[connection signal="pressed" from="VSplitContainer/ReplayPoints" to="." method="_on_replay_points_pressed"]
+[connection signal="pressed" from="VSplitContainer/ReplayPointsButton" to="." method="_on_replay_points_pressed"]
 [connection signal="pressed" from="VSplitContainer/RestoreCamera" to="." method="_on_restore_camera_pressed"]
 [connection signal="file_selected" from="OpenFile" to="." method="_on_open_file_file_selected"]
 [connection signal="file_selected" from="SaveAsFile" to="." method="_on_save_file_file_selected"]

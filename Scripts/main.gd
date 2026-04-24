@@ -1,0 +1,217 @@
+extends Node3D
+
+### Public Vars ###
+
+
+### Private Vars ##
+
+var _SMSCamera: SMSCameraInterface
+var GDInterface: Node
+
+### Override Funcs ###
+
+func _ready() -> void:
+	_connectGUISignals()
+	_SMSCamera = %SMSCameraInterface
+	_addPoint()
+
+func _process(_delta: float) -> void:
+	_control()
+
+
+### Private Funcs ###
+
+func _connectGUISignals() -> void:
+	%GUI/%AddPointButton.connect("pressed", _on_add_point_pressed)
+	%GUI/%DuplicatePointButton.connect("pressed", _on_duplicate_point_pressed)
+	%GUI/%CurPointField.connect("value_changed", _on_cur_keyframe_field_value_changed)
+	%GUI/%ReplayPointsButton.connect("pressed", _on_replay_points_pressed)
+	%GUI/%DeleteButton.connect("pressed", _on_delete_point_pressed)
+	%GUI/%Pos.find_child("X").find_child("Input").connect("value_changed", _on_gui_position_changed)
+	%GUI/%Pos.find_child("Y").find_child("Input").connect("value_changed", _on_gui_position_changed)
+	%GUI/%Pos.find_child("Z").find_child("Input").connect("value_changed", _on_gui_position_changed)
+	%GUI/%Target.find_child("X").find_child("Input").connect("value_changed", _on_gui_target_changed)
+	%GUI/%Target.find_child("Y").find_child("Input").connect("value_changed", _on_gui_target_changed)
+	%GUI/%Target.find_child("Z").find_child("Input").connect("value_changed", _on_gui_target_changed)
+	%GUI/%CopyFromGameButton.connect("pressed", _on_copy_all_pressed)
+	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
+
+func _control() -> void:
+	
+	var movementVector := Vector3.ZERO
+	
+	if Input.is_action_pressed("move_forward"):
+		movementVector.x += 1
+	
+	if Input.is_action_pressed("move_backward"):
+		movementVector.x -= 1
+	
+	if Input.is_action_pressed("move_left"):
+		movementVector.z -= 1
+	
+	if Input.is_action_pressed("move_right"):
+		movementVector.z += 1
+	
+	if Input.is_action_pressed("move_up"):
+		movementVector.y += 1
+	elif Input.is_action_just_pressed("move_up"):	# Scrollwheel
+		movementVector.y += 2
+	
+	if Input.is_action_pressed("move_down"):
+		movementVector.y -= 1
+	elif Input.is_action_just_pressed("move_down"):	# Scrollwheel
+		movementVector.y -= 2
+	
+	if Input.is_action_pressed("move_slow"):
+		movementVector *= 2.0
+	
+	movementVector /= 4.0
+	
+	%Camera3D.position += movementVector
+
+
+func _addPoint() -> void:
+	var camKeyFrame := CamKeyframe.new()
+	%CamKeyframes.add_child(camKeyFrame)
+	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
+	camKeyFrame.connect("keyframeChanged", _on_keyframe_changed)
+	#camKeyFrame.connect("positionChanged", _on_keyframe_dragged)
+	camKeyFrame.isSelected = true
+
+
+func _getSelectedkeyframe() -> CamKeyframe:
+	
+	var returnKeyframe: CamKeyframe
+	
+	for keyframe: CamKeyframe in %CamKeyframes.get_children():
+		if keyframe.isSelected:
+			returnKeyframe = keyframe
+			break
+	
+	_SMSCamera.selectedKeyframe = returnKeyframe	# Kinda messy but it works
+	return returnKeyframe
+
+### Gets the position of all CamKeyframes in %CamKeyframes, divides them by
+### pointDisplayDivScaler, then puts them in an Array to be returned
+#func _getPointPositions() -> Array[Vector3]:
+	#
+	#var posArray: Array[Vector3]
+	#
+	#for keyframe: CamKeyframe in %CamKeyframes.get_children():
+		#posArray.append(keyframe.position / _unitRatioDivide)
+	#
+	#return posArray
+#
+#
+### Gets the target position of all CamKeyframes in %CamKeyframes, divides them by
+### pointDisplayDivScaler, then puts them in an Array to be returned
+#func _getPointTargets() -> Array[Vector3]:
+	#
+	#var targetArray: Array[Vector3]
+	#
+	#for keyframe: CamKeyframe in %CamKeyframes.get_children():
+		#targetArray.append(keyframe.targetPos / _unitRatioDivide)
+	#
+	#return targetArray
+
+
+#func _placePoints(posArray: Array[Vector3], targetArray: Array[Vector3]) -> void:
+	#
+	#for i in len(posArray):
+		#var camKeyFrame := CamKeyframe.new()
+		#camKeyFrame.position = posArray[i]
+		#camKeyFrame.targetPos = targetArray[i]
+		#%Path3D.curve.add_point(posArray[i])
+
+
+## Sets the viewport camera above the xy center point of all CamKeyframes
+func _setCamera(posArray: Array[Vector3]) -> void:
+	
+	var avgXZPos := Vector2.ZERO
+	var highestY := posArray[0].y
+	
+	for pointPos in posArray:
+		avgXZPos.x += pointPos.x
+		avgXZPos.y += pointPos.z
+		if pointPos.y > highestY:
+			highestY = pointPos.y
+	
+	avgXZPos /= posArray.size()
+	
+	%Camera3D.position.x = avgXZPos.x
+	%Camera3D.position.y = highestY + 20
+	%Camera3D.position.z = avgXZPos.y
+
+
+### Signal Receive Funcs ###
+
+func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
+	%GUI.keyframe = keyframe
+	print("position: ", keyframe.position, "\n target: ", keyframe._targetPos, "\nsmsPosition: ", keyframe.smsPosition, "\nsmsTarget: ", keyframe.smsTarget)
+	print("\n--------------\n")
+
+
+func _on_add_point_pressed() -> void:
+	_addPoint()
+
+
+func _on_delete_point_pressed() -> void:
+	
+	var keyframesLeft := %CamKeyframes.get_child_count()
+	
+	if keyframesLeft == 1:
+		return	# TODO: make this reset the keyframe rather than just do nothing
+	
+	var keyframe := _getSelectedkeyframe()
+	keyframe.delete()
+	
+	%GUI.maxKeyframes = keyframesLeft
+	
+	if keyframesLeft > 0:
+		var newSelectedKeyframe: CamKeyframe = %CamKeyframes.get_child(0)
+		newSelectedKeyframe.isSelected = true
+
+
+func _on_duplicate_point_pressed() -> void:	# TODO: make this actually work
+	
+	#var kfToCopy := _getSelectedkeyframe()
+	#_addPoint()
+	#
+	#var kfToPaste := _getSelectedkeyframe()
+	#
+	#kfToPaste = kfToCopy
+	
+	print("duplicate")
+
+
+func _on_cur_keyframe_field_value_changed(value: float) -> void:
+	var idx: int = value - 1
+	var keyframe: CamKeyframe = %CamKeyframes.get_child(idx)
+	keyframe.isSelected = true
+	%GUI.keyframe = keyframe
+
+
+func _on_replay_points_pressed() -> void:
+	print("replay")
+
+
+func _on_gui_position_changed(_value: float) -> void:
+	var keyframe := _getSelectedkeyframe()
+	keyframe.smsPosition = %GUI.posField
+
+
+func _on_gui_target_changed(_value: float) -> void:
+	var keyframe := _getSelectedkeyframe()
+	keyframe.smsTarget = %GUI.targetField
+	%Camera3D.position = keyframe.position
+
+
+func _on_copy_all_pressed() -> void:
+	#print(_SMSCamera.position)
+	#print(_SMSCamera.target)
+	%GUI.posField = _SMSCamera.position
+	%GUI.targetField = _SMSCamera.target
+
+
+func _on_preview_pressed() -> void:
+	_SMSCamera.previewMode = %GUI/%PreviewPoint.button_pressed
