@@ -21,6 +21,10 @@ config/icon="uid://2afrsxxu7trg"
 run/size/viewport_height=540
 run/size/viewport_width=960
 
+[autoload]
+
+Globals="*uid://cbg1n0wx2wi4q"
+
 [display]
 
 window/size/viewport_width=960

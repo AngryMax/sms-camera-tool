@@ -9,12 +9,12 @@ var keyframe: CamKeyframe:
 	set(value):
 		keyframe = value
 		%CurPointField.set_value_no_signal(value.get_index() + 1)
-		%Pos/X/Input.set_value_no_signal(value.smsPosition.x)
-		%Pos/Y/Input.set_value_no_signal(value.smsPosition.y)
-		%Pos/Z/Input.set_value_no_signal(value.smsPosition.z)
-		%Target/X/Input.set_value_no_signal(value.smsTarget.x)
-		%Target/Y/Input.set_value_no_signal(value.smsTarget.y)
-		%Target/Z/Input.set_value_no_signal(value.smsTarget.z)
+		%Pos/X/Input.set_value_no_signal(value.cameraPoint.smsPosition.x)
+		%Pos/Y/Input.set_value_no_signal(value.cameraPoint.smsPosition.y)
+		%Pos/Z/Input.set_value_no_signal(value.cameraPoint.smsPosition.z)
+		%Target/X/Input.set_value_no_signal(value.targetPoint.smsPosition.x)
+		%Target/Y/Input.set_value_no_signal(value.targetPoint.smsPosition.y)
+		%Target/Z/Input.set_value_no_signal(value.targetPoint.smsPosition.z)
 		%TravelTimeInput.set_value_no_signal(value.transitionTime)
 
 var posField: Vector3:

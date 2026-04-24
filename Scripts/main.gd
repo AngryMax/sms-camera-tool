@@ -72,6 +72,8 @@ func _addPoint() -> void:
 	%CamKeyframes.add_child(camKeyFrame)
 	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
 	camKeyFrame.connect("keyframeChanged", _on_keyframe_changed)
+	camKeyFrame.cameraPoint.connect("keyframeChanged", _on_keyframe_changed)
+	camKeyFrame.targetPoint.connect("keyframeChanged", _on_keyframe_changed)
 	#camKeyFrame.connect("positionChanged", _on_keyframe_dragged)
 	camKeyFrame.isSelected = true
 
@@ -192,13 +194,13 @@ func _on_replay_points_pressed() -> void:
 
 func _on_gui_position_changed(_value: float) -> void:
 	var keyframe := _getSelectedkeyframe()
-	keyframe.smsPosition = %GUI.posField
+	keyframe.cameraPoint.smsPosition = %GUI.posField
 
 
 func _on_gui_target_changed(_value: float) -> void:
 	var keyframe := _getSelectedkeyframe()
-	keyframe.smsTarget = %GUI.targetField
-	%Camera3D.position = keyframe.position
+	keyframe.targetPoint.smsPosition = %GUI.targetField
+	%Camera3D.position = keyframe.cameraPoint.position
 
 
 func _on_copy_all_pressed() -> void:

@@ -67,8 +67,8 @@ func _replayKeyframes(delta: float):
 	
 	var curPos: Vector3
 	var curTarget: Vector3
-	curPos = _fromKeyframe.smsPosition.lerp(_toKeyframe.smsPosition, _lerpPow)
-	curTarget = _fromKeyframe.smsTarget.lerp(_toKeyframe.smsTarget, _lerpPow)
+	curPos = _fromKeyframe.cameraPoint.smsPosition.lerp(_toKeyframe.cameraPoint.smsPosition, _lerpPow)
+	curTarget = _fromKeyframe.targetPoint.smsPosition.lerp(_toKeyframe.targetPoint.smsPosition, _lerpPow)
 	
 	GDInterface.writeCamData(curPos, curTarget)
 	
@@ -118,7 +118,7 @@ func _previewKeyframe(keyframe: CamKeyframe):
 	_lastState = true
 	
 	GDInterface.nopOutCameraCode()
-	GDInterface.writeCamData(keyframe.smsPosition, keyframe.smsTarget)
+	GDInterface.writeCamData(keyframe.cameraPoint.smsPosition, keyframe.targetPoint.smsPosition)
 
 
 ## Get's Sunshine's camera position
