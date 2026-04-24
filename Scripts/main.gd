@@ -61,8 +61,10 @@ func _control() -> void:
 	
 	var relativeDir := Vector3(horzInputDir.x, vertInputDir, horzInputDir.y).rotated(Vector3.UP, %Camera3D.rotation.y)
 	
-	if Input.is_action_pressed("move_slow"):
-		relativeDir /= 2
+	relativeDir /= 2
+	
+	if Input.is_action_pressed("move_fast"):
+		relativeDir *= 2
 	
 	$Camera3D.position += relativeDir
 

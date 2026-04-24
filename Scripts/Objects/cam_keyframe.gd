@@ -9,6 +9,7 @@ class_name CamKeyframe
 var isSelected: bool:
 	set(value):
 		targetPoint.visible = value
+		_toggleArrowVisibility(value)
 		if value == true:
 			_deactivateOtherKeyframes()
 		isSelected = value
@@ -49,6 +50,15 @@ func _ready() -> void:
 	cameraPoint.body.connect("input_event", _signalPassthrough)
 	cameraPoint.connect("pointChanged", _pointChanged)
 	targetPoint.connect("pointChanged", _pointChanged)
+
+
+func _toggleArrowVisibility(toggle: bool) -> void:
+	cameraPoint.dragArrowX.visible = toggle
+	cameraPoint.dragArrowY.visible = toggle
+	cameraPoint.dragArrowZ.visible = toggle
+	targetPoint.dragArrowX.visible = toggle
+	targetPoint.dragArrowY.visible = toggle
+	targetPoint.dragArrowZ.visible = toggle
 
 
 ### Private Funcs ###

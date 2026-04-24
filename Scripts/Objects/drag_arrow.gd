@@ -3,6 +3,7 @@ class_name DragArrow
 
 enum Axis {X, Y, Z}
 var axis: Axis
+var color: Color
 
 var _sprite0: Sprite3D
 var _sprite90: Sprite3D
@@ -45,15 +46,16 @@ func _makeSprites() -> void:
 		sprite.texture = preload("res://Resources/Images/3d view sprites/grabarrow.png")
 		sprite.scale = Vector3(2, 2, 2)	
 		sprite.rotation_degrees = Vector3(0, rotateBy, 0)
-		sprite.modulate = Color(1.0, 0.0, 0.0, 1.0)
 		
 		match (axis):
 			Axis.X:
-				sprite.modulate = Color(1.0, 0.0, 0.0, 1.0)
+				color = Color(1.0, 0.0, 0.0, 1.0)
 			Axis.Y:
-				sprite.modulate = Color(0.0, 1.0, 0.0, 1.0)
+				color = Color(0.0, 1.0, 0.0, 1.0)
 			Axis.Z:
-				sprite.modulate = Color(0.0, 0.0, 1.0, 1.0)
+				color = Color(0.0, 0.0, 1.0, 1.0)
+		
+		sprite.modulate = color
 		
 		# Sets _sprit0 and _sprite90 to the newly created sprite
 		set("_sprite" + str(rotateBy), sprite)

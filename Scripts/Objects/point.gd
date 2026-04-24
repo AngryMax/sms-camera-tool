@@ -20,6 +20,9 @@ var body: StaticBody3D
 signal pointChanged(point: Point)	## Emitted to let the GUI know it needs to update
 var pointTex := preload("res://Resources/Images/3d view sprites/point3.png")
 var color := Color(1.0, 1.0, 1.0, 1.0)
+var dragArrowX: DragArrow
+var dragArrowY: DragArrow
+var dragArrowZ: DragArrow
 
 
 func _ready() -> void:
@@ -40,13 +43,13 @@ func _ready() -> void:
 	_sprite.modulate = color
 	body.add_child(_sprite)
 	
-	var dragArrowX := DragArrow.new()
+	dragArrowX = DragArrow.new()
 	dragArrowX.axis = DragArrow.Axis.X
 	add_child(dragArrowX)
-	var dragArrowY := DragArrow.new()
+	dragArrowY = DragArrow.new()
 	dragArrowY.axis = DragArrow.Axis.Y
 	add_child(dragArrowY)
-	var dragArrowZ := DragArrow.new()
+	dragArrowZ = DragArrow.new()
 	dragArrowZ.axis = DragArrow.Axis.Z
 	add_child(dragArrowZ)
 	
@@ -104,6 +107,9 @@ var _isArrowBeingDragged := false
 var _clickedOnArrow := false
 var _lastHoveredArrow := HoveredDragArrow.NONE
 func _movePointByDragArrows():
+	
+	if not visible:
+		return
 	
 	if not _isArrowBeingDragged:
 		
@@ -174,7 +180,6 @@ func _on_mouse_exited_y() -> void:
 	if _hoveredDragArrow == HoveredDragArrow.Y:
 		_hoveredDragArrow = HoveredDragArrow.NONE
 		_clickedOnArrow = false
-		
 	
 func _on_mouse_entered_z() -> void:
 	_hoveredDragArrow = HoveredDragArrow.Z
