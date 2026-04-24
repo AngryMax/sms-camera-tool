@@ -74,7 +74,6 @@ func _addPoint() -> void:
 	camKeyFrame.connect("keyframeChanged", _on_keyframe_changed)
 	camKeyFrame.cameraPoint.connect("keyframeChanged", _on_keyframe_changed)
 	camKeyFrame.targetPoint.connect("keyframeChanged", _on_keyframe_changed)
-	#camKeyFrame.connect("positionChanged", _on_keyframe_dragged)
 	camKeyFrame.isSelected = true
 
 
@@ -89,38 +88,6 @@ func _getSelectedkeyframe() -> CamKeyframe:
 	
 	_SMSCamera.selectedKeyframe = returnKeyframe	# Kinda messy but it works
 	return returnKeyframe
-
-### Gets the position of all CamKeyframes in %CamKeyframes, divides them by
-### pointDisplayDivScaler, then puts them in an Array to be returned
-#func _getPointPositions() -> Array[Vector3]:
-	#
-	#var posArray: Array[Vector3]
-	#
-	#for keyframe: CamKeyframe in %CamKeyframes.get_children():
-		#posArray.append(keyframe.position / _unitRatioDivide)
-	#
-	#return posArray
-#
-#
-### Gets the target position of all CamKeyframes in %CamKeyframes, divides them by
-### pointDisplayDivScaler, then puts them in an Array to be returned
-#func _getPointTargets() -> Array[Vector3]:
-	#
-	#var targetArray: Array[Vector3]
-	#
-	#for keyframe: CamKeyframe in %CamKeyframes.get_children():
-		#targetArray.append(keyframe.targetPos / _unitRatioDivide)
-	#
-	#return targetArray
-
-
-#func _placePoints(posArray: Array[Vector3], targetArray: Array[Vector3]) -> void:
-	#
-	#for i in len(posArray):
-		#var camKeyFrame := CamKeyframe.new()
-		#camKeyFrame.position = posArray[i]
-		#camKeyFrame.targetPos = targetArray[i]
-		#%Path3D.curve.add_point(posArray[i])
 
 
 ## Sets the viewport camera above the xy center point of all CamKeyframes
@@ -204,8 +171,6 @@ func _on_gui_target_changed(_value: float) -> void:
 
 
 func _on_copy_all_pressed() -> void:
-	#print(_SMSCamera.position)
-	#print(_SMSCamera.target)
 	%GUI.posField = _SMSCamera.position
 	%GUI.targetField = _SMSCamera.target
 
