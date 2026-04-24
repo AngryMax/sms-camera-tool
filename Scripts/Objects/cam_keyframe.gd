@@ -85,6 +85,7 @@ func _ready() -> void:
 	body.connect("mouse_entered", _on_mouse_entered)
 	body.connect("mouse_exited", _on_mouse_exited)
 
+
 func _process(_delta: float) -> void:
 	_movePointByMouse()
 	
@@ -117,8 +118,8 @@ func _movePointByMouse() -> void:
 	var from = camera.project_ray_origin(mousePos)
 	var magnitude = from.distance_to(position)
 	var to = from + camera.project_ray_normal(mousePos) * magnitude
-	position.x = to.x
-	position.z = to.z
+	smsPosition.x = to.x * UNIT_DIVIDE_RATIO
+	smsPosition.z = to.z * UNIT_DIVIDE_RATIO
 	keyframeChanged.emit(self)
 
 	# TODO: Add translate arrows instead of dragging the point around for the eventual move to true 3D
