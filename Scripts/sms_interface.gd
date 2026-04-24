@@ -78,6 +78,10 @@ func _replayKeyframes(delta: float):
 	
 	_playbackStartTimer += delta
 	
+	if _toKeyframe == _keyframes.back() and _lerpPow >= 1.0:
+		playbackMode = false
+		return
+	
 	if _lerpPow >= 1.0:
 		_keyframeIdx += 1
 		_lerpPow = 0.0
