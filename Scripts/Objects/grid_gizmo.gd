@@ -14,7 +14,7 @@ func _init() -> void:
 	
 	
 	_makeLines(10, Color(1.0, 1.0, 1.0, 0.5))
-	_makeLines(2, Color(1.0, 1.0, 1.0, 0.25), 10)
+	_makeLines(2, Color(1.0, 1.0, 1.0, 0.25))
 
 	surface_end()
 	_makeMeshInstance()
@@ -24,7 +24,7 @@ func _init() -> void:
 ## [b]color[/b] is of course the color of the line [br][br]
 ## [b]skipLine[/b] specifies if any lines should be skipped, where every skipLine line is skipped. [br][br]
 ## [b]length[/b] is how far out the line will draw. Since each line is technically two lines that start at 0 of their perpindicular axis, length is actually the half the total apparent length. [br][br]
-func _makeLines(lineSeparation: int, color: Color, length := 10000, lineNum := 1000, skipLine := length + 1,):
+func _makeLines(lineSeparation: int, color: Color, length := 10000, lineNum := 1000, skipLine := 7777777):
 	
 	surface_set_color(color)
 	for i in lineNum:
