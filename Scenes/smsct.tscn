@@ -49,10 +49,11 @@ grow_horizontal = 0
 
 [node name="Toolbar" parent="." unique_id=1592379772 instance=ExtResource("4_r6bid")]
 
-[node name="SMSCameraInterface" type="Node" parent="." unique_id=399060081 node_paths=PackedStringArray("GDInterface")]
+[node name="SMSCameraInterface" type="Node" parent="." unique_id=399060081 node_paths=PackedStringArray("GDInterface", "camKeyframesNode")]
 unique_name_in_owner = true
 script = ExtResource("5_7m5yr")
 GDInterface = NodePath("../GDInterface")
+camKeyframesNode = NodePath("../CamKeyframes")
 
 [node name="GDInterface" type="Node" parent="." unique_id=1955610450]
 unique_name_in_owner = true

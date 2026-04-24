@@ -25,7 +25,7 @@ func _connectGUISignals() -> void:
 	%GUI/%AddPointButton.connect("pressed", _on_add_point_pressed)
 	%GUI/%DuplicatePointButton.connect("pressed", _on_duplicate_point_pressed)
 	%GUI/%CurPointField.connect("value_changed", _on_cur_keyframe_field_value_changed)
-	%GUI/%ReplayPointsButton.connect("pressed", _on_replay_points_pressed)
+	%GUI/%PlayBackKeyframes.connect("pressed", _on_replay_points_pressed)
 	%GUI/%DeleteButton.connect("pressed", _on_delete_point_pressed)
 	%GUI/%Pos.find_child("X").find_child("Input").connect("value_changed", _on_gui_position_changed)
 	%GUI/%Pos.find_child("Y").find_child("Input").connect("value_changed", _on_gui_position_changed)
@@ -35,6 +35,7 @@ func _connectGUISignals() -> void:
 	%GUI/%Target.find_child("Z").find_child("Input").connect("value_changed", _on_gui_target_changed)
 	%GUI/%CopyFromGameButton.connect("pressed", _on_copy_all_pressed)
 	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
+	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
 
 func _control() -> void:
 	
@@ -215,3 +216,7 @@ func _on_copy_all_pressed() -> void:
 
 func _on_preview_pressed() -> void:
 	_SMSCamera.previewMode = %GUI/%PreviewPoint.button_pressed
+
+
+func _on_play_keyframes_pressed() -> void:
+	_SMSCamera.playbackMode = true

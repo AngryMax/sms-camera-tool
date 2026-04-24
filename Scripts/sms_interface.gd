@@ -6,9 +6,17 @@ extends Node
 class_name SMSCameraInterface
 
 @export var GDInterface: Node
+@export var camKeyframesNode: Node3D
 
 var selectedKeyframe: CamKeyframe
-var previewMode := false
+
+var previewMode := false		# TODO: make previewMode and playbackMode into a state machine
+var playbackMode := false:
+	set(value):
+		playbackMode = value
+		if value == true:
+			_preparingPlayback = true
+
 var position: Vector3:
 	get:
 		return _getCameraPosition()
@@ -16,6 +24,22 @@ var target: Vector3:
 	get:
 		return _getCameraTargetPosition()
 
+var _keyframes: Array[CamKeyframe]
+var _preparingPlayback := true	## Used in _replayKeyframes to track state. This will get refactored as an Enter() func in the state machine update
+var _lerpPow := 0.0:				## lerpPow is my personal convention for what to call t in the lerp() equation.
+	set(value):
+		_lerpPow = clampf(value, 0.0, 1.0)	# Perhaps unnecessary, since the way I'm coding this it should basically be auto-clamped
+var _fromKeyframe: CamKeyframe	## The keyframe we're lerping from. Set through _keyframeIdx's setter
+var _toKeyframe: CamKeyframe	## The keyframe we're lerping to. Set through _keyframeIdx's setter
+var _keyframeIdx := 0:
+	set(value):
+		value = clampi(value, 1, _keyframes.size() - 1)
+		if _toKeyframe == null:
+			_fromKeyframe = _keyframes[value]
+		else: _fromKeyframe = _toKeyframe
+		_toKeyframe = _keyframes[value]
+		_keyframeIdx = value
+var _playbackStartTimer := 0.0
 
 ### Override Funcs ##
 
@@ -24,81 +48,65 @@ func _ready() -> void:
 	GDInterface.Hook()
 
 
-func _process(_delta: float) -> void:
-	previewKeyframe(selectedKeyframe)
+func _process(delta: float) -> void:
+	_previewKeyframe(selectedKeyframe)
+	_replayKeyframes(delta)
 
-### Public Funcs ###
 
-func replayPoints(keyframes: Array[CamKeyframe]):
+### Private Funcs ###
+
+func _replayKeyframes(delta: float):
 	
-	#%PreviewPoint.button_pressed = false	!!!
-	#%PreviewPoint.emit_signal("pressed")	!!!
+	if not playbackMode:
+		return
 	
-	var keyNum = keyframes.size()
+	if _preparingPlayback:
+		_preparePlayback()
+		return
 	
+	
+	var curPos: Vector3
+	var curTarget: Vector3
+	curPos = _fromKeyframe.smsPosition.lerp(_toKeyframe.smsPosition, _lerpPow)
+	curTarget = _fromKeyframe.smsTarget.lerp(_toKeyframe.smsTarget, _lerpPow)
+	
+	GDInterface.writeCamData(curPos, curTarget)
+	
+	
+	const WAIT_AT_START_TIMER = 0.5
+	if _playbackStartTimer > WAIT_AT_START_TIMER:	# Hold 0.5 seconds on the first keyframe before moving
+		_lerpPow += delta	# It's kinda weird but we want to add on delta AFTER doing our lerping
+	
+	_playbackStartTimer += delta
+	
+	if _lerpPow >= 1.0:
+		_keyframeIdx += 1
+		_lerpPow = 0.0
+		return
+
+
+## Sets the _keyframes array + other playback prep work.
+func _preparePlayback() -> void:
+	
+	_keyframes.clear()
+	
+	# Set our keyframe array
+	for i in camKeyframesNode.get_child_count():
+		_keyframes.append(camKeyframesNode.get_child(i))
+	
+	# Misc prep work
 	GDInterface.nopOutCameraCode()
-	GDInterface.writeCamData(keyframes.front().position, keyframes.front().target)
-	await get_tree().create_timer(0.5).timeout
-	print(keyframes.size())
-	
-	for i in keyNum:
-		
-		var fromPos: Vector3 = keyframes[i].position
-		var curPos := fromPos
-		var toPos: Vector3
-		var fromTarget: Vector3 = keyframes[i].targetPosition
-		var curTarget := fromTarget
-		var toTarget: Vector3
-		
-		if i == keyNum - 1:		# If we're on the last point
-			toPos = keyframes.back().position
-			toTarget = keyframes.back().targetPosition
-		else:
-			toPos = keyframes[i + 1].targetPosition
-			toTarget = keyframes[i + 1].target
-		
-		var startTime: float = Time.get_ticks_msec() / 1000.0
-		
-		print("Processing point ", i)
-		print("Currently at ", curPos)
-		print("Currently looking at ", curTarget)
-		print("Going to ", toPos)
-		print("Going to look at ", toTarget)
-		
-		var lastTime := 0.0
-		while true:
-			
-			var curTime: float = Time.get_ticks_msec() / 1000.0
-			
-			if curTime - lastTime <= 1.0 / 60.0:	# Bootleg 60 ticks per second system
-				continue
-			
-			lastTime = curTime
-			
-			var lerpPow: = curTime - startTime
-			lerpPow /= keyframes[i].transitionTime
-			if lerpPow >= 1.0:
-				lerpPow = 1.0
-			
-			match keyframes[i].interpolation:
-				CamKeyframe.InterpolationTypes.Linear:
-					curPos = _interpolateLinear(fromPos, toPos, lerpPow)
-					curTarget = _interpolateLinear(fromTarget, toTarget, lerpPow)
-				CamKeyframe.InterpolationTypes.Cubic:
-					curPos = _interpolateSmooth(fromPos, toPos, lerpPow)
-					curTarget = _interpolateSmooth(fromTarget, toTarget, lerpPow)
-				_:
-					print("uh oh")
-					push_error("Invalid interpolation type!")
-			
-			GDInterface.writeCamData(curPos, curTarget)
-			
-			if lerpPow >= 1.0:
-				break
+	_preparingPlayback = false
+	_lerpPow = 0
+	_toKeyframe = null
+	_fromKeyframe = null
+	_keyframeIdx = 1
+	previewMode = false
+	_playbackStartTimer = 0.0
 
 
 var _lastState := false
-func previewKeyframe(keyframe: CamKeyframe):
+func _previewKeyframe(keyframe: CamKeyframe):
 	
 	if _lastState == true and previewMode == false:
 		GDInterface.restoreCameraCode()
@@ -112,8 +120,6 @@ func previewKeyframe(keyframe: CamKeyframe):
 	GDInterface.nopOutCameraCode()
 	GDInterface.writeCamData(keyframe.smsPosition, keyframe.smsTarget)
 
-
-### Private Funcs ###
 
 ## Get's Sunshine's camera position
 func _getCameraPosition() -> Vector3:
