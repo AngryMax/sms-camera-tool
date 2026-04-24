@@ -5,7 +5,7 @@ class_name CamKeyframe
 ### should be used in their stead!
 
 ### Public Vars ###
-const UNIT_DIVIDE_RATIO := 1000	## How much we should divide SMS Units by when displaying here in Godot (since SMS's scale is much bigger)
+const UNIT_DIVIDE_RATIO := 100	## How much we should divide SMS Units by when displaying here in Godot (since SMS's scale is much bigger)
 
 var smsPosition: Vector3:	## Camera Position coordinates directly ripped from SMS
 	set(value):

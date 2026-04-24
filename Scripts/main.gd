@@ -48,36 +48,23 @@ func _connectGUISignals() -> void:
 
 func _control() -> void:
 	
-	var movementVector := Vector3.ZERO
+	#if not Input.is_action_pressed("mouse_click_right"):
+		#return
 	
-	if Input.is_action_pressed("move_forward"):
-		movementVector.x += 1
-	
-	if Input.is_action_pressed("move_backward"):
-		movementVector.x -= 1
-	
-	if Input.is_action_pressed("move_left"):
-		movementVector.z -= 1
-	
-	if Input.is_action_pressed("move_right"):
-		movementVector.z += 1
+	var horzInputDir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	var vertInputDir := 0.0
 	
 	if Input.is_action_pressed("move_up"):
-		movementVector.y += 1
-	elif Input.is_action_just_pressed("move_up"):	# Scrollwheel
-		movementVector.y += 2
-	
+		vertInputDir += 1.0
 	if Input.is_action_pressed("move_down"):
-		movementVector.y -= 1
-	elif Input.is_action_just_pressed("move_down"):	# Scrollwheel
-		movementVector.y -= 2
+		vertInputDir -= 1.0
+	
+	var relativeDir := Vector3(horzInputDir.x, vertInputDir, horzInputDir.y).rotated(Vector3.UP, %Camera3D.rotation.y)
 	
 	if Input.is_action_pressed("move_slow"):
-		movementVector *= 2.0
+		relativeDir /= 2
 	
-	movementVector /= 4.0
-	
-	%Camera3D.position += movementVector
+	$Camera3D.position += relativeDir
 
 
 func _addPoint() -> void:

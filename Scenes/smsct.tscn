@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://rirt1n4a4udb"]
 
 [ext_resource type="Script" uid="uid://dwxic6kpw8bwk" path="res://Scripts/main.gd" id="1_a8iap"]
+[ext_resource type="Script" uid="uid://dxkvc8emc6wjx" path="res://Scripts/camera_control.gd" id="2_a8iap"]
 [ext_resource type="PackedScene" uid="uid://b0t1cqynrh1xk" path="res://Scenes/gui.tscn" id="3_1jbuc"]
 [ext_resource type="PackedScene" uid="uid://b6r21qnusrlmj" path="res://Scenes/toolbar.tscn" id="4_r6bid"]
 [ext_resource type="Script" uid="uid://bdyc85dm83ysq" path="res://Scripts/sms_interface.gd" id="5_7m5yr"]
@@ -21,9 +22,10 @@ script = ExtResource("1_a8iap")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=540177063]
 unique_name_in_owner = true
-transform = Transform3D(1.1924881e-08, 1, -1.1924881e-08, 0, 1.1924881e-08, 1, 1, -1.1924881e-08, 1.4220278e-16, 0, 20, -1.8963585)
+transform = Transform3D(0.17364822, 0.45473358, -0.8735351, 0, 0.8870108, 0.4617486, 0.9848077, -0.08018182, 0.15402785, -10, 10, 10)
 current = true
 far = 40000.0
+script = ExtResource("2_a8iap")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1801204254]
 environment = SubResource("Environment_kmq1t")
@@ -65,3 +67,5 @@ physics_interpolation_mode = 0
 auto_translate_mode = 0
 editor_description = ""
 script = ExtResource("6_1egvx")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1374060584]
