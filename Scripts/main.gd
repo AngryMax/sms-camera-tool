@@ -72,8 +72,6 @@ func _addPoint() -> void:
 	%CamKeyframes.add_child(camKeyFrame)
 	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
 	camKeyFrame.connect("keyframeChanged", _on_keyframe_changed)
-	camKeyFrame.cameraPoint.connect("keyframeChanged", _on_keyframe_changed)
-	camKeyFrame.targetPoint.connect("keyframeChanged", _on_keyframe_changed)
 	camKeyFrame.isSelected = true
 
 
