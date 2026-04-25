@@ -13,6 +13,9 @@ var isSelected: bool:
 		_toggleArrowVisibility(value)
 		if value == true:
 			_deactivateOtherKeyframes()
+		if value == false:
+			cameraPoint.isSelected = false
+			targetPoint.isSelected = false
 		isSelected = value
 		keyframeChanged.emit(self)
 var transitionTime: float
@@ -44,6 +47,7 @@ func _ready() -> void:
 	
 	cameraPoint.color = Color(1.0, 0.635, 0.579, 1.0)
 	cameraPoint.pointTex = preload("res://Resources/Images/3d view sprites/campoint.png")
+	cameraPoint.position = Vector3(3, 4, 5)
 	targetPoint.pointTex = preload("res://Resources/Images/target_icon.png")
 	
 	_pointLink = PointLink.new()
@@ -53,11 +57,13 @@ func _ready() -> void:
 	add_child(targetPoint)
 	
 	cameraPoint.body.connect("input_event", _signalPassthrough)
-	cameraPoint.connect("pointChanged", _pointChanged)
-	targetPoint.connect("pointChanged", _pointChanged)
+	cameraPoint.connect("pointUpdated", _on_point_updated)
+	targetPoint.connect("pointUpdated", _on_point_updated)
+	cameraPoint.connect("pointSelected", _on_point_selected)
+	targetPoint.connect("pointSelected", _on_point_selected)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	_pointLink.start  = cameraPoint.position
 	_pointLink.end = targetPoint.position
 
@@ -103,5 +109,14 @@ func _signalPassthrough(_camera: Node, event: InputEvent, _event_position: Vecto
 	if mouseButtonEvent.pressed and mouseButtonEvent.button_mask == 1:
 		isSelected = true
 
-func _pointChanged(_point: Point) -> void:
+func _on_point_updated() -> void:
 	keyframeChanged.emit(self)
+
+
+func _on_point_selected(point: Point) -> void:
+	if point == cameraPoint:
+		cameraPoint.isSelected = true
+		targetPoint.isSelected = false
+	else:
+		cameraPoint.isSelected = false
+		targetPoint.isSelected = true

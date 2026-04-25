@@ -17,12 +17,14 @@ var smsPosition: Vector3:
 		print("sms: ", value, " | godot: ", position)
 		smsPosition = value
 var body: StaticBody3D
-signal pointChanged(point: Point)	## Emitted to let the GUI know it needs to update
+signal pointUpdated()	## Emitted to let the GUI know it needs to update
+signal pointSelected(point: Point)	## Emitted to let the GUI know it needs to update
 var pointTex := preload("res://Resources/Images/3d view sprites/point3.png")
 var color := Color(1.0, 1.0, 1.0, 1.0)
 var dragArrowX: DragArrow
 var dragArrowY: DragArrow
 var dragArrowZ: DragArrow
+var isSelected := false
 
 
 func _ready() -> void:
@@ -75,6 +77,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	_movePointByMouse()
 	_movePointByDragArrows()
+	
+	if isSelected:
+		_sprite.modulate = Color(0.0, 0.5, 0.0, 1.0)
 
 
 func updateLabel() -> void:
@@ -106,7 +111,14 @@ func _movePointByMouse() -> void:
 		_isBeingDragged = false
 		return
 	
-	_sprite.modulate = Color(0.0, 0.5, 0.0, 1.0)
+	
+	# 1st click to select, second click to drag around. This prevents moving the Point as soon as it's selected
+	if not isSelected:
+		_isBeingDragged = false
+		_clickedOnPoint = false
+		pointSelected.emit(self)
+		return
+	
 	var camera := get_viewport().get_camera_3d()
 	var mousePos := get_viewport().get_mouse_position()
 	var from = camera.project_ray_origin(mousePos)
@@ -114,7 +126,7 @@ func _movePointByMouse() -> void:
 	var to = from + camera.project_ray_normal(mousePos) * magnitude
 	position.x = to.x
 	position.z = to.z
-	pointChanged.emit(self)
+	pointUpdated.emit()
 
 
 var _mouseLastPos := 0.0
@@ -144,8 +156,6 @@ func _movePointByDragArrows():
 		_isArrowBeingDragged = false
 		return
 	
-	_sprite.modulate = Color(0.0, 0.5, 0.0, 1.0)
-	
 	var camera := get_viewport().get_camera_3d()
 	var mousePos := get_viewport().get_mouse_position()
 	var from = camera.project_ray_origin(mousePos)
@@ -172,7 +182,7 @@ func _movePointByDragArrows():
 			push_error("...how did we even get here?")
 			return
 	
-	pointChanged.emit(self)
+	pointUpdated.emit(self)
 
 
 ### Signal Receiver Funcs ###
