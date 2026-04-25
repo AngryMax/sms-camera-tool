@@ -21,6 +21,8 @@ func _ready() -> void:
 	add_child(_axis.mi)
 	# TODO: call _axis.toggleVisible() using the toolbar view menu
 	
+	Globals.currentKeyframe = %CamKeyframes.get_child(0)	# Since this is in _ready, this *should* always be the first and only keyframe...
+	
 	_grid = gridGizmo.new()
 	add_child(_grid.mi)
 
@@ -45,6 +47,8 @@ func _connectGUISignals() -> void:
 	%GUI/%CopyFromGameButton.connect("pressed", _on_copy_all_pressed)
 	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
 	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
+	%Toolbar/%SaveAsFile.connect("file_selected", _on_file_saved)
+	%Toolbar/%OpenFile.connect("file_selected", _on_file_opened)
 
 func _control() -> void:
 	
@@ -86,7 +90,6 @@ func _getSelectedkeyframe() -> CamKeyframe:
 			returnKeyframe = keyframe
 			break
 	
-	_SMSCamera.selectedKeyframe = returnKeyframe	# Kinda messy but it works
 	return returnKeyframe
 
 
@@ -135,7 +138,6 @@ func _on_delete_point_pressed() -> void:
 		var newSelectedKeyframe: CamKeyframe = %CamKeyframes.get_child(0)
 		newSelectedKeyframe.isSelected = true
 	
-	_SMSCamera.selectedKeyframe = _getSelectedkeyframe()
 	
 	for i in %CamKeyframes.get_child_count():
 		var keyframe: CamKeyframe = %CamKeyframes.get_children()[i]
@@ -164,6 +166,7 @@ func _on_cur_keyframe_field_value_changed(value: float) -> void:
 	var keyframe: CamKeyframe = %CamKeyframes.get_child(idx)
 	keyframe.isSelected = true
 	%GUI.keyframe = keyframe
+	Globals.currentKeyframe = keyframe
 
 
 func _on_replay_points_pressed() -> void:
@@ -192,3 +195,39 @@ func _on_preview_pressed() -> void:
 
 func _on_play_keyframes_pressed() -> void:
 	_SMSCamera.playbackMode = true
+
+
+### Toolbar Signal Receivers ###
+
+func _on_file_saved(path: String):
+	
+	var saveFile: SaveFile = SaveFile.new()
+	
+	for i in %CamKeyframes.get_child_count():
+		var keyframe: CamKeyframe = %CamKeyframes.get_children()[i]
+		saveFile.positions.append(keyframe.cameraPoint.smsPosition)
+		saveFile.targets.append(keyframe.targetPoint.smsPosition)
+		saveFile.times.append(keyframe.transitionTime)
+		saveFile.interps.append(keyframe.interpolation)
+	
+	saveFile.saveFile(path)
+
+
+func _on_file_opened(path: String):
+	
+	var file: SaveFile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
+	
+	# Clear all CamKeyframes. TODO: make this it's own clear() func to be called by the "new" file option, etc.
+	for child: Node in %CamKeyframes.get_children():
+		%CamKeyframes.remove_child(child)
+		child.queue_free()
+	
+	for i in file.positions.size():
+		_addPoint()
+		var keyframe: CamKeyframe = %CamKeyframes.get_child(i)
+		keyframe.cameraPoint.smsPosition = file.positions[i]
+		keyframe.targetPoint.smsPosition = file.targets[i]
+		keyframe.transitionTime = file.times[i]
+		keyframe.interpolation = file.interps[i]
+	
+	Globals.currentKeyframe = _getSelectedkeyframe()

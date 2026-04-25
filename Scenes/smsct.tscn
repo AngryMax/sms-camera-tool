@@ -50,6 +50,7 @@ anchor_left = 1.0
 grow_horizontal = 0
 
 [node name="Toolbar" parent="." unique_id=1592379772 instance=ExtResource("4_r6bid")]
+unique_name_in_owner = true
 
 [node name="SMSCameraInterface" type="Node" parent="." unique_id=399060081 node_paths=PackedStringArray("GDInterface", "camKeyframesNode")]
 unique_name_in_owner = true

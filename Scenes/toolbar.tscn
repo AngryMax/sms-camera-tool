@@ -21,6 +21,24 @@ popup/item_2/id = 2
 popup/item_3/text = "Quit"
 popup/item_3/id = 3
 
+[node name="SaveAsFile" type="FileDialog" parent="File" unique_id=122102199]
+unique_name_in_owner = true
+oversampling_override = 1.0
+initial_position = 2
+display_mode = 1
+access = 2
+filters = PackedStringArray("*.tres")
+
+[node name="OpenFile" type="FileDialog" parent="File" unique_id=1275683082]
+unique_name_in_owner = true
+oversampling_override = 1.0
+title = "Open a File"
+initial_position = 2
+file_mode = 0
+display_mode = 1
+access = 2
+filters = PackedStringArray("*.tres")
+
 [node name="View" type="MenuButton" parent="." unique_id=1985131734]
 unique_name_in_owner = true
 layout_mode = 2

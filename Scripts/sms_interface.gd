@@ -8,7 +8,6 @@ class_name SMSCameraInterface
 @export var GDInterface: Node
 @export var camKeyframesNode: Node3D
 
-var selectedKeyframe: CamKeyframe
 
 var previewMode := false		# TODO: make previewMode and playbackMode into a state machine
 var playbackMode := false:
@@ -49,7 +48,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	_previewKeyframe(selectedKeyframe)
+	_previewKeyframe(Globals.currentKeyframe)
 	_replayKeyframes(delta)
 
 
