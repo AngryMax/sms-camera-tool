@@ -73,9 +73,10 @@ func _replayKeyframes(delta: float):
 	
 	const WAIT_AT_START_TIMER = 0.5
 	if _playbackStartTimer > WAIT_AT_START_TIMER:	# Hold 0.5 seconds on the first keyframe before moving
-		_lerpPow += delta	# It's kinda weird but we want to add on delta AFTER doing our lerping
+		_lerpPow += delta / _fromKeyframe.transitionTime	# It's kinda weird but we want to add on delta AFTER doing our lerping
 	
 	_playbackStartTimer += delta
+	
 	
 	if _toKeyframe == _keyframes.back() and _lerpPow >= 1.0:
 		playbackMode = false
