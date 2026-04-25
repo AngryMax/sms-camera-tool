@@ -13,19 +13,19 @@ var _grid: gridGizmo
 ### Override Funcs ###
 
 func _ready() -> void:
+	
 	_connectGUISignals()
 	_connectToolbarSignals()
 	_SMSCamera = %SMSCameraInterface
 	_addPoint()
 	
-	_axis = axisGizmo.new()
-	add_child(_axis.mi)
-	# TODO: call _axis.toggleVisible() using the toolbar view menu
-	
-	Globals.currentKeyframe = %CamKeyframes.get_child(0)	# Since this is in _ready, this *should* always be the first and only keyframe...
-	
 	_grid = gridGizmo.new()
 	add_child(_grid.mi)
+	_axis = axisGizmo.new()
+	add_child(_axis.mi)
+	
+	Globals.currentKeyframe = %CamKeyframes.get_child(0)	# Since this is in _ready, this *should* always be the first and only keyframe...
+
 
 func _process(_delta: float) -> void:
 	_control()
@@ -53,6 +53,9 @@ func _connectGUISignals() -> void:
 func _connectToolbarSignals() -> void:
 	%Toolbar.connect("newFile", _on_new_file)
 	%Toolbar.connect("resetCam", _on_reset_cam)
+	%Toolbar.connect("gotoPoint", _on_goto_point)
+	%Toolbar.connect("toggleGrid", _on_toggle_grid)
+	%Toolbar.connect("toggleAxes", _on_toggle_axes)
 	%Toolbar/%SaveAsFile.connect("file_selected", _on_file_saved)
 	%Toolbar/%OpenFile.connect("file_selected", _on_file_opened)
 
@@ -253,3 +256,29 @@ func _on_new_file():
 func _on_reset_cam():
 	%Camera3D.position = Globals.viewportCameraStartPos
 	%Camera3D.rotation = Globals.viewportCameraStartRot
+
+
+func _on_goto_point():
+	
+	const POS_OFFSET := Vector3(Vector3.ONE) * 2
+	
+	var keyframe := Globals.currentKeyframe
+	
+	for child in keyframe.get_children():
+		
+		if child is not Point:
+			continue
+		
+		var point: Point = child
+		
+		$Camera3D.global_position = point.global_position + POS_OFFSET
+		$Camera3D.look_at(point.global_position)
+		break
+
+
+func _on_toggle_grid(toggle: bool):
+	_grid.toggleVisible(toggle)
+
+
+func _on_toggle_axes(toggle: bool):
+	_axis.toggleVisible(toggle)

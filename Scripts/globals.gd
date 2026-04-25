@@ -6,3 +6,5 @@ var currentKeyframe: CamKeyframe	## The keyframe that's selected in the GUI
 
 var viewportCameraStartPos: Vector3	## The spawn coords of the viewport camera. Set in the Camera3D's _ready()
 var viewportCameraStartRot: Vector3	## The spawn rot of the viewport camera. Set in the Camera3D's _ready()
+
+var showTargets: bool = false

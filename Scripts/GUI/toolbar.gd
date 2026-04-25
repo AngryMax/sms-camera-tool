@@ -6,6 +6,10 @@ enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
 
 signal newFile
 signal resetCam
+signal gotoPoint
+signal toggleGrid
+signal toggleAxes
+signal toggleTargets
 
 
 func _ready() -> void:
@@ -31,17 +35,23 @@ func _on_file_menu(id: int) -> void:
 
 func _on_view_menu(id: int) -> void:
 	
+	var popup: PopupMenu = $View.get_popup()
+	
 	match id:
 		ViewOptions.RESET_CAMERA:
 			resetCam.emit()
+			return
 		ViewOptions.GOTO_POINT:
-			pass
+			gotoPoint.emit()
+			return
 		ViewOptions.TOGGLE_GRID:
-			pass
+			toggleGrid.emit(!popup.is_item_checked(id))
 		ViewOptions.TOGGLE_AXES:
-			pass
+			toggleAxes.emit(!popup.is_item_checked(id))
 		ViewOptions.TOGGLE_TARGETS:
-			pass
+			Globals.showTargets = !popup.is_item_checked(id)
+		
+	popup.set_item_checked(id, !popup.is_item_checked(id))
 
 
 func _on_help_menu(id: int) -> void:

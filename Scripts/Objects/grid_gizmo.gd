@@ -8,10 +8,10 @@ func _init() -> void:
 	
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	surface_begin(Mesh.PRIMITIVE_LINES, mat)
 	mat.vertex_color_use_as_albedo = true
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	
+	surface_begin(Mesh.PRIMITIVE_LINES, mat)
 	
 	_makeLines(10, Color(1.0, 1.0, 1.0, 0.5))
 	_makeLines(2, Color(1.0, 1.0, 1.0, 0.25))
@@ -51,5 +51,5 @@ func _makeMeshInstance():
 	mi.mesh = self
 
 
-func toggleVisible():
-	mi.visible = not mi.visible
+func toggleVisible(toggle: bool):
+	mi.visible = toggle

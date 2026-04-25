@@ -5,7 +5,7 @@ class_name CamKeyframe
 
 var isSelected: bool:
 	set(value):
-		targetPoint.visible = value
+		targetPoint.visible = value or Globals.showTargets
 		_pointLink.visible = value
 		_toggleArrowVisibility(value)
 		if value == true:
@@ -25,6 +25,7 @@ signal keyframeChanged(keyframe: CamKeyframe)	## Emitted to let the GUI know it 
 ### Private Vars ###
 var _SMSInterface: Node
 var _pointLink: PointLink
+var _lastShowTargets: bool
 const _mainScene := preload("res://Scenes/smsct.tscn")
 
 
@@ -63,6 +64,16 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	_pointLink.start  = cameraPoint.position
 	_pointLink.end = targetPoint.position
+	
+	
+	if Globals.showTargets:
+		targetPoint.visible = true
+		_pointLink.visible = true
+		_lastShowTargets = Globals.showTargets
+	
+	if _lastShowTargets != Globals.showTargets and isSelected == false:
+		targetPoint.visible = false
+		_pointLink.visible = false
 
 
 func _toggleArrowVisibility(toggle: bool) -> void:

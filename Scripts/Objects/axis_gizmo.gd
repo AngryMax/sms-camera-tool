@@ -6,12 +6,12 @@ var mi: MeshInstance3D
 # TODO: perhaps add screen space thickness
 func _init() -> void:
 	
+	var length = 10000.0
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	surface_begin(Mesh.PRIMITIVE_LINES, mat)
 	mat.vertex_color_use_as_albedo = true
-
-	var length = 10000.0
+	
+	surface_begin(Mesh.PRIMITIVE_LINES, mat)
 
 	# x axis
 	surface_set_color(Color(1,0,0))
@@ -38,5 +38,5 @@ func _makeMeshInstance():
 	mi.mesh = self
 
 
-func toggleVisible():
-	mi.visible = not mi.visible
+func toggleVisible(toggle: bool):
+	mi.visible = toggle
