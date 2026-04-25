@@ -239,7 +239,8 @@ func _on_file_opened(path: String):
 		keyframe.transitionTime = file.times[i]
 		keyframe.interpolation = file.interps[i]
 	
-	Globals.currentKeyframe = _getSelectedkeyframe()
+	Globals.currentKeyframe = _getSelectedkeyframe()	# TODO: perhaps just set %GUI.keyframe from Globals.currentKeyframe's setter
+	%GUI.keyframe = Globals.currentKeyframe
 
 
 func _on_new_file():
