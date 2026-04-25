@@ -1,7 +1,7 @@
 extends HBoxContainer
 
 enum FileOptions {NEW, OPEN, SAVE, QUIT}
-enum ViewOptions {RESET_CAMERA, GOTO_POINT, TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS}
+enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
 
 signal newFile
@@ -38,19 +38,19 @@ func _on_view_menu(id: int) -> void:
 	var popup: PopupMenu = $View.get_popup()
 	
 	match id:
-		ViewOptions.RESET_CAMERA:
-			resetCam.emit()
-			return
-		ViewOptions.GOTO_POINT:
-			gotoPoint.emit()
-			return
 		ViewOptions.TOGGLE_GRID:
 			toggleGrid.emit(!popup.is_item_checked(id))
 		ViewOptions.TOGGLE_AXES:
 			toggleAxes.emit(!popup.is_item_checked(id))
 		ViewOptions.TOGGLE_TARGETS:
 			Globals.showTargets = !popup.is_item_checked(id)
-		
+		ViewOptions.RESET_CAMERA:
+			resetCam.emit()
+			return
+		ViewOptions.GOTO_POINT:
+			gotoPoint.emit()
+			return
+	
 	popup.set_item_checked(id, !popup.is_item_checked(id))
 
 
