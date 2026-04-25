@@ -40,7 +40,8 @@ theme_override_constants/separation = 5
 [node name="CurPoint" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1148527782]
 layout_mode = 2
 size_flags_horizontal = 4
-split_offsets = PackedInt32Array(0, 0, 0)
+split_offsets = PackedInt32Array(109)
+split_offset = 109
 
 [node name="Label" type="Label" parent="VSplitContainer/PointEdit/CurPoint" unique_id=502225898]
 layout_mode = 2
@@ -57,15 +58,20 @@ max_value = 1.0
 value = 1.0
 rounded = true
 
-[node name="AddPointButton" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1966676548]
-unique_name_in_owner = true
+[node name="AddOrDupe" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=776201505]
 layout_mode = 2
-text = "Add Point"
 
-[node name="DuplicatePointButton" type="Button" parent="VSplitContainer/PointEdit/CurPoint" unique_id=1488294071]
+[node name="AddPointButton" type="Button" parent="VSplitContainer/PointEdit/AddOrDupe" unique_id=1966676548]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Duplicate Point"
+size_flags_horizontal = 3
+text = "Add Keyframe"
+
+[node name="DuplicatePointButton" type="Button" parent="VSplitContainer/PointEdit/AddOrDupe" unique_id=1488294071]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Duplicate Keyframe"
 
 [node name="PosEdit" type="HSplitContainer" parent="VSplitContainer/PointEdit" unique_id=1075222597]
 layout_mode = 2
@@ -308,7 +314,7 @@ text = "Preview Point:"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
-text = "Delete Point"
+text = "Delete Keyframe"
 icon = ExtResource("4_d1lea")
 icon_alignment = 2
 
@@ -343,8 +349,8 @@ toggle_mode = true
 icon = ExtResource("7_chfyp")
 
 [connection signal="value_changed" from="VSplitContainer/PointEdit/CurPoint/CurPointField" to="." method="_on_cur_point_field_value_changed"]
-[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/AddPointButton" to="." method="_on_add_point_pressed"]
-[connection signal="pressed" from="VSplitContainer/PointEdit/CurPoint/DuplicatePointButton" to="." method="_on_duplicate_point_pressed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/AddOrDupe/AddPointButton" to="." method="_on_add_point_pressed"]
+[connection signal="pressed" from="VSplitContainer/PointEdit/AddOrDupe/DuplicatePointButton" to="." method="_on_duplicate_point_pressed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/X/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Y/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="VSplitContainer/PointEdit/PosEdit/Pos/Z/Input" to="." method="_on_any_point_field_changed"]
