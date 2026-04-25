@@ -52,6 +52,13 @@ func _process(delta: float) -> void:
 	_replayKeyframes(delta)
 
 
+### Public Funcs ###
+
+func getCoord(lambda: String) -> float:
+	var callFunc := Callable(GDInterface, lambda)
+	return callFunc.call()
+
+
 ### Private Funcs ###
 
 func _replayKeyframes(delta: float):

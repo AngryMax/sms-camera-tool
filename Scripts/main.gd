@@ -6,7 +6,6 @@ extends Node3D
 ### Private Vars ##
 
 var _SMSCamera: SMSCameraInterface
-var GDInterface: Node
 var _axis: axisGizmo
 var _grid: gridGizmo
 
@@ -34,6 +33,7 @@ func _process(_delta: float) -> void:
 ### Private Funcs ###
 
 func _connectGUISignals() -> void:
+	
 	%GUI/%AddPointButton.connect("pressed", _on_add_point_pressed)
 	%GUI/%DuplicatePointButton.connect("pressed", _on_duplicate_point_pressed)
 	%GUI/%CurPointField.connect("value_changed", _on_cur_keyframe_field_value_changed)
@@ -48,6 +48,11 @@ func _connectGUISignals() -> void:
 	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
 	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
 	%GUI/%TravelTimeInput.connect("value_changed", _on_transition_time_changed)
+	
+	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
+		button.toggled.connect(_on_grab_from_target_toggled)
+	for button: Button in get_tree().get_nodes_in_group("GrabFromCamera"):
+		button.toggled.connect(_on_grab_from_camera_toggled)
 
 
 func _connectToolbarSignals() -> void:
@@ -219,6 +224,24 @@ func _on_play_keyframes_pressed() -> void:
 func _on_transition_time_changed(value: float) -> void:
 	var keyframe := _getSelectedkeyframe()
 	keyframe.transitionTime = value
+
+
+func _on_grab_from_target_toggled(_toggle: bool):
+	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
+		if button.button_pressed:
+				button.button_pressed = false
+				var parent: HBoxContainer = button.get_parent()
+				var input: SpinBox = parent.find_child("Input")
+				input.value = _SMSCamera.getCoord("getCamTarget" + parent.name)
+
+
+func _on_grab_from_camera_toggled(_toggle: bool):
+		for button: Button in get_tree().get_nodes_in_group("GrabFromCamera"):
+			if button.button_pressed:
+				button.button_pressed = false
+				var parent: HBoxContainer = button.get_parent()
+				var input: SpinBox = parent.find_child("Input")
+				input.value = _SMSCamera.getCoord("getCamPos" + parent.name)
 
 
 ### Toolbar Signal Receivers ###
