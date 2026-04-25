@@ -37,7 +37,6 @@ func _connectGUISignals() -> void:
 	%GUI/%AddPointButton.connect("pressed", _on_add_point_pressed)
 	%GUI/%DuplicatePointButton.connect("pressed", _on_duplicate_point_pressed)
 	%GUI/%CurPointField.connect("value_changed", _on_cur_keyframe_field_value_changed)
-	%GUI/%PlayBackKeyframes.connect("pressed", _on_replay_points_pressed)
 	%GUI/%DeleteButton.connect("pressed", _on_delete_point_pressed)
 	%GUI/%Pos.find_child("X").find_child("Input").connect("value_changed", _on_gui_position_changed)
 	%GUI/%Pos.find_child("Y").find_child("Input").connect("value_changed", _on_gui_position_changed)
@@ -185,10 +184,6 @@ func _on_cur_keyframe_field_value_changed(value: float) -> void:
 	keyframe.isSelected = true
 	%GUI.keyframe = keyframe
 	Globals.currentKeyframe = keyframe
-
-
-func _on_replay_points_pressed() -> void:
-	print("replay")
 
 
 func _on_gui_position_changed(_value: float) -> void:

@@ -14,12 +14,11 @@ var smsPosition: Vector3:
 		return position * Globals.UNIT_DIVIDE_RATIO
 	set(value):
 		position = value /  Globals.UNIT_DIVIDE_RATIO
-		print("sms: ", value, " | godot: ", position)
 		smsPosition = value
 var body: StaticBody3D
 signal pointUpdated()	## Emitted to let the GUI know it needs to update
 signal pointSelected(point: Point)	## Emitted to let the GUI know it needs to update
-var pointTex := preload("res://Resources/Images/3d view sprites/point3.png")
+var pointTex: CompressedTexture2D
 var color := Color(1.0, 1.0, 1.0, 1.0)
 var dragArrowX: DragArrow
 var dragArrowY: DragArrow
