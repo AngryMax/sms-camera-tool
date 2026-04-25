@@ -1,6 +1,7 @@
 extends HBoxContainer
 
 enum FileOptions {NEW, OPEN, SAVE, QUIT}
+enum ToolsOptions {TOGGLE_SNAP}
 enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
 
@@ -9,11 +10,11 @@ signal resetCam
 signal gotoPoint
 signal toggleGrid
 signal toggleAxes
-signal toggleTargets
 
 
 func _ready() -> void:
 	%File.get_popup().id_pressed.connect(_on_file_menu)
+	%Tools.get_popup().id_pressed.connect(_on_tools_menu)
 	%View.get_popup().id_pressed.connect(_on_view_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
 
@@ -33,6 +34,27 @@ func _on_file_menu(id: int) -> void:
 			push_error("Invalid File menu button!")
 
 
+func _on_tools_menu(id: int) -> void:
+	
+	var popup: PopupMenu = %Tools.get_popup()
+	var isSnap := false
+	
+	
+	match id:
+		ToolsOptions.TOGGLE_SNAP:
+			popup.set_item_checked(id, !popup.is_item_checked(id))
+			isSnap = popup.is_item_checked(id)
+		_:
+			push_error("Invalid Tools menu button!")
+	
+	if not isSnap:
+		Globals.snapMode = Globals.SnapMode.NONE
+		return
+	
+	if isSnap:	# TODO: make this "if snapMode == POINT" then have "if snapMode == GRID"
+		Globals.snapMode = Globals.SnapMode.POINT
+
+
 func _on_view_menu(id: int) -> void:
 	
 	var popup: PopupMenu = $View.get_popup()
@@ -50,6 +72,9 @@ func _on_view_menu(id: int) -> void:
 		ViewOptions.GOTO_POINT:
 			gotoPoint.emit()
 			return
+		_:
+			push_error("Invalid View menu button!")
+			return
 	
 	popup.set_item_checked(id, !popup.is_item_checked(id))
 
@@ -65,6 +90,9 @@ func _on_help_menu(id: int) -> void:
 			%"Website Prompt".setWebsiteString("https://github.com/AngryMax/sms-camera-tool/blob/main/LICENSE")
 		HelpOptions.ABOUT:
 			%About.visible = true
+			return
+		_:
+			push_error("Invalid Help menu button!")
 			return
 	
 	%"Website Prompt".show()

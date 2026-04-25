@@ -41,6 +41,15 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.tres")
 
+[node name="Tools" type="MenuButton" parent="." unique_id=1297977762]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Tools"
+item_count = 1
+popup/item_0/text = "Enable Snapping"
+popup/item_0/checkable = 1
+popup/item_0/id = 0
+
 [node name="View" type="MenuButton" parent="." unique_id=1985131734]
 unique_name_in_owner = true
 layout_mode = 2

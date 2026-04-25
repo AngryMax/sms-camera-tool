@@ -8,3 +8,6 @@ var viewportCameraStartPos: Vector3	## The spawn coords of the viewport camera. 
 var viewportCameraStartRot: Vector3	## The spawn rot of the viewport camera. Set in the Camera3D's _ready()
 
 var showTargets: bool = false
+
+enum SnapMode {NONE, POINT, GRID}
+var snapMode := SnapMode.NONE

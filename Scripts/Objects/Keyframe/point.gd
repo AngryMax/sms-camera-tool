@@ -6,6 +6,7 @@ var _clickedOnPoint := false		## If there's currently a mouse click, tracks if t
 var _isBeingDragged := false		## If this ClickPoint is currently being dragged
 var _sprite := Sprite3D.new()
 var _hoveredDragArrow := HoveredDragArrow.NONE
+var _snapDetect: ShapeCast3D
 
 enum HoveredDragArrow {NONE, X, Y, Z}
 
@@ -62,6 +63,14 @@ func _ready() -> void:
 	numLabel.position += Vector3(-0.5, 0.75, 0)
 	add_child(numLabel)
 	
+	var snapRadius := SphereShape3D.new()
+	
+	_snapDetect = ShapeCast3D.new()
+	_snapDetect.visible = true
+	_snapDetect.shape = snapRadius
+	_snapDetect.position += Vector3(0, 0.5 , 0)
+	_snapDetect.enabled = false
+	add_child(_snapDetect)
 	
 	dragArrowX.connect("mouse_entered", _on_mouse_entered_x)
 	dragArrowX.connect("mouse_exited", _on_mouse_exited_x)
@@ -79,6 +88,14 @@ func _process(_delta: float) -> void:
 	
 	if isSelected:
 		_sprite.modulate = Color(0.0, 0.5, 0.0, 1.0)
+	
+	if (_isBeingDragged or _isArrowBeingDragged) and Globals.snapMode == Globals.SnapMode.POINT:
+		var snapPoint: Point = _getSnapPoints()
+		
+		if snapPoint == null:
+			return
+		
+		position = snapPoint.position
 
 
 func updateLabel() -> void:
@@ -183,6 +200,26 @@ func _movePointByDragArrows():
 	
 	pointUpdated.emit()
 
+
+## If another Point is nearby this Point, return a reference to the nearby Point. Otherwise, return null.
+func _getSnapPoints() -> Point:
+	
+	_snapDetect.force_shapecast_update()
+	
+	if not _snapDetect.collide_with_bodies:	# I don't think this ever gets hit since _snapDetect will collide with colShape, but posterity sake
+		return null
+	
+	var collisions: Array = _snapDetect.collision_result
+	
+	for colInfo: Dictionary in collisions:
+		var colBody: StaticBody3D = colInfo.collider
+		var parent = colBody.get_parent()
+		if parent is Point and parent != self:
+			return parent
+		else:
+			continue
+	
+	return null
 
 ### Signal Receiver Funcs ###
 
