@@ -40,7 +40,8 @@ func _ready() -> void:
 	cameraPoint = Point.new()
 	targetPoint = Point.new()
 	
-	cameraPoint.color = Color(1.0, 0.0, 0.0, 1.0)
+	cameraPoint.color = Color(1.0, 0.635, 0.579, 1.0)
+	cameraPoint.pointTex = preload("res://Resources/Images/3d view sprites/campoint.png")
 	targetPoint.pointTex = preload("res://Resources/Images/target_icon.png")
 	
 	add_child(cameraPoint)
