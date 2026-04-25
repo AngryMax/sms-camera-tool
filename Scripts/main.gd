@@ -133,6 +133,7 @@ func _deleteAllKeyframes() -> void:
 
 func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
 	%GUI.keyframe = keyframe
+	Globals.currentKeyframe = keyframe
 
 
 func _on_add_point_pressed() -> void:
