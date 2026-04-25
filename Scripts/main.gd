@@ -14,6 +14,7 @@ var _grid: gridGizmo
 
 func _ready() -> void:
 	_connectGUISignals()
+	_connectToolbarSignals()
 	_SMSCamera = %SMSCameraInterface
 	_addPoint()
 	
@@ -47,8 +48,13 @@ func _connectGUISignals() -> void:
 	%GUI/%CopyFromGameButton.connect("pressed", _on_copy_all_pressed)
 	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
 	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
+
+
+func _connectToolbarSignals() -> void:
+	%Toolbar.connect("newFile", _on_new_file)
 	%Toolbar/%SaveAsFile.connect("file_selected", _on_file_saved)
 	%Toolbar/%OpenFile.connect("file_selected", _on_file_opened)
+
 
 func _control() -> void:
 	
@@ -110,6 +116,12 @@ func _setCamera(posArray: Array[Vector3]) -> void:
 	%Camera3D.position.x = avgXZPos.x
 	%Camera3D.position.y = highestY + 20
 	%Camera3D.position.z = avgXZPos.y
+
+
+func _deleteAllKeyframes() -> void:
+	for child: Node in %CamKeyframes.get_children():
+		%CamKeyframes.remove_child(child)
+		child.queue_free()
 
 
 ### Signal Receive Funcs ###
@@ -217,10 +229,7 @@ func _on_file_opened(path: String):
 	
 	var file: SaveFile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 	
-	# Clear all CamKeyframes. TODO: make this it's own clear() func to be called by the "new" file option, etc.
-	for child: Node in %CamKeyframes.get_children():
-		%CamKeyframes.remove_child(child)
-		child.queue_free()
+	_deleteAllKeyframes()
 	
 	for i in file.positions.size():
 		_addPoint()
@@ -231,3 +240,8 @@ func _on_file_opened(path: String):
 		keyframe.interpolation = file.interps[i]
 	
 	Globals.currentKeyframe = _getSelectedkeyframe()
+
+
+func _on_new_file():
+	_deleteAllKeyframes()
+	_addPoint()

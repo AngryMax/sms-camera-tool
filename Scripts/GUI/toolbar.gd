@@ -4,6 +4,8 @@ enum FileOptions {NEW, OPEN, SAVE, QUIT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
 enum ViewOptions {temp}
 
+signal newFile
+
 
 func _ready() -> void:
 	%File.get_popup().id_pressed.connect(_on_file_menu)
@@ -14,7 +16,7 @@ func _on_file_menu(id: int) -> void:
 	
 	match id:
 		FileOptions.NEW:
-			pass
+			newFile.emit()
 		FileOptions.OPEN:
 			%OpenFile.visible = true
 		FileOptions.SAVE:
