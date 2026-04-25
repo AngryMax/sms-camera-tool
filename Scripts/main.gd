@@ -61,8 +61,8 @@ func _connectToolbarSignals() -> void:
 
 func _control() -> void:
 	
-	#if not Input.is_action_pressed("mouse_click_right"):
-		#return
+	if not Input.is_action_pressed("mouse_click_right"):
+		return
 	
 	var horzInputDir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var vertInputDir := 0.0
