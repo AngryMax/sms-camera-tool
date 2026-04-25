@@ -1,9 +1,6 @@
 extends Node3D
 class_name CamKeyframe
 
-### NOTE: position and _targetPos should (almost) never be edited directly!
-### Instead, smsPosition and smsTarget should be used in their stead!
-
 ### Public Vars ###
 
 var isSelected: bool:

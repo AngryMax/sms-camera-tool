@@ -182,7 +182,7 @@ func _movePointByDragArrows():
 			push_error("...how did we even get here?")
 			return
 	
-	pointUpdated.emit(self)
+	pointUpdated.emit()
 
 
 ### Signal Receiver Funcs ###

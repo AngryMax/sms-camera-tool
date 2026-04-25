@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://orw6sv2lcwjb" path="res://Scripts/GUI/gui_new.gd" id="1_3w84o"]
 [ext_resource type="Texture2D" uid="uid://bycf4itydc703" path="res://Resources/Images/target_icon.png" id="2_wi63h"]
 [ext_resource type="Texture2D" uid="uid://2afrsxxu7trg" path="res://Resources/Images/camera_icon.png" id="3_d1lea"]
-[ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://Scenes/about.tscn" id="3_q8o8l"]
 [ext_resource type="Texture2D" uid="uid://celwy614803e6" path="res://Resources/Images/trash_icon.png" id="4_d1lea"]
 [ext_resource type="Texture2D" uid="uid://dygfde5x82h71" path="res://Resources/Images/unlink_icon.png" id="7_chfyp"]
 
@@ -327,11 +326,6 @@ layout_mode = 2
 [node name="RestoreCamera" type="Button" parent="VSplitContainer" unique_id=458215804]
 layout_mode = 2
 text = "Restore Camera"
-
-[node name="About" parent="." unique_id=1166068054 instance=ExtResource("3_q8o8l")]
-unique_name_in_owner = true
-position = Vector2i(153, 196)
-visible = false
 
 [node name="LinkTransformsButton" type="Button" parent="." unique_id=1180236898]
 unique_name_in_owner = true

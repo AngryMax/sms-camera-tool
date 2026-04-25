@@ -20,6 +20,7 @@ grow_vertical = 2
 color = Color(0.16924527, 0.1692453, 0.16924527, 1)
 
 [node name="Text" type="RichTextLabel" parent="." unique_id=420465064]
+unique_name_in_owner = true
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -33,14 +34,13 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 2
 bbcode_enabled = true
-text = "SMS Camera Rail by Angry_Max
-[url=https://github.com/AngryMax/sms-camera-tool]https://github.com/AngryMax/sms-camera-tool[/url]
+text = "Version: [you_shouldnt_see_this]
 
-Py4Godot
-[url=https://github.com/niklas2902/py4godot]https://github.com/niklas2902/py4godot[/url]
+[url=https://github.com/AngryMax/sms-camera-tool][color=#60baff][hint=\"Go to https://github.com/AngryMax/sms-camera-tool\"]SMS Camera Rail by Angry_Max[/hint][/color][/url]
 
-Godot Engine
-[url=https://godotengine.org/]https://godotengine.org/[/url]"
+[url=https://github.com/niklas2902/py4godot][color=#60baff][hint=\"Go to https://github.com/niklas2902/py4godot\"]Py4Godot[/hint][/color][/url]
+
+[url=https://godotengine.org/][color=#60baff][hint=\"Go to https://godotengine.org/\"]Godot Engine[/hint][/color][/url]"
 horizontal_alignment = 1
 vertical_alignment = 1
 selection_enabled = true

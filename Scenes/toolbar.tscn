@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b6r21qnusrlmj"]
 
 [ext_resource type="Script" uid="uid://uf3fc7jnxu1x" path="res://Scripts/GUI/toolbar.gd" id="1_vmn2u"]
+[ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://Scenes/about.tscn" id="2_5g788"]
 
 [node name="Toolbar" type="HBoxContainer" unique_id=1592379772]
 offset_right = 132.0
@@ -62,3 +63,8 @@ popup/item_2/text = "License"
 popup/item_2/id = 2
 popup/item_3/text = "About"
 popup/item_3/id = 3
+
+[node name="About" parent="Help" unique_id=85651705 instance=ExtResource("2_5g788")]
+unique_name_in_owner = true
+initial_position = 1
+visible = false
