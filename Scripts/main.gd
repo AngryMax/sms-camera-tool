@@ -86,6 +86,7 @@ func _addPoint() -> void:
 	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
 	camKeyFrame.connect("keyframeChanged", _on_keyframe_changed)
 	camKeyFrame.isSelected = true
+	Globals.currentKeyframe = camKeyFrame
 
 
 func _getSelectedkeyframe() -> CamKeyframe:
