@@ -125,7 +125,7 @@ split_offset = 109
 [node name="Label" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/CurPoint" unique_id=502225898]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Current Point:"
+text = "Current Keyframe:"
 horizontal_alignment = 2
 
 [node name="CurPointField" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/CurPoint" unique_id=460760319]
@@ -387,7 +387,7 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Preview Point:"
+text = "Preview Keyframe:"
 
 [node name="DeleteButton" type="Button" parent="KeyframeGUI/VSplitContainer/HBoxContainer" unique_id=1384828627]
 unique_name_in_owner = true
