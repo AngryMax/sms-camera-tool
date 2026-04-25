@@ -29,7 +29,6 @@ const _mainScene := preload("res://Scenes/smsct.tscn")
 ### Override Funcs ###
 
 func _init() -> void:
-	print("init")
 	transitionTime = 1.0
 	interpolation = InterpolationTypes.Linear
 
@@ -73,10 +72,6 @@ func _deactivateOtherKeyframes() -> void:
 			keyframe.isSelected = false
 
 ### Public Funcs ###
-	
-
-func delete() -> void:
-	queue_free()
 
 
 ### Signal Receiver Funcs ###

@@ -53,6 +53,14 @@ func _ready() -> void:
 	dragArrowZ.axis = DragArrow.Axis.Z
 	add_child(dragArrowZ)
 	
+	var numLabel = Label3D.new()
+	numLabel.text = str(get_parent().get_index() + 1)
+	numLabel.font_size = 118
+	numLabel.outline_size = 24
+	numLabel.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	numLabel.position += Vector3(-0.5, 0.75, 0)
+	add_child(numLabel)
+	
 	
 	dragArrowX.connect("mouse_entered", _on_mouse_entered_x)
 	dragArrowX.connect("mouse_exited", _on_mouse_exited_x)
@@ -67,6 +75,13 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	_movePointByMouse()
 	_movePointByDragArrows()
+
+
+func updateLabel() -> void:
+	print("updating label")
+	for child in get_children():
+		if child is Label3D:
+			child.text = str(get_parent().get_index() + 1)
 
 
 func _movePointByMouse() -> void:
@@ -154,6 +169,7 @@ func _movePointByDragArrows():
 			_mouseLastPos = to.z
 			
 		_:
+			push_error("...how did we even get here?")
 			return
 	
 	pointChanged.emit(self)

@@ -126,14 +126,25 @@ func _on_delete_point_pressed() -> void:
 	if keyframesLeft == 1:
 		return	# TODO: make this reset the keyframe rather than just do nothing
 	
-	var keyframe := _getSelectedkeyframe()
-	keyframe.delete()
+	var keyframeToDelete := _getSelectedkeyframe()
+	keyframeToDelete.free()
 	
 	%GUI.maxKeyframes = keyframesLeft
 	
 	if keyframesLeft > 0:
 		var newSelectedKeyframe: CamKeyframe = %CamKeyframes.get_child(0)
 		newSelectedKeyframe.isSelected = true
+	
+	_SMSCamera.selectedKeyframe = _getSelectedkeyframe()
+	
+	for i in %CamKeyframes.get_child_count():
+		var keyframe: CamKeyframe = %CamKeyframes.get_children()[i]
+		if keyframe == keyframeToDelete:
+			continue
+		var updateCamPosLabel = Callable(keyframe.cameraPoint, "updateLabel")
+		var updateTargetLabel = Callable(keyframe.targetPoint, "updateLabel")
+		updateCamPosLabel.call_deferred()
+		updateTargetLabel.call_deferred()
 
 
 func _on_duplicate_point_pressed() -> void:	# TODO: make this actually work
