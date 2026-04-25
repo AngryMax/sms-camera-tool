@@ -32,7 +32,11 @@ var targetField: Vector3:
 		%Target/Z/Input.value = value.z
 	get:
 		return Vector3(%Target/X/Input.value, %Target/Y/Input.value, %Target/Z/Input.value)
-	
+
+
+func _ready() -> void:
+	%BG.size.x = %KeyframeGUI.size.x
+	%BG.size.y = DisplayServer.window_get_size().y
 
 
 func _on_shrink_button_toggled(toggled_on: bool) -> void:
