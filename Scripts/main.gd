@@ -205,7 +205,7 @@ func _on_gui_position_changed(_value: float) -> void:
 func _on_gui_target_changed(_value: float) -> void:
 	var keyframe := _getSelectedkeyframe()
 	keyframe.targetPoint.smsPosition = %GUI.targetField
-	%Camera3D.position = keyframe.cameraPoint.position
+	#%Camera3D.position = keyframe.cameraPoint.position
 
 
 func _on_copy_all_pressed() -> void:
