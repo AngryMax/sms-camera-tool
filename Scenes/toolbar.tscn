@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://uf3fc7jnxu1x" path="res://Scripts/GUI/toolbar.gd" id="1_vmn2u"]
 [ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://Scenes/about.tscn" id="2_5g788"]
+[ext_resource type="PackedScene" uid="uid://nxugwcbog76n" path="res://Scenes/website_prompt.tscn" id="3_qlqgh"]
 
 [node name="Toolbar" type="HBoxContainer" unique_id=1592379772]
 offset_right = 132.0
@@ -81,3 +82,6 @@ popup/item_3/id = 3
 unique_name_in_owner = true
 initial_position = 1
 visible = false
+
+[node name="Website Prompt" parent="Help" unique_id=742102282 instance=ExtResource("3_qlqgh")]
+unique_name_in_owner = true

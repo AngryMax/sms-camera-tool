@@ -58,10 +58,13 @@ func _on_help_menu(id: int) -> void:
 	
 	match id:
 		HelpOptions.BUG:
-			pass
+			%"Website Prompt".setWebsiteString("https://github.com/AngryMax/sms-camera-tool/issues")
 		HelpOptions.GUIDE:
-			pass
+			%"Website Prompt".setWebsiteString("https://github.com/AngryMax/sms-camera-tool/tree/dev#sms-camera-tool")
 		HelpOptions.LICENSE:
-			pass
+			%"Website Prompt".setWebsiteString("https://github.com/AngryMax/sms-camera-tool/blob/main/LICENSE")
 		HelpOptions.ABOUT:
 			%About.visible = true
+			return
+	
+	%"Website Prompt".show()

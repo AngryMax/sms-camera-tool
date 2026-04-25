@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://nxugwcbog76n"]
+
+[ext_resource type="Script" uid="uid://dvdegq2wr6mb7" path="res://Scripts/GUI/website_prompt.gd" id="1_klqa8"]
+
+[node name="Website Prompt" type="PopupPanel" unique_id=742102282]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(400, 240)
+script = ExtResource("1_klqa8")
+
+[node name="BG" type="Panel" parent="." unique_id=164100958]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BG" unique_id=629106119]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="PromptText" type="RichTextLabel" parent="BG/VBoxContainer" unique_id=1669900941]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(184, 101)
+layout_mode = 2
+size_flags_vertical = 2
+size_flags_stretch_ratio = 2.76
+bbcode_enabled = true
+text = "
+Open
+
+[you_shouldnt_see_this]
+
+in your browser?"
+fit_content = true
+scroll_active = false
+autowrap_mode = 1
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="BG/VBoxContainer" unique_id=1668746072]
+layout_mode = 2
+size_flags_vertical = 6
+alignment = 1
+
+[node name="YesButton" type="Button" parent="BG/VBoxContainer/Buttons" unique_id=1587218299]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "   Yes   "
+
+[node name="NoButton" type="Button" parent="BG/VBoxContainer/Buttons" unique_id=1697515086]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "   No   "
+
+[connection signal="pressed" from="BG/VBoxContainer/Buttons/YesButton" to="." method="_on_yes_button_pressed"]
+[connection signal="pressed" from="BG/VBoxContainer/Buttons/NoButton" to="." method="_on_no_button_pressed"]
