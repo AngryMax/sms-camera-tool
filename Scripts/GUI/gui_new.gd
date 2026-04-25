@@ -32,3 +32,13 @@ var targetField: Vector3:
 		%Target/Z/Input.value = value.z
 	get:
 		return Vector3(%Target/X/Input.value, %Target/Y/Input.value, %Target/Z/Input.value)
+	
+
+
+func _on_shrink_button_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		%AnimationPlayer.play("close_expand_gui")
+		%ShrinkButton.text = "<"
+	else:
+		%AnimationPlayer.play_backwards("close_expand_gui")
+		%ShrinkButton.text = ">"
