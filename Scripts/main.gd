@@ -166,16 +166,21 @@ func _on_delete_point_pressed() -> void:
 		updateTargetLabel.call_deferred()
 
 
-func _on_duplicate_point_pressed() -> void:	# TODO: make this actually work
+func _on_duplicate_point_pressed() -> void:
 	
-	#var kfToCopy := _getSelectedkeyframe()
-	#_addPoint()
-	#
-	#var kfToPaste := _getSelectedkeyframe()
-	#
-	#kfToPaste = kfToCopy
+	var camPos := Globals.currentKeyframe.cameraPoint.position
+	var targetPos := Globals.currentKeyframe.targetPoint.position
+	var time := Globals.currentKeyframe.transitionTime
+	var interps := Globals.currentKeyframe.interpolation
 	
-	print("duplicate")
+	_addPoint()
+	
+	var newKeyframe: CamKeyframe = %CamKeyframes.get_child(-1)
+	newKeyframe.cameraPoint.position = camPos
+	newKeyframe.targetPoint.position = targetPos
+	newKeyframe.transitionTime = time
+	newKeyframe.interpolation = interps
+	%GUI.keyframe = newKeyframe
 
 
 func _on_cur_keyframe_field_value_changed(value: float) -> void:
