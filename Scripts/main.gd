@@ -52,6 +52,7 @@ func _connectGUISignals() -> void:
 
 func _connectToolbarSignals() -> void:
 	%Toolbar.connect("newFile", _on_new_file)
+	%Toolbar.connect("resetCam", _on_reset_cam)
 	%Toolbar/%SaveAsFile.connect("file_selected", _on_file_saved)
 	%Toolbar/%OpenFile.connect("file_selected", _on_file_opened)
 
@@ -246,3 +247,8 @@ func _on_file_opened(path: String):
 func _on_new_file():
 	_deleteAllKeyframes()
 	_addPoint()
+
+
+func _on_reset_cam():
+	%Camera3D.position = Globals.viewportCameraStartPos
+	%Camera3D.rotation = Globals.viewportCameraStartRot

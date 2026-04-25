@@ -8,6 +8,11 @@ extends Camera3D
 @export_range(0.0, 90.0, 0.1, "radians_as_degrees") var MAX_VERT_ANGLE = PI/4
 
 
+func _ready() -> void:
+	Globals.viewportCameraStartPos = position
+	Globals.viewportCameraStartRot = rotation
+
+
 func _physics_process(_delta: float) -> void:
 	
 	if Input.is_action_pressed("mouse_click_right"):
