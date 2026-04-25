@@ -79,6 +79,7 @@ func _replayKeyframes(delta: float):
 	
 	
 	if _toKeyframe == _keyframes.back() and _lerpPow >= 1.0:
+		GDInterface.restoreCameraCode()
 		playbackMode = false
 		return
 	
