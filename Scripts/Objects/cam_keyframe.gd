@@ -9,6 +9,7 @@ class_name CamKeyframe
 var isSelected: bool:
 	set(value):
 		targetPoint.visible = value
+		_pointLink.visible = value
 		_toggleArrowVisibility(value)
 		if value == true:
 			_deactivateOtherKeyframes()
@@ -23,6 +24,7 @@ signal keyframeChanged(keyframe: CamKeyframe)	## Emitted to let the GUI know it 
 
 ### Private Vars ###
 var _SMSInterface: Node
+var _pointLink: PointLink
 const _mainScene := preload("res://Scenes/smsct.tscn")
 
 
@@ -44,12 +46,20 @@ func _ready() -> void:
 	cameraPoint.pointTex = preload("res://Resources/Images/3d view sprites/campoint.png")
 	targetPoint.pointTex = preload("res://Resources/Images/target_icon.png")
 	
+	_pointLink = PointLink.new()
+	
+	add_child(_pointLink)
 	add_child(cameraPoint)
 	add_child(targetPoint)
 	
 	cameraPoint.body.connect("input_event", _signalPassthrough)
 	cameraPoint.connect("pointChanged", _pointChanged)
 	targetPoint.connect("pointChanged", _pointChanged)
+
+
+func _process(delta: float) -> void:
+	_pointLink.start  = cameraPoint.position
+	_pointLink.end = targetPoint.position
 
 
 func _toggleArrowVisibility(toggle: bool) -> void:
