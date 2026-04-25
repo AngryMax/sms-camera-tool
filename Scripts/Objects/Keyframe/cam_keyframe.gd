@@ -62,6 +62,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	
 	_pointLink.start  = cameraPoint.position
 	_pointLink.end = targetPoint.position
 	
@@ -74,6 +75,17 @@ func _process(_delta: float) -> void:
 	if _lastShowTargets != Globals.showTargets and isSelected == false:
 		targetPoint.visible = false
 		_pointLink.visible = false
+	
+	if not isSelected:
+		return
+	
+	if Globals.camPointFollowViewport:
+		cameraPoint.position = get_viewport().get_camera_3d().position
+		keyframeChanged.emit(self)
+	
+	if Globals.targetPointFollowViewport:
+		targetPoint.position = get_viewport().get_camera_3d().position
+		keyframeChanged.emit(self)
 
 
 func _toggleArrowVisibility(toggle: bool) -> void:

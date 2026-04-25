@@ -1,7 +1,7 @@
 extends HBoxContainer
 
 enum FileOptions {NEW, OPEN, SAVE, QUIT}
-enum ToolsOptions {TOGGLE_SNAP}
+enum ToolsOptions {TOGGLE_SNAP, TOGGLE_CAM_FOLLOW, TOGGLE_TARGET_FOLLOW}
 enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
 
@@ -39,13 +39,17 @@ func _on_tools_menu(id: int) -> void:
 	var popup: PopupMenu = %Tools.get_popup()
 	var isSnap := false
 	
-	
 	match id:
 		ToolsOptions.TOGGLE_SNAP:
-			popup.set_item_checked(id, !popup.is_item_checked(id))
-			isSnap = popup.is_item_checked(id)
+			isSnap = !popup.is_item_checked(id)
+		ToolsOptions.TOGGLE_CAM_FOLLOW:
+			Globals.camPointFollowViewport = !popup.is_item_checked(id)
+		ToolsOptions.TOGGLE_TARGET_FOLLOW:
+			Globals.targetPointFollowViewport = !popup.is_item_checked(id)
 		_:
 			push_error("Invalid Tools menu button!")
+	
+	popup.set_item_checked(id, !popup.is_item_checked(id))
 	
 	if not isSnap:
 		Globals.snapMode = Globals.SnapMode.NONE
