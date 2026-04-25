@@ -47,6 +47,7 @@ func _connectGUISignals() -> void:
 	%GUI/%CopyFromGameButton.connect("pressed", _on_copy_all_pressed)
 	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
 	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
+	%GUI/%TravelTimeInput.connect("value_changed", _on_transition_time_changed)
 
 
 func _connectToolbarSignals() -> void:
@@ -128,7 +129,7 @@ func _deleteAllKeyframes() -> void:
 		child.queue_free()
 
 
-### Signal Receive Funcs ###
+### GUI Signal Receive Funcs ###
 
 func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
 	%GUI.keyframe = keyframe
@@ -213,6 +214,11 @@ func _on_preview_pressed() -> void:
 
 func _on_play_keyframes_pressed() -> void:
 	_SMSCamera.playbackMode = true
+
+
+func _on_transition_time_changed(value: float) -> void:
+	var keyframe := _getSelectedkeyframe()
+	keyframe.transitionTime = value
 
 
 ### Toolbar Signal Receivers ###
