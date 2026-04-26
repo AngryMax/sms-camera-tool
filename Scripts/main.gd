@@ -37,9 +37,9 @@ func _process(_delta: float) -> void:
 func _connectGUISignals() -> void:
 	
 	%GUI/%AddPointButton.connect("pressed", _on_add_point_pressed)
-	%GUI/%DuplicatePointButton.connect("pressed", _on_duplicate_point_pressed)
+	%GUI/%DuplicatePointButton.connect("pressed", _on_duplicate_keyframe_pressed)
 	%GUI/%CurPointField.connect("value_changed", _on_cur_keyframe_field_value_changed)
-	%GUI/%DeleteButton.connect("pressed", _on_delete_point_pressed)
+	%GUI/%DeleteButton.connect("pressed", _on_delete_keyframe_pressed)
 	%GUI/%Pos.find_child("X").find_child("Input").connect("value_changed", _on_gui_position_changed)
 	%GUI/%Pos.find_child("Y").find_child("Input").connect("value_changed", _on_gui_position_changed)
 	%GUI/%Pos.find_child("Z").find_child("Input").connect("value_changed", _on_gui_position_changed)
@@ -90,14 +90,23 @@ func _control() -> void:
 	$Camera3D.position += relativeDir
 
 
-func _addKeyframe() -> void:
+func _addKeyframe(idx := -1, keyframeVals: SaveFile = null) -> void:
 	
-	var camKeyFrame := CamKeyframe.new()
-	%CamKeyframes.add_child(camKeyFrame)
+
+	var keyFrame := CamKeyframe.new()
+	%CamKeyframes.add_child(keyFrame)
+	%CamKeyframes.move_child(keyFrame, idx)
 	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
-	camKeyFrame.connect("keyframeChanged", _on_keyframe_changed)
-	camKeyFrame.isSelected = true
-	Globals.currentKeyframe = camKeyFrame
+	keyFrame.connect("keyframeChanged", _on_keyframe_changed)
+	
+	if keyframeVals:
+		keyFrame.cameraPoint.position = keyframeVals.positions.front()
+		keyFrame.targetPoint.position = keyframeVals.targets.front()
+		keyFrame.transitionTime = keyframeVals.times.front()
+		keyFrame.interpolation = keyframeVals.interps.front()
+	
+	keyFrame.isSelected = true
+	Globals.currentKeyframe = keyFrame
 
 
 func _deleteKeyframe(deleteFromUndo := false) -> void:
@@ -187,24 +196,40 @@ func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
 
 func _on_add_point_pressed() -> void:
 	
-	Globals.undoRedo.create_action("Add Point")
+	Globals.undoRedo.create_action("Add Keyframe")
 	Globals.undoRedo.add_do_method(_addKeyframe)
 	Globals.undoRedo.add_undo_method(_deleteKeyframe.bind(true))
 	Globals.undoRedo.commit_action()
 
 
-func _on_delete_point_pressed() -> void:
-	_deleteKeyframe()
+func _on_delete_keyframe_pressed() -> void:
+	
+	var keyframe := _getSelectedkeyframe()
+	
+	# Using a SaveFile turned out to be the simplest way to achieve my goals haha
+	# Perhaps I need to rename SaveFile to something else?
+	var keyframeVals := SaveFile.new()
+	keyframeVals.positions.append(keyframe.cameraPoint.position)
+	keyframeVals.targets.append(keyframe.targetPoint.position)
+	keyframeVals.times.append(keyframe.transitionTime)
+	keyframeVals.interps.append(keyframe.interpolation)
+	
+	var undoIdx := _getSelectedkeyframe().get_index()
+	
+	Globals.undoRedo.create_action("Delete Keyframe")
+	Globals.undoRedo.add_do_method(_deleteKeyframe)
+	Globals.undoRedo.add_undo_method(_addKeyframe.bind(undoIdx, keyframeVals))
+	Globals.undoRedo.commit_action()
 
 
-func _on_duplicate_point_pressed() -> void:
+func _on_duplicate_keyframe_pressed() -> void:
 	
 	var camPos := Globals.currentKeyframe.cameraPoint.position
 	var targetPos := Globals.currentKeyframe.targetPoint.position
 	var time := Globals.currentKeyframe.transitionTime
 	var interps := Globals.currentKeyframe.interpolation
 	
-	Globals.undoRedo.create_action("Duplicate Point")
+	Globals.undoRedo.create_action("Duplicate Keyframe")
 	Globals.undoRedo.add_do_method(_addKeyframe)
 	Globals.undoRedo.add_undo_method(_deleteKeyframe.bind(true))
 	Globals.undoRedo.commit_action()

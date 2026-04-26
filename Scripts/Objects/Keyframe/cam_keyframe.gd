@@ -40,19 +40,21 @@ func _ready() -> void:
 	
 	_SMSInterface = get_tree().get_first_node_in_group("SMSCameraInterface")
 	
-	cameraPoint = Point.new()
-	targetPoint = Point.new()
+	if cameraPoint == null:
+		cameraPoint = Point.new()
+		cameraPoint.color = Color(1.0, 0.635, 0.579, 1.0)
+		cameraPoint.pointTex = preload("res://Resources/Images/3d view sprites/campoint.png")
+		cameraPoint.position = Vector3(3, 4, 5)
+		add_child(cameraPoint)
 	
-	cameraPoint.color = Color(1.0, 0.635, 0.579, 1.0)
-	cameraPoint.pointTex = preload("res://Resources/Images/3d view sprites/campoint.png")
-	cameraPoint.position = Vector3(3, 4, 5)
-	targetPoint.pointTex = preload("res://Resources/Images/target_icon.png")
+	
+	if targetPoint == null:
+		targetPoint = Point.new()
+		targetPoint.pointTex = preload("res://Resources/Images/target_icon.png")
+		add_child(targetPoint)
 	
 	_pointLink = PointLink.new()
-	
 	add_child(_pointLink)
-	add_child(cameraPoint)
-	add_child(targetPoint)
 	
 	cameraPoint.body.connect("input_event", _signalPassthrough)
 	cameraPoint.connect("pointUpdated", _on_point_updated)
