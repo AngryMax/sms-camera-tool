@@ -110,7 +110,7 @@ func _deleteKeyframe(deleteFromUndo := false) -> void:
 	var keyframeToDelete: CamKeyframe
 	
 	if deleteFromUndo:	# TODO: The lazy way to handle undos... it works until you can add keyframes at any index or rearrange them lol
-		keyframeToDelete = %CamKeyframes.get_children().back()
+		keyframeToDelete = %CamKeyframes.get_child(-1)
 	else:
 		keyframeToDelete = _getSelectedkeyframe()
 	
@@ -204,7 +204,10 @@ func _on_duplicate_point_pressed() -> void:
 	var time := Globals.currentKeyframe.transitionTime
 	var interps := Globals.currentKeyframe.interpolation
 	
-	_addKeyframe()
+	Globals.undoRedo.create_action("Duplicate Point")
+	Globals.undoRedo.add_do_method(_addKeyframe)
+	Globals.undoRedo.add_undo_method(_deleteKeyframe.bind(true))
+	Globals.undoRedo.commit_action()
 	
 	var newKeyframe: CamKeyframe = %CamKeyframes.get_child(-1)
 	newKeyframe.cameraPoint.position = camPos
