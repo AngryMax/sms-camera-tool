@@ -27,9 +27,19 @@ func _ready() -> void:
 	Globals.currentKeyframe = %CamKeyframes.get_child(0)	# Since this is in _ready, this *should* always be the first and only keyframe...
 
 
+var temp := 0.0
 func _process(_delta: float) -> void:
 	_control()
 	_keyboardShortcuts()
+	
+	temp += _delta
+	
+	if temp <= 2:
+		return
+	temp = 0
+	
+	if Globals.undoRedo.get_history_count() <= 1:
+		print("undo history is ", Globals.undoRedo.get_history_count(), "!")
 
 
 ### Private Funcs ###
@@ -109,21 +119,21 @@ func _addKeyframe(idx := -1, keyframeVals: SaveFile = null) -> void:
 	Globals.currentKeyframe = keyFrame
 
 
-func _deleteKeyframe(deleteFromUndo := false) -> void:
+func _deleteKeyframe(deleteFromAddUndo := false) -> void:
 	
 	var keyframesLeft := %CamKeyframes.get_child_count()
 	
-	if keyframesLeft == 1:
-		return	# TODO: make this reset the keyframe rather than just do nothing
-	
 	var keyframeToDelete: CamKeyframe
 	
-	if deleteFromUndo:	# TODO: The lazy way to handle undos... it works until you can add keyframes at any index or rearrange them lol
+	if deleteFromAddUndo:	# TODO: The lazy way to handle undos... it works until you can add keyframes at any index or rearrange them lol
 		keyframeToDelete = %CamKeyframes.get_child(-1)
 	else:
 		keyframeToDelete = _getSelectedkeyframe()
 	
-	keyframeToDelete.free()
+	#keyframeToDelete.free()
+	%CamKeyframes.remove_child(keyframeToDelete)
+	%UndoKeyframes.add_child(keyframeToDelete)
+	keyframeToDelete.process_mode = Node.PROCESS_MODE_DISABLED
 	
 	%GUI.maxKeyframes = keyframesLeft - 1
 	
@@ -140,6 +150,13 @@ func _deleteKeyframe(deleteFromUndo := false) -> void:
 		updateCamPosLabel.call_deferred()
 		updateTargetLabel.call_deferred()
 
+
+func _undoDeletedKeyframe():
+	var keyframe: CamKeyframe = %UndoKeyframes.get_child(-1)
+	%UndoKeyframes.remove_child(keyframe)
+	%CamKeyframes.add_child(keyframe)
+	keyframe.process_mode = Node.PROCESS_MODE_ALWAYS
+	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
 
 func _getSelectedkeyframe() -> CamKeyframe:
 	
@@ -204,21 +221,13 @@ func _on_add_point_pressed() -> void:
 
 func _on_delete_keyframe_pressed() -> void:
 	
-	var keyframe := _getSelectedkeyframe()
-	
-	# Using a SaveFile turned out to be the simplest way to achieve my goals haha
-	# Perhaps I need to rename SaveFile to something else?
-	var keyframeVals := SaveFile.new()
-	keyframeVals.positions.append(keyframe.cameraPoint.position)
-	keyframeVals.targets.append(keyframe.targetPoint.position)
-	keyframeVals.times.append(keyframe.transitionTime)
-	keyframeVals.interps.append(keyframe.interpolation)
-	
-	var undoIdx := _getSelectedkeyframe().get_index()
+	var keyframesLeft := %CamKeyframes.get_child_count()
+	if keyframesLeft == 1:
+		return	# TODO: make this reset the keyframe rather than just do nothing
 	
 	Globals.undoRedo.create_action("Delete Keyframe")
 	Globals.undoRedo.add_do_method(_deleteKeyframe)
-	Globals.undoRedo.add_undo_method(_addKeyframe.bind(undoIdx, keyframeVals))
+	Globals.undoRedo.add_undo_method(_undoDeletedKeyframe.bind())
 	Globals.undoRedo.commit_action()
 
 

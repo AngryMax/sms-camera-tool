@@ -38,6 +38,10 @@ light_color = Color(1, 1, 0.9372549, 1)
 unique_name_in_owner = true
 editor_description = "This is where CamKeyframes get put during runtime."
 
+[node name="UndoKeyframes" type="Node3D" parent="." unique_id=1217866017]
+unique_name_in_owner = true
+visible = false
+
 [node name="Path3D" type="Path3D" parent="." unique_id=479842117]
 unique_name_in_owner = true
 curve = SubResource("Curve3D_o6pwk")
