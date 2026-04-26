@@ -17,6 +17,8 @@ func _ready() -> void:
 	
 	_connectGUISignals()
 	_connectToolbarSignals()
+	_connectSettingsSignals()
+	
 	_SMSCamera = %SMSCameraInterface
 	_addKeyframe()
 	
@@ -31,11 +33,6 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	_control()
 	_keyboardShortcuts()
-
-
-### Public Funcs ###
-
-
 
 
 ### Private Funcs ###
@@ -71,6 +68,10 @@ func _connectToolbarSignals() -> void:
 	%Toolbar.connect("toggleAxes", _on_toggle_axes)
 	%Toolbar/%SaveAsFile.connect("file_selected", _on_file_saved)
 	%Toolbar/%OpenFile.connect("file_selected", _on_file_opened)
+
+
+func _connectSettingsSignals() -> void:
+	%Toolbar/%Settings.connect("reloadMat", _on_reload_mat)
 
 
 func _control() -> void:
@@ -406,7 +407,7 @@ func _on_grab_from_camera_toggled(_toggle: bool):
 
 ### Toolbar Signal Receivers ###
 
-func _on_file_saved(path: String):
+func _on_file_saved(path: String) -> void:
 	
 	var saveFile: SaveFile = SaveFile.new()
 	
@@ -420,7 +421,7 @@ func _on_file_saved(path: String):
 	saveFile.saveFile(path)
 
 
-func _on_file_opened(path: String):
+func _on_file_opened(path: String) -> void:
 	
 	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
@@ -439,18 +440,18 @@ func _on_file_opened(path: String):
 	%GUI.keyframe = Globals.currentKeyframe
 
 
-func _on_new_file():
+func _on_new_file() -> void:
 	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
 	_addKeyframe()
 
 
-func _on_reset_cam():
+func _on_reset_cam() -> void:
 	%Camera3D.position = Globals.viewportCameraStartPos
 	%Camera3D.rotation = Globals.viewportCameraStartRot
 
 
-func _on_goto_point():
+func _on_goto_point() -> void:
 	
 	const POS_OFFSET := Vector3(Vector3.ONE) * 2
 	
@@ -468,9 +469,32 @@ func _on_goto_point():
 		break
 
 
-func _on_toggle_grid(toggle: bool):
+func _on_toggle_grid(toggle: bool) -> void:
 	_grid.toggleVisible(toggle)
 
 
-func _on_toggle_axes(toggle: bool):
+func _on_toggle_axes(toggle: bool) -> void:
 	_axis.toggleVisible(toggle)
+
+
+### Settings Signal Receive Funcs ###
+
+func _on_reload_mat(enable_shaders: bool) -> void:
+	
+	var camShaderMatOverride: ShaderMaterial = load("res://Scenes/Mat/camera_model_shader_mat.tres")
+	var targetShaderMatOverride: ShaderMaterial = load("res://Scenes/Mat/target_model_shader_mat.tres")
+	
+	var targetMesh: MeshInstance3D = %SMSCameraRepresantation/TargetModel
+	var camMesh: MeshInstance3D = %SMSCameraRepresantation/CamModel/body
+	
+	targetMesh.set_surface_override_material(0, null)
+	camMesh.set_surface_override_material(0, null)
+	if enable_shaders == true:
+		print("enable shaders")
+		targetMesh.material_override = targetShaderMatOverride
+		camMesh.material_override = camShaderMatOverride
+	else:
+		print("disable shaders")
+		targetMesh.material_override = null
+		camMesh.material_override = null
+	

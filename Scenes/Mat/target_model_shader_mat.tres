@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bhdjr62jbw281"]
+
+[ext_resource type="Shader" uid="uid://cflq2yrkywpgd" path="res://Resources/Shaders/camera_target_model.gdshader" id="1_n8hfi"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_n8hfi")

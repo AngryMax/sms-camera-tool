@@ -1,7 +1,7 @@
 extends HBoxContainer
 
 enum FileOptions {NEW, OPEN, SAVE, QUIT}
-enum EditOptions {UNDO, REDO}
+enum EditOptions {UNDO, REDO, SETTINGS}
 enum ToolsOptions {TOGGLE_SNAP, TOGGLE_CAM_FOLLOW, TOGGLE_TARGET_FOLLOW}
 enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
@@ -43,6 +43,8 @@ func _on_edit_menu(id: int) -> void:
 			Globals.undoRedo.undo()
 		EditOptions.REDO:
 			Globals.undoRedo.redo()
+		EditOptions.SETTINGS:
+			%Settings.visible = true
 		_:
 			push_error("Invalid Edit menu button!")
 

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://uf3fc7jnxu1x" path="res://Scripts/GUI/toolbar.gd" id="1_vmn2u"]
 [ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://Scenes/about.tscn" id="2_5g788"]
 [ext_resource type="PackedScene" uid="uid://nxugwcbog76n" path="res://Scenes/website_prompt.tscn" id="3_qlqgh"]
+[ext_resource type="PackedScene" uid="uid://dl2mrowghweij" path="res://Scenes/settings.tscn" id="4_nc5mq"]
 
 [node name="Toolbar" type="HBoxContainer" unique_id=1592379772]
 offset_right = 132.0
@@ -45,11 +46,13 @@ filters = PackedStringArray("*.tres")
 unique_name_in_owner = true
 layout_mode = 2
 text = "Edit"
-item_count = 2
+item_count = 3
 popup/item_0/text = "Undo"
 popup/item_0/id = 0
 popup/item_1/text = "Redo"
 popup/item_1/id = 1
+popup/item_2/text = "Settings"
+popup/item_2/id = 2
 
 [node name="Tools" type="MenuButton" parent="." unique_id=1297977762]
 unique_name_in_owner = true
@@ -110,3 +113,7 @@ visible = false
 
 [node name="Website Prompt" parent="Help" unique_id=742102282 instance=ExtResource("3_qlqgh")]
 unique_name_in_owner = true
+
+[node name="Settings" parent="." unique_id=2027716955 instance=ExtResource("4_nc5mq")]
+unique_name_in_owner = true
+visible = false

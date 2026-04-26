@@ -24,3 +24,5 @@ var targetPointFollowViewport := false	## currentKeyframe's targetPoint will upd
 
 var viewportCameraStartPos: Vector3	## The spawn coords of the viewport camera. Set in the Camera3D's _ready()
 var viewportCameraStartRot: Vector3	## The spawn rot of the viewport camera. Set in the Camera3D's _ready()
+
+var enableShaders := false

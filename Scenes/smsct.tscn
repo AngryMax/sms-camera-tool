@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://bdyc85dm83ysq" path="res://Scripts/sms_interface.gd" id="5_7m5yr"]
 [ext_resource type="Script" path="res://PyScripts/GDInterface.py" id="6_1egvx"]
 [ext_resource type="PackedScene" uid="uid://kx15b1p6s6cl" path="res://Scenes/camera_model.tscn" id="6_hrafl"]
-[ext_resource type="Shader" uid="uid://cflq2yrkywpgd" path="res://Resources/Shaders/camera_target_model.gdshader" id="7_1jbuc"]
+[ext_resource type="Material" uid="uid://bhdjr62jbw281" path="res://Scenes/Mat/target_model_shader_mat.tres" id="7_1jbuc"]
 
 [sub_resource type="Environment" id="Environment_kmq1t"]
 background_mode = 1
@@ -19,12 +19,11 @@ reflected_light_source = 1
 
 [sub_resource type="Curve3D" id="Curve3D_o6pwk"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r6bid"]
-render_priority = 0
-shader = ExtResource("7_1jbuc")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1jbuc"]
+albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_hrafl"]
-material = SubResource("ShaderMaterial_r6bid")
+material = SubResource("StandardMaterial3D_1jbuc")
 radial_segments = 32
 rings = 16
 
@@ -95,6 +94,7 @@ transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 [node name="TargetModel" type="MeshInstance3D" parent="SMSCameraInterface/SMSCameraRepresantation" unique_id=787941679]
 unique_name_in_owner = true
 mesh = SubResource("SphereMesh_hrafl")
+surface_material_override/0 = ExtResource("7_1jbuc")
 
 [node name="Timer" type="Timer" parent="SMSCameraInterface" unique_id=673486839]
 unique_name_in_owner = true
