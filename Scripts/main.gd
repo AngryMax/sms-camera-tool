@@ -8,6 +8,7 @@ extends Node3D
 var _SMSCamera: SMSCameraInterface
 var _axis: axisGizmo
 var _grid: gridGizmo
+var _addFromButton := false	## Tracks when a Keyframe is being added via clicking the Add Keyframe button, or via undoing a deleted keyframe
 
 
 ### Override Funcs ###
@@ -27,19 +28,9 @@ func _ready() -> void:
 	Globals.currentKeyframe = %CamKeyframes.get_child(0)	# Since this is in _ready, this *should* always be the first and only keyframe...
 
 
-var temp := 0.0
 func _process(_delta: float) -> void:
 	_control()
 	_keyboardShortcuts()
-	
-	temp += _delta
-	
-	if temp <= 2:
-		return
-	temp = 0
-	
-	if Globals.undoRedo.get_history_count() <= 1:
-		print("undo history is ", Globals.undoRedo.get_history_count(), "!")
 
 
 ### Private Funcs ###
@@ -102,7 +93,11 @@ func _control() -> void:
 
 func _addKeyframe(idx := -1, keyframeVals: SaveFile = null) -> void:
 	
-
+	# If _addKeyFrame() is called via redo (ctrl + shift + z)
+	if not _addFromButton and Globals.undoRedo.get_current_action_name() == "Add Keyframe":	# TODO: Add Global enum for undoRedo action names, access enum name as string
+		_readdKeyframe()
+		return
+	
 	var keyFrame := CamKeyframe.new()
 	%CamKeyframes.add_child(keyFrame)
 	%CamKeyframes.move_child(keyFrame, idx)
@@ -119,6 +114,15 @@ func _addKeyframe(idx := -1, keyframeVals: SaveFile = null) -> void:
 	Globals.currentKeyframe = keyFrame
 
 
+## Takes Keyframes "deleted" via ctrl + z (undo) and re-adds them upon ctrl + shift + z (redo)
+func _readdKeyframe() -> void:
+	var keyframe: CamKeyframe = %DeleteUndoKeyframes.get_child(-1)
+	%DeleteUndoKeyframes.remove_child(keyframe)
+	%CamKeyframes.add_child(keyframe)
+	keyframe.process_mode = Node.PROCESS_MODE_ALWAYS
+	keyframe.isSelected = true
+
+
 func _deleteKeyframe(deleteFromAddUndo := false) -> void:
 	
 	var keyframesLeft := %CamKeyframes.get_child_count()
@@ -132,7 +136,7 @@ func _deleteKeyframe(deleteFromAddUndo := false) -> void:
 	
 	#keyframeToDelete.free()
 	%CamKeyframes.remove_child(keyframeToDelete)
-	%UndoKeyframes.add_child(keyframeToDelete)
+	%UndoRedoKeyframes.add_child(keyframeToDelete)
 	keyframeToDelete.process_mode = Node.PROCESS_MODE_DISABLED
 	
 	%GUI.maxKeyframes = keyframesLeft - 1
@@ -145,18 +149,27 @@ func _deleteKeyframe(deleteFromAddUndo := false) -> void:
 		var keyframe: CamKeyframe = %CamKeyframes.get_children()[i]
 		if keyframe == keyframeToDelete:
 			continue
-		var updateCamPosLabel = Callable(keyframe.cameraPoint, "updateLabel")
+		var updateCamPosLabel = Callable(keyframe.cameraPoint, "updateLabel")	# TODO: just make an updateLable func in CamKeyframe that calls updateLabel in Point?
 		var updateTargetLabel = Callable(keyframe.targetPoint, "updateLabel")
 		updateCamPosLabel.call_deferred()
 		updateTargetLabel.call_deferred()
 
 
+## "Deletes" added Keyframes via ctrl + z (undo)
+func _deleteKeyframeUndo() -> void:
+	var keyframe = _getSelectedkeyframe()
+	%CamKeyframes.remove_child(keyframe)
+	%DeleteUndoKeyframes.add_child(keyframe)
+	keyframe.process_mode = Node.PROCESS_MODE_DISABLED
+
+
 func _undoDeletedKeyframe():
-	var keyframe: CamKeyframe = %UndoKeyframes.get_child(-1)
-	%UndoKeyframes.remove_child(keyframe)
+	var keyframe: CamKeyframe = %UndoRedoKeyframes.get_child(-1)
+	%UndoRedoKeyframes.remove_child(keyframe)
 	%CamKeyframes.add_child(keyframe)
 	keyframe.process_mode = Node.PROCESS_MODE_ALWAYS
 	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
+
 
 func _getSelectedkeyframe() -> CamKeyframe:
 	
@@ -213,10 +226,23 @@ func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
 
 func _on_add_point_pressed() -> void:
 	
+	_addFromButton = true
+	# NOTE: Where I leave off, I'm fixing a bug where adding a Keyframe, moving it
+	# undo moving it, undo adding it, then REDO adding, then ATTEMPT at redo moving
+	# it doesn't do anything, since the original and re-added Keyframes are not
+	# actually the same keyframe! _addFromButton tracks if the the Add Keyframe
+	# button is currently being pressed, which means _addFromButton will be false
+	# if _addKeyframe() is called by the undo, but true when it's initially called
+	# by commit_action()! So what's next is to make _addKeyframe() change whether
+	# it actually creates a new Keyframe, or pulls one from one of the undo buffers
+	# in the scene tree.
+	
 	Globals.undoRedo.create_action("Add Keyframe")
 	Globals.undoRedo.add_do_method(_addKeyframe)
-	Globals.undoRedo.add_undo_method(_deleteKeyframe.bind(true))
+	Globals.undoRedo.add_undo_method(_deleteKeyframeUndo)
 	Globals.undoRedo.commit_action()
+	
+	_addFromButton = false
 
 
 func _on_delete_keyframe_pressed() -> void:

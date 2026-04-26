@@ -38,8 +38,16 @@ light_color = Color(1, 1, 0.9372549, 1)
 unique_name_in_owner = true
 editor_description = "This is where CamKeyframes get put during runtime."
 
-[node name="UndoKeyframes" type="Node3D" parent="." unique_id=1217866017]
+[node name="UndoRedoKeyframes" type="Node3D" parent="." unique_id=1217866017]
 unique_name_in_owner = true
+process_mode = 4
+editor_description = "Keyframes \"deleted\" via undo are put in here in case of potential \"creation\" via redo. So undo -> redo hence \"UndoRedo\""
+visible = false
+
+[node name="DeleteUndoKeyframes" type="Node3D" parent="." unique_id=1467077902]
+unique_name_in_owner = true
+process_mode = 4
+editor_description = "Keyframes deleted via the delete button are put in here in case of potential \"creation\" via redo. So delete -> redo hence \"DeleteRedo\""
 visible = false
 
 [node name="Path3D" type="Path3D" parent="." unique_id=479842117]
