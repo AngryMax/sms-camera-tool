@@ -163,6 +163,7 @@ func _deleteKeyframeUndo() -> void:
 	keyframe.process_mode = Node.PROCESS_MODE_DISABLED
 
 
+## Re-"creates" deleted Keyframes via ctrl + z (undo)
 func _undoDeletedKeyframe():
 	var keyframe: CamKeyframe = %UndoRedoKeyframes.get_child(-1)
 	%UndoRedoKeyframes.remove_child(keyframe)
@@ -171,6 +172,7 @@ func _undoDeletedKeyframe():
 	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
 
 
+## Gets the current selected Keyframe. I probably should use Globals.currentKeyframe in its place?
 func _getSelectedkeyframe() -> CamKeyframe:
 	
 	var returnKeyframe: CamKeyframe
@@ -227,15 +229,6 @@ func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
 func _on_add_point_pressed() -> void:
 	
 	_addFromButton = true
-	# NOTE: Where I leave off, I'm fixing a bug where adding a Keyframe, moving it
-	# undo moving it, undo adding it, then REDO adding, then ATTEMPT at redo moving
-	# it doesn't do anything, since the original and re-added Keyframes are not
-	# actually the same keyframe! _addFromButton tracks if the the Add Keyframe
-	# button is currently being pressed, which means _addFromButton will be false
-	# if _addKeyframe() is called by the undo, but true when it's initially called
-	# by commit_action()! So what's next is to make _addKeyframe() change whether
-	# it actually creates a new Keyframe, or pulls one from one of the undo buffers
-	# in the scene tree.
 	
 	Globals.undoRedo.create_action("Add Keyframe")
 	Globals.undoRedo.add_do_method(_addKeyframe)
