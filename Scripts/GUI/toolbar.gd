@@ -1,6 +1,7 @@
 extends HBoxContainer
 
 enum FileOptions {NEW, OPEN, SAVE, QUIT}
+enum EditOptions {UNDO, REDO}
 enum ToolsOptions {TOGGLE_SNAP, TOGGLE_CAM_FOLLOW, TOGGLE_TARGET_FOLLOW}
 enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
@@ -14,6 +15,7 @@ signal toggleAxes
 
 func _ready() -> void:
 	%File.get_popup().id_pressed.connect(_on_file_menu)
+	%Edit.get_popup().id_pressed.connect(_on_edit_menu)
 	%Tools.get_popup().id_pressed.connect(_on_tools_menu)
 	%View.get_popup().id_pressed.connect(_on_view_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
@@ -32,6 +34,17 @@ func _on_file_menu(id: int) -> void:
 			get_tree().quit()
 		_:
 			push_error("Invalid File menu button!")
+
+
+func _on_edit_menu(id: int) -> void:
+	
+	match id:
+		EditOptions.UNDO:
+			Globals.undoRedo.undo()
+		EditOptions.REDO:
+			Globals.undoRedo.redo()
+		_:
+			push_error("Invalid Edit menu button!")
 
 
 func _on_tools_menu(id: int) -> void:

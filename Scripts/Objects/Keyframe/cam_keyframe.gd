@@ -57,15 +57,18 @@ func _ready() -> void:
 	cameraPoint.body.connect("input_event", _signalPassthrough)
 	cameraPoint.connect("pointUpdated", _on_point_updated)
 	targetPoint.connect("pointUpdated", _on_point_updated)
+	cameraPoint.connect("pointSetUndoRedo", _on_point_set_undo_redo)
+	targetPoint.connect("pointSetUndoRedo", _on_point_set_undo_redo)
 	cameraPoint.connect("pointSelected", _on_point_selected)
 	targetPoint.connect("pointSelected", _on_point_selected)
+	cameraPoint.connect("selectParentKeyframe", _on_request_selected)
+	targetPoint.connect("selectParentKeyframe", _on_request_selected)
 
 
 func _process(_delta: float) -> void:
 	
 	_pointLink.start  = cameraPoint.position
 	_pointLink.end = targetPoint.position
-	
 	
 	if Globals.showTargets:
 		targetPoint.visible = true
@@ -101,7 +104,7 @@ func _toggleArrowVisibility(toggle: bool) -> void:
 
 
 
-## DO NOT CALL THIS FUNC!! IT'S CALLED IN isSelected's SET!
+## NOTE: DO NOT CALL THIS FUNC!! IT'S CALLED IN isSelected's SET!
 func _deactivateOtherKeyframes() -> void:
 	var _camKeyframes: Node3D = get_parent()
 	for keyframe: CamKeyframe in _camKeyframes.get_children():
@@ -129,8 +132,24 @@ func _signalPassthrough(_camera: Node, event: InputEvent, _event_position: Vecto
 	if mouseButtonEvent.pressed and mouseButtonEvent.button_mask == 1:
 		isSelected = true
 
+
 func _on_point_updated() -> void:
 	keyframeChanged.emit(self)
+
+
+## For making this the selected keyframe from child nodes (IE: when a point gets ctrl + z'd)
+func _on_request_selected() -> void:
+	isSelected = true
+
+
+func _on_point_set_undo_redo(point: Point) -> void:
+	
+	Globals.undoRedo.create_action("Point")
+	Globals.undoRedo.add_undo_property(point, "position", point.undoPos)
+	Globals.undoRedo.add_do_property(point, "position", point.position)
+	Globals.undoRedo.commit_action()
+	
+	point.undoPos = point.position
 
 
 func _on_point_selected(point: Point) -> void:

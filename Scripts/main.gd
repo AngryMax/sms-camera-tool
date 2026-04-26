@@ -28,6 +28,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	_control()
+	_keyboardShortcuts()
 
 
 ### Private Funcs ###
@@ -134,6 +135,15 @@ func _deleteAllKeyframes() -> void:
 		child.queue_free()
 
 
+func _keyboardShortcuts() -> void:
+	
+	if Input.is_action_just_pressed("shortcut_undo", true):
+		Globals.undoRedo.undo()
+	
+	if Input.is_action_just_pressed("shortcut_redo"):
+		Globals.undoRedo.redo()
+
+
 ### GUI Signal Receive Funcs ###
 
 func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
@@ -199,12 +209,12 @@ func _on_cur_keyframe_field_value_changed(value: float) -> void:
 
 func _on_gui_position_changed(_value: float) -> void:
 	var keyframe := _getSelectedkeyframe()
-	keyframe.cameraPoint.smsPosition = %GUI.posField
+	keyframe.cameraPoint.setPosition(%GUI.posField)
 
 
 func _on_gui_target_changed(_value: float) -> void:
 	var keyframe := _getSelectedkeyframe()
-	keyframe.targetPoint.smsPosition = %GUI.targetField
+	keyframe.targetPoint.setPosition(%GUI.targetField)
 
 
 func _on_copy_all_pressed() -> void:

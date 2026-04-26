@@ -7,6 +7,10 @@ var _isBeingDragged := false		## If this ClickPoint is currently being dragged
 var _sprite := Sprite3D.new()
 var _hoveredDragArrow := HoveredDragArrow.NONE
 var _snapDetect: ShapeCast3D
+var _mouseLastPos := 0.0
+var _isArrowBeingDragged := false
+var _clickedOnArrow := false
+var _lastHoveredArrow := HoveredDragArrow.NONE
 
 enum HoveredDragArrow {NONE, X, Y, Z}
 
@@ -14,17 +18,21 @@ var smsPosition: Vector3:
 	get:
 		return position * Globals.UNIT_DIVIDE_RATIO
 	set(value):
-		position = value /  Globals.UNIT_DIVIDE_RATIO
+		position = value / Globals.UNIT_DIVIDE_RATIO
 		smsPosition = value
+
 var body: StaticBody3D
 signal pointUpdated()	## Emitted to let the GUI know it needs to update
+signal pointSetUndoRedo()	## Emitted to let the GUI know it needs to update, and when it shouldn't track the change for the Undo history
 signal pointSelected(point: Point)	## Emitted to let the GUI know it needs to update
+signal selectParentKeyframe()		## Emitted to the parent keyframe to flip _isSelected true
 var pointTex: CompressedTexture2D
 var color := Color(1.0, 1.0, 1.0, 1.0)
 var dragArrowX: DragArrow
 var dragArrowY: DragArrow
 var dragArrowZ: DragArrow
 var isSelected := false
+var undoPos: Vector3
 
 
 func _ready() -> void:
@@ -80,6 +88,10 @@ func _ready() -> void:
 	dragArrowZ.connect("mouse_exited", _on_mouse_exited_z)
 	body.connect("mouse_entered", _on_mouse_entered)
 	body.connect("mouse_exited", _on_mouse_exited)
+	
+	Globals.undoRedo.connect("version_changed", _on_undo_redo)
+	
+	undoPos = position
 
 
 func _process(_delta: float) -> void:
@@ -105,10 +117,20 @@ func updateLabel() -> void:
 			child.text = str(get_parent().get_index() + 1)
 
 
+func setPosition(pos: Vector3, isSMSPos := true) -> void:
+	
+	if isSMSPos:
+		pos /= Globals.UNIT_DIVIDE_RATIO
+	
+	position = pos
+	_setUndoRedo()
+
+
 func _movePointByMouse() -> void:
 	
 	if not visible:
 		return
+	
 	
 	_sprite.modulate = color
 	if not _isBeingDragged:
@@ -122,8 +144,11 @@ func _movePointByMouse() -> void:
 
 		if not _clickedOnPoint:
 			return
+		
+		return
 
 	if not Input.is_action_pressed("mouse_click_left"):
+		_setUndoRedo()
 		_isBeingDragged = false
 		return
 	
@@ -140,15 +165,12 @@ func _movePointByMouse() -> void:
 	var from = camera.project_ray_origin(mousePos)
 	var magnitude = from.distance_to(position)
 	var to = from + camera.project_ray_normal(mousePos) * magnitude
-	position.x = to.x
-	position.z = to.z
+	
+	position = Vector3(to.x, position.y, to.z)
+	
 	pointUpdated.emit()
 
 
-var _mouseLastPos := 0.0
-var _isArrowBeingDragged := false
-var _clickedOnArrow := false
-var _lastHoveredArrow := HoveredDragArrow.NONE
 func _movePointByDragArrows():
 	
 	if not visible:
@@ -167,9 +189,12 @@ func _movePointByDragArrows():
 		
 		if not _clickedOnArrow:
 			return
-			
+		
+	
 	if not Input.is_action_pressed("mouse_click_left"):
 		_isArrowBeingDragged = false
+		_clickedOnArrow = false
+		_setUndoRedo()
 		return
 	
 	var camera := get_viewport().get_camera_3d()
@@ -177,6 +202,9 @@ func _movePointByDragArrows():
 	var from = camera.project_ray_origin(mousePos)
 	var magnitude = from.distance_to(position)
 	var to = from + camera.project_ray_normal(mousePos) * magnitude
+	
+	if not _isArrowBeingDragged:	# Have to do this after the mouse to position calcs
+		return
 	
 	match(_lastHoveredArrow):
 		HoveredDragArrow.X:
@@ -221,6 +249,13 @@ func _getSnapPoints() -> Point:
 	
 	return null
 
+
+## Call this to basically append the current position into the undo history
+func _setUndoRedo() -> void:
+	pointSetUndoRedo.emit(self)
+	undoPos = position
+
+
 ### Signal Receiver Funcs ###
 
 func _on_mouse_entered() -> void:
@@ -230,21 +265,26 @@ func _on_mouse_entered() -> void:
 func _on_mouse_entered_x() -> void:
 	_hoveredDragArrow = HoveredDragArrow.X
 
+
 func _on_mouse_exited_x() -> void:
 	if _hoveredDragArrow == HoveredDragArrow.X:
 		_hoveredDragArrow = HoveredDragArrow.NONE
 		_clickedOnArrow = false
-	
+
+
 func _on_mouse_entered_y() -> void:
 	_hoveredDragArrow = HoveredDragArrow.Y
+
 
 func _on_mouse_exited_y() -> void:
 	if _hoveredDragArrow == HoveredDragArrow.Y:
 		_hoveredDragArrow = HoveredDragArrow.NONE
 		_clickedOnArrow = false
-	
+
+
 func _on_mouse_entered_z() -> void:
 	_hoveredDragArrow = HoveredDragArrow.Z
+
 
 func _on_mouse_exited_z() -> void:
 	if _hoveredDragArrow == HoveredDragArrow.Z:
@@ -255,3 +295,9 @@ func _on_mouse_exited_z() -> void:
 func _on_mouse_exited() -> void:
 	_isMouseHovered = false
 	_clickedOnPoint = false
+
+
+func _on_undo_redo() -> void:	## Called when the Undo or Redo action is used
+	pointUpdated.emit()
+	selectParentKeyframe.emit()
+	undoPos = position
