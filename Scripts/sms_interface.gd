@@ -70,13 +70,13 @@ func _replayKeyframes(delta: float):
 		_preparePlayback()
 		return
 	
-	
 	var curPos: Vector3
 	var curTarget: Vector3
 	curPos = _fromKeyframe.cameraPoint.smsPosition.lerp(_toKeyframe.cameraPoint.smsPosition, _lerpPow)
 	curTarget = _fromKeyframe.targetPoint.smsPosition.lerp(_toKeyframe.targetPoint.smsPosition, _lerpPow)
 	
 	GDInterface.writeCamData(curPos, curTarget)
+	setSMSCamRepTransform(curPos / Globals.UNIT_DIVIDE_RATIO, curTarget / Globals.UNIT_DIVIDE_RATIO)
 	
 	const WAIT_AT_START_TIMER = 0.5
 	if _playbackStartTimer > WAIT_AT_START_TIMER:	# Hold 0.5 seconds on the first keyframe before moving
@@ -96,6 +96,17 @@ func _replayKeyframes(delta: float):
 		return
 
 
+func setSMSCamRepTransform(setPos: Vector3, setTarget: Vector3) -> void:
+	%Timer.start()
+	if not %SMSCameraRepresantation.visible:
+		%SMSCameraRepresantation.visible = true
+		print("vis")
+	%CamModel.position = setPos
+	%CamModel.look_at(setTarget)
+	%TargetModel.position = setTarget
+	
+
+
 ## Sets the _keyframes array + other playback prep work.
 func _preparePlayback() -> void:
 	
@@ -104,8 +115,6 @@ func _preparePlayback() -> void:
 	# Set our keyframe array
 	for i in camKeyframesNode.get_child_count():
 		_keyframes.append(camKeyframesNode.get_child(i))
-	
-	print(_keyframes)
 	
 	# Misc prep work
 	GDInterface.nopOutCameraCode()
@@ -158,3 +167,8 @@ func _interpolateCubic(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:	#
 func _interpolateSmooth(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
 	lerpPow = smoothstep(0, 1, lerpPow)
 	return from.lerp(to, lerpPow)
+
+
+func _on_timer_timeout() -> void:
+	%SMSCameraRepresantation.visible = false
+	%Timer.stop()

@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://b6r21qnusrlmj" path="res://Scenes/toolbar.tscn" id="4_r6bid"]
 [ext_resource type="Script" uid="uid://bdyc85dm83ysq" path="res://Scripts/sms_interface.gd" id="5_7m5yr"]
 [ext_resource type="Script" path="res://PyScripts/GDInterface.py" id="6_1egvx"]
+[ext_resource type="PackedScene" uid="uid://kx15b1p6s6cl" path="res://Scenes/camera_model.tscn" id="6_hrafl"]
+[ext_resource type="Shader" uid="uid://cflq2yrkywpgd" path="res://Resources/Shaders/camera_target_model.gdshader" id="7_1jbuc"]
 
 [sub_resource type="Environment" id="Environment_kmq1t"]
 background_mode = 1
@@ -16,6 +18,15 @@ ambient_light_energy = 0.34
 reflected_light_source = 1
 
 [sub_resource type="Curve3D" id="Curve3D_o6pwk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r6bid"]
+render_priority = 0
+shader = ExtResource("7_1jbuc")
+
+[sub_resource type="SphereMesh" id="SphereMesh_hrafl"]
+material = SubResource("ShaderMaterial_r6bid")
+radial_segments = 32
+rings = 16
 
 [node name="SMSCT" type="Node3D" unique_id=917104174]
 script = ExtResource("1_a8iap")
@@ -73,6 +84,21 @@ script = ExtResource("5_7m5yr")
 GDInterface = NodePath("../GDInterface")
 camKeyframesNode = NodePath("../CamKeyframes")
 
+[node name="SMSCameraRepresantation" type="Node3D" parent="SMSCameraInterface" unique_id=1785880108]
+unique_name_in_owner = true
+visible = false
+
+[node name="CamModel" parent="SMSCameraInterface/SMSCameraRepresantation" unique_id=581904648 instance=ExtResource("6_hrafl")]
+unique_name_in_owner = true
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="TargetModel" type="MeshInstance3D" parent="SMSCameraInterface/SMSCameraRepresantation" unique_id=787941679]
+unique_name_in_owner = true
+mesh = SubResource("SphereMesh_hrafl")
+
+[node name="Timer" type="Timer" parent="SMSCameraInterface" unique_id=673486839]
+unique_name_in_owner = true
+
 [node name="GDInterface" type="Node" parent="." unique_id=1955610450]
 unique_name_in_owner = true
 process_mode = 0
@@ -83,3 +109,5 @@ physics_interpolation_mode = 0
 auto_translate_mode = 0
 editor_description = ""
 script = ExtResource("6_1egvx")
+
+[connection signal="timeout" from="SMSCameraInterface/Timer" to="SMSCameraInterface" method="_on_timer_timeout"]

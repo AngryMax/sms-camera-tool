@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://kx15b1p6s6cl"]
+
+[ext_resource type="PackedScene" uid="uid://ci82skmjbeqtc" path="res://Resources/Models/camera optimized.glb" id="1_if1la"]
+[ext_resource type="Shader" uid="uid://dn70kjb8uw7we" path="res://Resources/Shaders/camera_model.gdshader" id="2_pyvin"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4qbmm"]
+render_priority = 0
+shader = ExtResource("2_pyvin")
+
+[node name="camera optimized" unique_id=581904648 instance=ExtResource("1_if1la")]
+
+[node name="body" parent="." index="0" unique_id=2034795371]
+transform = Transform3D(-7.507135e-08, 0, 1, 0, 1, 0, -1.7174323, 0, -4.371139e-08, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_4qbmm")
