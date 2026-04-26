@@ -1,10 +1,5 @@
 extends Control
 
-var maxKeyframes: int:
-	set(value):
-		maxKeyframes = value
-		%CurPointField.max_value = value
-
 var keyframe: CamKeyframe:
 	set(value):
 		keyframe = value

@@ -93,6 +93,9 @@ func _process(_delta: float) -> void:
 		keyframeChanged.emit(self)
 
 
+### Private Funcs ###
+
+
 func _toggleArrowVisibility(toggle: bool) -> void:
 	cameraPoint.dragArrowX.visible = toggle
 	cameraPoint.dragArrowY.visible = toggle
@@ -102,13 +105,12 @@ func _toggleArrowVisibility(toggle: bool) -> void:
 	targetPoint.dragArrowZ.visible = toggle
 
 
-### Private Funcs ###
-
-
-
 ## NOTE: DO NOT CALL THIS FUNC!! IT'S CALLED IN isSelected's SET!
 func _deactivateOtherKeyframes() -> void:
 	var _camKeyframes: Node3D = get_parent()
+	if _camKeyframes == null:	## Currently a safeguard, but could cause bugs if I don't keep in mind
+		queue_free()
+		return
 	for keyframe: CamKeyframe in _camKeyframes.get_children():
 		if keyframe.isSelected == true and keyframe != self:
 			keyframe.isSelected = false

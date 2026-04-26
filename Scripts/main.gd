@@ -91,6 +91,55 @@ func _control() -> void:
 	$Camera3D.position += relativeDir
 
 
+func _keyboardShortcuts() -> void:
+	
+	# Toolbar shortcuts
+	
+	if Input.is_action_just_pressed("shortcut_undo", true):
+		Globals.undoRedo.undo()
+	
+	if Input.is_action_just_pressed("shortcut_redo", true):
+		Globals.undoRedo.redo()
+	
+	if Input.is_action_just_pressed("shortcut_new_file", true):
+		_on_new_file()
+	
+	if Input.is_action_just_pressed("shortcut_open_file", true):
+		%Toolbar/%OpenFile.visible = true
+	
+	if Input.is_action_just_pressed("shortcut_save_as", true):
+		%Toolbar/%SaveAsFile.visible = true
+	
+	
+	# Keyframe shortcuts
+	
+	if Input.is_action_just_pressed("shortcut_new_keyframe", true):
+		_on_add_point_pressed()
+	
+	if Input.is_action_just_pressed("shortcut_delete_keyframe", true):
+		_on_delete_keyframe_pressed()
+	
+	if Input.is_action_just_pressed("shortcut_select_keyframe_next", true):
+		var keyframe: CamKeyframe  = _getSpecificKeyframe(1, true)
+		keyframe.isSelected = true
+		Globals.currentKeyframe = keyframe
+	
+	if Input.is_action_just_pressed("shortcut_select_keyframe_previous", true):
+		var keyframe: CamKeyframe  = _getSpecificKeyframe(-1, true)
+		keyframe.isSelected = true
+		Globals.currentKeyframe = keyframe
+	
+	if Input.is_action_just_pressed("shortcut_select_keyframe_first", true):
+		var keyframe: CamKeyframe  = _getSpecificKeyframe(0)
+		keyframe.isSelected = true
+		Globals.currentKeyframe = keyframe
+	
+	if Input.is_action_just_pressed("shortcut_select_keyframe_last", true):
+		var keyframe: CamKeyframe  = _getSpecificKeyframe(-1)
+		keyframe.isSelected = true
+		Globals.currentKeyframe = keyframe
+
+
 func _addKeyframe(idx := -1, keyframeVals: SaveFile = null) -> void:
 	
 	# If _addKeyFrame() is called via redo (ctrl + shift + z)
@@ -101,7 +150,6 @@ func _addKeyframe(idx := -1, keyframeVals: SaveFile = null) -> void:
 	var keyFrame := CamKeyframe.new()
 	%CamKeyframes.add_child(keyFrame)
 	%CamKeyframes.move_child(keyFrame, idx)
-	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
 	keyFrame.connect("keyframeChanged", _on_keyframe_changed)
 	
 	if keyframeVals:
@@ -139,8 +187,6 @@ func _deleteKeyframe(deleteFromAddUndo := false) -> void:
 	%UndoRedoKeyframes.add_child(keyframeToDelete)
 	keyframeToDelete.process_mode = Node.PROCESS_MODE_DISABLED
 	
-	%GUI.maxKeyframes = keyframesLeft - 1
-	
 	if keyframesLeft > 0:
 		var newSelectedKeyframe: CamKeyframe = %CamKeyframes.get_child(0)
 		newSelectedKeyframe.isSelected = true
@@ -169,7 +215,15 @@ func _undoDeletedKeyframe():
 	%UndoRedoKeyframes.remove_child(keyframe)
 	%CamKeyframes.add_child(keyframe)
 	keyframe.process_mode = Node.PROCESS_MODE_ALWAYS
-	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
+
+
+## Clears undoRedo's history and clears the Undo Keyframe buffer nodes
+func _clearUndoRedoProcess() -> void:
+	Globals.undoRedo.clear_history()
+	for keyframe in %UndoRedoKeyframes.get_children():
+		keyframe.queue_free()
+	for keyframe in %DeleteUndoKeyframes.get_children():
+		keyframe.queue_free()
 
 
 ## Gets the current selected Keyframe. I probably should use Globals.currentKeyframe in its place?
@@ -183,6 +237,29 @@ func _getSelectedkeyframe() -> CamKeyframe:
 			break
 	
 	return returnKeyframe
+
+
+## Returns a Keyframe at the specified index of %CamKeyframes. [br][br]
+## If [b]idxRel[/b] is false, then [b]idx[/b] is the index of the Keyframe you want returned. Negative index numbers count from the back (ie: -1 = last index). [br][br]
+## If [b]idxRel[/b] is true, then [b]idx[/b] becomes relative to the index of the Keyframe in Globals.currentKeyframe. [br][br]
+## If [b]wrapIdx[/b] is true, then idx wraps around.
+func _getSpecificKeyframe(idx: int, idxRel := false, wrapIdx := true) -> CamKeyframe:
+	
+	var keyframe: CamKeyframe
+	var idxNum = %CamKeyframes.get_child_count()
+	var desireIdx: int
+	
+	if idxRel == true:
+		idx += Globals.currentKeyframe.get_index()
+	
+	if wrapIdx:
+		desireIdx = wrap(idx, idxNum * -1, idxNum)
+	else:
+		desireIdx = clamp(idx, 0, idxNum -1)
+	keyframe = %CamKeyframes.get_child(desireIdx)
+	assert(keyframe != null, "Failed to assign keyframe! Check wrapIdx!")
+	
+	return keyframe
 
 
 ## Sets the viewport camera above the xy center point of all CamKeyframes
@@ -205,18 +282,11 @@ func _setCamera(posArray: Array[Vector3]) -> void:
 
 
 func _deleteAllKeyframes() -> void:
+	print("deleting all keyframes!")
 	for child: Node in %CamKeyframes.get_children():
+		child.process_mode = Node.PROCESS_MODE_DISABLED
 		%CamKeyframes.remove_child(child)
 		child.queue_free()
-
-
-func _keyboardShortcuts() -> void:
-	
-	if Input.is_action_just_pressed("shortcut_undo", true):
-		Globals.undoRedo.undo()
-	
-	if Input.is_action_just_pressed("shortcut_redo"):
-		Globals.undoRedo.redo()
 
 
 ### GUI Signal Receive Funcs ###
@@ -272,7 +342,12 @@ func _on_duplicate_keyframe_pressed() -> void:
 
 func _on_cur_keyframe_field_value_changed(value: float) -> void:
 	var idx: int = value - 1
-	var keyframe: CamKeyframe = %CamKeyframes.get_child(idx)
+	
+	var wasValTyped := false
+	if abs(idx - Globals.currentKeyframe.get_index()) > 1:
+		wasValTyped = true
+	
+	var keyframe: CamKeyframe = _getSpecificKeyframe(idx, false, !wasValTyped)
 	keyframe.isSelected = true
 	%GUI.keyframe = keyframe
 	Globals.currentKeyframe = keyframe
@@ -342,9 +417,10 @@ func _on_file_saved(path: String):
 
 func _on_file_opened(path: String):
 	
-	var file: SaveFile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
-	
+	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
+	
+	var file: SaveFile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 	
 	for i in file.positions.size():
 		_addKeyframe()
@@ -359,6 +435,7 @@ func _on_file_opened(path: String):
 
 
 func _on_new_file():
+	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
 	_addKeyframe()
 
