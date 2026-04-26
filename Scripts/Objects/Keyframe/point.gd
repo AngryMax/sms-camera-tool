@@ -111,7 +111,6 @@ func _process(_delta: float) -> void:
 
 
 func updateLabel() -> void:
-	print("updating label")
 	for child in get_children():
 		if child is Label3D:
 			child.text = str(get_parent().get_index() + 1)

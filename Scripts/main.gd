@@ -9,6 +9,7 @@ var _SMSCamera: SMSCameraInterface
 var _axis: axisGizmo
 var _grid: gridGizmo
 
+
 ### Override Funcs ###
 
 func _ready() -> void:
@@ -16,7 +17,7 @@ func _ready() -> void:
 	_connectGUISignals()
 	_connectToolbarSignals()
 	_SMSCamera = %SMSCameraInterface
-	_addPoint()
+	_addKeyframe()
 	
 	_grid = gridGizmo.new()
 	add_child(_grid.mi)
@@ -89,13 +90,46 @@ func _control() -> void:
 	$Camera3D.position += relativeDir
 
 
-func _addPoint() -> void:
+func _addKeyframe() -> void:
+	
 	var camKeyFrame := CamKeyframe.new()
 	%CamKeyframes.add_child(camKeyFrame)
 	%GUI.maxKeyframes = %CamKeyframes.get_child_count()
 	camKeyFrame.connect("keyframeChanged", _on_keyframe_changed)
 	camKeyFrame.isSelected = true
 	Globals.currentKeyframe = camKeyFrame
+
+
+func _deleteKeyframe(deleteFromUndo := false) -> void:
+	
+	var keyframesLeft := %CamKeyframes.get_child_count()
+	
+	if keyframesLeft == 1:
+		return	# TODO: make this reset the keyframe rather than just do nothing
+	
+	var keyframeToDelete: CamKeyframe
+	
+	if deleteFromUndo:	# TODO: The lazy way to handle undos... it works until you can add keyframes at any index or rearrange them lol
+		keyframeToDelete = %CamKeyframes.get_children().back()
+	else:
+		keyframeToDelete = _getSelectedkeyframe()
+	
+	keyframeToDelete.free()
+	
+	%GUI.maxKeyframes = keyframesLeft
+	
+	if keyframesLeft > 0:
+		var newSelectedKeyframe: CamKeyframe = %CamKeyframes.get_child(0)
+		newSelectedKeyframe.isSelected = true
+	
+	for i in %CamKeyframes.get_child_count():
+		var keyframe: CamKeyframe = %CamKeyframes.get_children()[i]
+		if keyframe == keyframeToDelete:
+			continue
+		var updateCamPosLabel = Callable(keyframe.cameraPoint, "updateLabel")
+		var updateTargetLabel = Callable(keyframe.targetPoint, "updateLabel")
+		updateCamPosLabel.call_deferred()
+		updateTargetLabel.call_deferred()
 
 
 func _getSelectedkeyframe() -> CamKeyframe:
@@ -152,34 +186,15 @@ func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
 
 
 func _on_add_point_pressed() -> void:
-	_addPoint()
+	
+	Globals.undoRedo.create_action("Add Point")
+	Globals.undoRedo.add_do_method(_addKeyframe)
+	Globals.undoRedo.add_undo_method(_deleteKeyframe.bind(true))
+	Globals.undoRedo.commit_action()
 
 
 func _on_delete_point_pressed() -> void:
-	
-	var keyframesLeft := %CamKeyframes.get_child_count()
-	
-	if keyframesLeft == 1:
-		return	# TODO: make this reset the keyframe rather than just do nothing
-	
-	var keyframeToDelete := _getSelectedkeyframe()
-	keyframeToDelete.free()
-	
-	%GUI.maxKeyframes = keyframesLeft
-	
-	if keyframesLeft > 0:
-		var newSelectedKeyframe: CamKeyframe = %CamKeyframes.get_child(0)
-		newSelectedKeyframe.isSelected = true
-	
-	
-	for i in %CamKeyframes.get_child_count():
-		var keyframe: CamKeyframe = %CamKeyframes.get_children()[i]
-		if keyframe == keyframeToDelete:
-			continue
-		var updateCamPosLabel = Callable(keyframe.cameraPoint, "updateLabel")
-		var updateTargetLabel = Callable(keyframe.targetPoint, "updateLabel")
-		updateCamPosLabel.call_deferred()
-		updateTargetLabel.call_deferred()
+	_deleteKeyframe()
 
 
 func _on_duplicate_point_pressed() -> void:
@@ -189,7 +204,7 @@ func _on_duplicate_point_pressed() -> void:
 	var time := Globals.currentKeyframe.transitionTime
 	var interps := Globals.currentKeyframe.interpolation
 	
-	_addPoint()
+	_addKeyframe()
 	
 	var newKeyframe: CamKeyframe = %CamKeyframes.get_child(-1)
 	newKeyframe.cameraPoint.position = camPos
@@ -276,7 +291,7 @@ func _on_file_opened(path: String):
 	_deleteAllKeyframes()
 	
 	for i in file.positions.size():
-		_addPoint()
+		_addKeyframe()
 		var keyframe: CamKeyframe = %CamKeyframes.get_child(i)
 		keyframe.cameraPoint.smsPosition = file.positions[i]
 		keyframe.targetPoint.smsPosition = file.targets[i]
@@ -289,7 +304,7 @@ func _on_file_opened(path: String):
 
 func _on_new_file():
 	_deleteAllKeyframes()
-	_addPoint()
+	_addKeyframe()
 
 
 func _on_reset_cam():
