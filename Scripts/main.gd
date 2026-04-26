@@ -116,7 +116,7 @@ func _deleteKeyframe(deleteFromUndo := false) -> void:
 	
 	keyframeToDelete.free()
 	
-	%GUI.maxKeyframes = keyframesLeft
+	%GUI.maxKeyframes = keyframesLeft - 1
 	
 	if keyframesLeft > 0:
 		var newSelectedKeyframe: CamKeyframe = %CamKeyframes.get_child(0)
