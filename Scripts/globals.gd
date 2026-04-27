@@ -25,4 +25,16 @@ var targetPointFollowViewport := false	## currentKeyframe's targetPoint will upd
 var viewportCameraStartPos: Vector3	## The spawn coords of the viewport camera. Set in the Camera3D's _ready()
 var viewportCameraStartRot: Vector3	## The spawn rot of the viewport camera. Set in the Camera3D's _ready()
 
-var enableShaders := false
+
+### File Parameters
+
+var curFile := "":
+	set(value):
+		curFile = value
+		var slices := curFile.get_slice_count("/")
+		curFileName = curFile.get_slice("/", slices - 1)
+	
+var curFileName: String:
+	set(value):
+		curFileName = value
+		get_window().title = value + " - SMS Camera Tool"

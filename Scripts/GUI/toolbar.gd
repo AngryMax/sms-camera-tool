@@ -19,6 +19,10 @@ func _ready() -> void:
 	%Tools.get_popup().id_pressed.connect(_on_tools_menu)
 	%View.get_popup().id_pressed.connect(_on_view_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
+	
+	
+	
+	
 
 
 func _on_file_menu(id: int) -> void:

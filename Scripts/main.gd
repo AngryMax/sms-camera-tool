@@ -20,7 +20,7 @@ func _ready() -> void:
 	_connectSettingsSignals()
 	
 	_SMSCamera = %SMSCameraInterface
-	_addKeyframe()
+	_on_new_file()
 	
 	_grid = gridGizmo.new()
 	add_child(_grid.mi)
@@ -409,6 +409,8 @@ func _on_grab_from_camera_toggled(_toggle: bool):
 
 func _on_file_saved(path: String) -> void:
 	
+	Globals.curFile = path
+	
 	var saveFile: SaveFile = SaveFile.new()
 	
 	for i in %CamKeyframes.get_child_count():
@@ -426,6 +428,8 @@ func _on_file_opened(path: String) -> void:
 	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
 	
+	Globals.curFile = path
+	
 	var file: SaveFile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 	
 	for i in file.positions.size():
@@ -441,6 +445,7 @@ func _on_file_opened(path: String) -> void:
 
 
 func _on_new_file() -> void:
+	Globals.curFileName = "Untitled"
 	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
 	_addKeyframe()
@@ -479,7 +484,7 @@ func _on_toggle_axes(toggle: bool) -> void:
 
 ### Settings Signal Receive Funcs ###
 
-func _on_reload_mat(enable_shaders: bool) -> void:
+func _on_reload_mat(enable_shaders: bool) -> void:	# TODO: if more shader materials get added, make a dictionary with refs and for loop thru it
 	
 	var camShaderMatOverride: ShaderMaterial = load("res://Scenes/Mat/camera_model_shader_mat.tres")
 	var targetShaderMatOverride: ShaderMaterial = load("res://Scenes/Mat/target_model_shader_mat.tres")
