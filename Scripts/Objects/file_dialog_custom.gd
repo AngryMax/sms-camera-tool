@@ -37,7 +37,6 @@ func _on_save_confirm(origCallable: Callable):
 	
 	okButton.connect("pressed", _on_invalid_ok_pressed)
 	
-	var path := current_path
 	var file := current_file
 	
 	var invalidChars: String = "<>:\"/\\|?*"

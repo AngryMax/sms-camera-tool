@@ -15,15 +15,17 @@ script = ExtResource("1_vmn2u")
 unique_name_in_owner = true
 layout_mode = 2
 text = "File"
-item_count = 4
+item_count = 5
 popup/item_0/text = "New"
 popup/item_0/id = 0
 popup/item_1/text = "Open"
 popup/item_1/id = 1
-popup/item_2/text = "Save As"
-popup/item_2/id = 2
-popup/item_3/text = "Quit"
-popup/item_3/id = 3
+popup/item_2/text = "Save"
+popup/item_2/id = 4
+popup/item_3/text = "Save As"
+popup/item_3/id = 2
+popup/item_4/text = "Quit"
+popup/item_4/id = 3
 
 [node name="SaveAsFile" type="FileDialog" parent="File" unique_id=1701862620 node_paths=PackedStringArray("okButton")]
 unique_name_in_owner = true
@@ -44,8 +46,10 @@ size = Vector2i(224, 100)
 borderless = false
 
 [node name="ColorRect" type="ColorRect" parent="File/SaveAsFile/InvalidFilePopup" unique_id=58533195]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 220.0
+offset_bottom = 96.0
 color = Color(0.12156863, 0.12156863, 0.12156863, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="File/SaveAsFile/InvalidFilePopup" unique_id=1371253519]

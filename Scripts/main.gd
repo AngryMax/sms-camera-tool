@@ -66,6 +66,7 @@ func _connectToolbarSignals() -> void:
 	%Toolbar.connect("gotoPoint", _on_goto_point)
 	%Toolbar.connect("toggleGrid", _on_toggle_grid)
 	%Toolbar.connect("toggleAxes", _on_toggle_axes)
+	%Toolbar.connect("save", _on_file_saved)
 	%Toolbar/%SaveAsFile.connect("file_selected", _on_file_saved)
 	%Toolbar/%OpenFile.connect("file_selected", _on_file_opened)
 
@@ -115,6 +116,12 @@ func _keyboardShortcuts() -> void:
 	
 	if Input.is_action_just_pressed("shortcut_save_as", true):
 		%Toolbar/%SaveAsFile.visible = true
+	
+	if Input.is_action_just_pressed("shortcut_save", true):
+		if Globals.curFile == "":
+			%Toolbar/%SaveAsFile.visible = true
+		else:
+			_on_file_saved(Globals.curFile)
 	
 	
 	# Keyframe shortcuts
@@ -446,6 +453,7 @@ func _on_file_opened(path: String) -> void:
 
 func _on_new_file() -> void:
 	Globals.curFileName = "Untitled"
+	Globals.curFile = ""
 	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
 	_addKeyframe()

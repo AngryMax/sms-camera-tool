@@ -1,6 +1,6 @@
 extends HBoxContainer
 
-enum FileOptions {NEW, OPEN, SAVE, QUIT}
+enum FileOptions {NEW, OPEN, SAVE_AS, QUIT, SAVE}
 enum EditOptions {UNDO, REDO, SETTINGS}
 enum ToolsOptions {TOGGLE_SNAP, TOGGLE_CAM_FOLLOW, TOGGLE_TARGET_FOLLOW}
 enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
@@ -11,6 +11,7 @@ signal resetCam
 signal gotoPoint
 signal toggleGrid
 signal toggleAxes
+signal save
 
 
 func _ready() -> void:
@@ -19,10 +20,6 @@ func _ready() -> void:
 	%Tools.get_popup().id_pressed.connect(_on_tools_menu)
 	%View.get_popup().id_pressed.connect(_on_view_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
-	
-	
-	
-	
 
 
 func _on_file_menu(id: int) -> void:
@@ -32,10 +29,12 @@ func _on_file_menu(id: int) -> void:
 			newFile.emit()
 		FileOptions.OPEN:
 			%OpenFile.visible = true
-		FileOptions.SAVE:
+		FileOptions.SAVE_AS:
 			%SaveAsFile.visible = true
 		FileOptions.QUIT:
 			get_tree().quit()
+		FileOptions.SAVE:
+			save.emit()
 		_:
 			push_error("Invalid File menu button!")
 
