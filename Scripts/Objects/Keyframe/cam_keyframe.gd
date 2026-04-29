@@ -55,7 +55,7 @@ func _ready() -> void:
 	_pointLink = PointLink.new()
 	add_child(_pointLink)
 	
-	cameraPoint.body.connect("input_event", _signalPassthrough)
+	cameraPoint.body.connect("input_event", _on_body_mouse_input)
 	cameraPoint.connect("pointUpdated", _on_point_updated)
 	targetPoint.connect("pointUpdated", _on_point_updated)
 	cameraPoint.connect("pointSetUndoRedo", _on_point_set_undo_redo)
@@ -122,7 +122,7 @@ func _deactivateOtherKeyframes() -> void:
 ## Since the "input_event" signal that belongs to StaticBody3D doesn't seem to pass the object that's being
 ## clicked as a parameter, we go through the whole process of making this ClickObj and passing a processed
 ## version of the signal through here
-func _signalPassthrough(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+func _on_body_mouse_input(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
 		
 	var mouseButtonEvent: InputEventMouseButton
 	

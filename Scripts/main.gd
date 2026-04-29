@@ -339,7 +339,7 @@ func _on_duplicate_keyframe_pressed() -> void:
 	var camPos := Globals.currentKeyframe.cameraPoint.position
 	var targetPos := Globals.currentKeyframe.targetPoint.position
 	var time := Globals.currentKeyframe.transitionTime
-	var ease := Globals.currentKeyframe.easeDirection
+	var easing := Globals.currentKeyframe.easeDirection
 	
 	Globals.undoRedo.create_action("Duplicate Keyframe")
 	Globals.undoRedo.add_do_method(_addKeyframe)
@@ -350,7 +350,7 @@ func _on_duplicate_keyframe_pressed() -> void:
 	newKeyframe.cameraPoint.position = camPos
 	newKeyframe.targetPoint.position = targetPos
 	newKeyframe.transitionTime = time
-	newKeyframe.easeDirection = ease
+	newKeyframe.easeDirection = easing
 	%GUI.keyframe = newKeyframe
 
 
@@ -414,7 +414,6 @@ func _on_grab_from_camera_toggled(_toggle: bool):
 
 
 func _on_ease_direction_changed(value: int) -> void:
-	print("Changing keyframe easing from ", Globals.EaseDirection.keys()[Globals.currentKeyframe.easeDirection], " to ", Globals.EaseDirection.keys()[value])
 	Globals.currentKeyframe.easeDirection = value as Globals.EaseDirection
 	%GUI.keyframe = Globals.currentKeyframe
 

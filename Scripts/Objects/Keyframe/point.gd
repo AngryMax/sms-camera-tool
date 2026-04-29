@@ -296,7 +296,31 @@ func _on_mouse_exited() -> void:
 	_clickedOnPoint = false
 
 
-func _on_undo_redo() -> void:	## Called when the Undo or Redo action is used
+func _on_undo_redo() -> void:	## Called *ANY* TIME the Undo or Redo action is used
+	
+	# This is a really sloppy bug fix. Since this function is connected to
+	# Globals.undoRedo.version_changed, that means that any time undoRedo does
+	# basically anything, regardless of its relation to this Point, that this
+	# function gets called-- which in practice meant that the highest indexed
+	# CamKeyframe would always become selected whenever any other CamKeyframe
+	# was changed. I only really want this function to be called when
+	# Globals.undoRedo is acting on THIS Point, which is what the if statement
+	# below is filtering for. This is what it's specifically doing:
+	# If the parent CamKeyframe is not selected, we then check to see if any
+	# of the other CamKeyframes are selected. If true, then we return.
+	# If there is no other selected CamKeyframe, then we know that the current
+	# undoRedo action is focus on this Point, so we continue to the rest of this func.
+	if get_parent().isSelected == false:
+		var isAnyOtherKeyframeSelected := false
+		for keyframe in get_parent().get_parent().get_children():	# for CamKeyframe in self -> CamKeyframe -> CamKeyframes
+			if keyframe.isSelected:
+				isAnyOtherKeyframeSelected = true
+		
+		if isAnyOtherKeyframeSelected:
+			return
+		
+	
+	print(self)
 	pointUpdated.emit()
 	selectParentKeyframe.emit()
 	undoPos = position
