@@ -79,7 +79,11 @@ func _connectSettingsSignals() -> void:
 func _control() -> void:
 	
 	if not Input.is_action_pressed("mouse_click_right"):
+		%GUI.process_mode = Node.PROCESS_MODE_ALWAYS
 		return
+	
+	
+	%GUI.process_mode = Node.PROCESS_MODE_DISABLED
 	
 	var horzInputDir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var vertInputDir := 0.0
