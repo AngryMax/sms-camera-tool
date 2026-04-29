@@ -16,10 +16,9 @@ var isSelected: bool:
 		isSelected = value
 		keyframeChanged.emit(self)
 var transitionTime: float
-var interpolation: InterpolationTypes
+var easeDirection: Globals.EaseDirection
 var cameraPoint: Point
 var targetPoint: Point
-enum InterpolationTypes {Linear, Cubic}	## Linear = 0, Cubic = 1
 signal keyframeChanged(keyframe: CamKeyframe)	## Emitted to let the GUI know it needs to update
 
 ### Private Vars ###
@@ -33,7 +32,7 @@ const _mainScene := preload("res://Scenes/smsct.tscn")
 
 func _init() -> void:
 	transitionTime = 1.0
-	interpolation = InterpolationTypes.Linear
+	easeDirection = Globals.EaseDirection.NONE
 
 
 func _ready() -> void:

@@ -11,6 +11,7 @@ var keyframe: CamKeyframe:
 		%Target/Y/Input.set_value_no_signal(value.targetPoint.smsPosition.y)
 		%Target/Z/Input.set_value_no_signal(value.targetPoint.smsPosition.z)
 		%TravelTimeInput.set_value_no_signal(value.transitionTime)
+		%EasingOptions.select(value.easeDirection)
 
 var posField: Vector3:
 	set(value):

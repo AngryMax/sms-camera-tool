@@ -367,15 +367,19 @@ unique_name_in_owner = true
 layout_mode = 2
 value = 1.0
 
-[node name="InterpolationOption" type="OptionButton" parent="KeyframeGUI/VSplitContainer/PointEdit/TimeEdit" unique_id=1280472836]
+[node name="EasingOptions" type="OptionButton" parent="KeyframeGUI/VSplitContainer/PointEdit/TimeEdit" unique_id=1280472836]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
-item_count = 2
-popup/item_0/text = "Linear"
+item_count = 4
+popup/item_0/text = "No Easing"
 popup/item_0/id = 0
-popup/item_1/text = "Cubic"
+popup/item_1/text = "Ease In"
 popup/item_1/id = 1
+popup/item_2/text = "Ease Out"
+popup/item_2/id = 2
+popup/item_3/text = "Ease In and Out"
+popup/item_3/id = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer" unique_id=138920213]
 layout_mode = 2

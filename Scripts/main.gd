@@ -53,6 +53,7 @@ func _connectGUISignals() -> void:
 	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
 	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
 	%GUI/%TravelTimeInput.connect("value_changed", _on_transition_time_changed)
+	%GUI/%EasingOptions.connect("item_selected", _on_ease_direction_changed)
 	
 	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
 		button.toggled.connect(_on_grab_from_target_toggled)
@@ -169,7 +170,7 @@ func _addKeyframe(idx := -1, keyframeVals: SaveFile = null) -> void:
 		keyFrame.cameraPoint.position = keyframeVals.positions.front()
 		keyFrame.targetPoint.position = keyframeVals.targets.front()
 		keyFrame.transitionTime = keyframeVals.times.front()
-		keyFrame.interpolation = keyframeVals.interps.front()
+		keyFrame.easeDirection = keyframeVals.ease.front()
 	
 	keyFrame.isSelected = true
 	Globals.currentKeyframe = keyFrame
@@ -338,7 +339,7 @@ func _on_duplicate_keyframe_pressed() -> void:
 	var camPos := Globals.currentKeyframe.cameraPoint.position
 	var targetPos := Globals.currentKeyframe.targetPoint.position
 	var time := Globals.currentKeyframe.transitionTime
-	var interps := Globals.currentKeyframe.interpolation
+	var ease := Globals.currentKeyframe.easeDirection
 	
 	Globals.undoRedo.create_action("Duplicate Keyframe")
 	Globals.undoRedo.add_do_method(_addKeyframe)
@@ -349,7 +350,7 @@ func _on_duplicate_keyframe_pressed() -> void:
 	newKeyframe.cameraPoint.position = camPos
 	newKeyframe.targetPoint.position = targetPos
 	newKeyframe.transitionTime = time
-	newKeyframe.interpolation = interps
+	newKeyframe.easeDirection = ease
 	%GUI.keyframe = newKeyframe
 
 
@@ -412,6 +413,12 @@ func _on_grab_from_camera_toggled(_toggle: bool):
 				input.value = _SMSCamera.getCoord("getCamPos" + parent.name)
 
 
+func _on_ease_direction_changed(value: int) -> void:
+	print("Changing keyframe easing from ", Globals.EaseDirection.keys()[Globals.currentKeyframe.easeDirection], " to ", Globals.EaseDirection.keys()[value])
+	Globals.currentKeyframe.easeDirection = value as Globals.EaseDirection
+	%GUI.keyframe = Globals.currentKeyframe
+
+
 ### Toolbar Signal Receivers ###
 
 func _on_file_saved(path: String) -> void:
@@ -425,7 +432,7 @@ func _on_file_saved(path: String) -> void:
 		saveFile.positions.append(keyframe.cameraPoint.smsPosition)
 		saveFile.targets.append(keyframe.targetPoint.smsPosition)
 		saveFile.times.append(keyframe.transitionTime)
-		saveFile.interps.append(keyframe.interpolation)
+		saveFile.ease.append(keyframe.easeDirection)
 	
 	saveFile.saveFile(path)
 
@@ -445,7 +452,7 @@ func _on_file_opened(path: String) -> void:
 		keyframe.cameraPoint.smsPosition = file.positions[i]
 		keyframe.targetPoint.smsPosition = file.targets[i]
 		keyframe.transitionTime = file.times[i]
-		keyframe.interpolation = file.interps[i]
+		keyframe.easeDirection = file.ease[i]
 	
 	Globals.currentKeyframe = _getSelectedkeyframe()	# TODO: perhaps just set %GUI.keyframe from Globals.currentKeyframe's setter
 	%GUI.keyframe = Globals.currentKeyframe

@@ -72,8 +72,11 @@ func _replayKeyframes(delta: float):
 	
 	var curPos: Vector3
 	var curTarget: Vector3
-	curPos = _fromKeyframe.cameraPoint.smsPosition.lerp(_toKeyframe.cameraPoint.smsPosition, _lerpPow)
-	curTarget = _fromKeyframe.targetPoint.smsPosition.lerp(_toKeyframe.targetPoint.smsPosition, _lerpPow)
+	#curPos = _fromKeyframe.cameraPoint.smsPosition.lerp(_toKeyframe.cameraPoint.smsPosition, _lerpPow)
+	#curTarget = _fromKeyframe.targetPoint.smsPosition.lerp(_toKeyframe.targetPoint.smsPosition, _lerpPow)
+	
+	curPos = _interpolateCubic(_fromKeyframe.cameraPoint.smsPosition, _toKeyframe.cameraPoint.smsPosition, _lerpPow)
+	curTarget = _interpolateCubic(_fromKeyframe.targetPoint.smsPosition, _toKeyframe.targetPoint.smsPosition, _lerpPow)
 	
 	GDInterface.writeCamData(curPos, curTarget)
 	setSMSCamRepTransform(curPos / Globals.UNIT_DIVIDE_RATIO, curTarget / Globals.UNIT_DIVIDE_RATIO)
@@ -159,8 +162,22 @@ func _interpolateLinear(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
 
 
 ## Cubic camera interpolation | Only to be called by replayPoints()
-func _interpolateCubic(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:	# TODO: actually figure this out lol
-	return from.cubic_interpolate(to, to * 1.5, to * 0.75, lerpPow)
+func _interpolateCubic(from: Vector3, to: Vector3, lerpPow: float, easeDirection := Globals.EaseDirection.NONE) -> Vector3:	# TODO: actually figure this out lol
+	
+	var pre_from := from
+	var pre_to := to
+	
+	match easeDirection:
+		
+		Globals.EaseDirection.IN:
+			pre_from += Vector3.ONE
+		Globals.EaseDirection.OUT:
+			pre_to += Vector3.ONE
+		Globals.EaseDirection.BOTH:
+			pre_from += Vector3.ONE
+			pre_to += Vector3.ONE
+		
+	return from.cubic_interpolate(to, pre_from, pre_to, lerpPow)
 
 
 ## Smooth camera interpolation (also cubic) | Only to be called by replayPoints()
