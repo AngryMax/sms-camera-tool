@@ -233,6 +233,7 @@ func _undoDeletedKeyframe():
 	var keyframe: CamKeyframe = %UndoRedoKeyframes.get_child(-1)
 	%UndoRedoKeyframes.remove_child(keyframe)
 	%CamKeyframes.add_child(keyframe)
+	%CamKeyframes.move_child(keyframe, keyframe.index)
 	keyframe.process_mode = Node.PROCESS_MODE_ALWAYS
 
 

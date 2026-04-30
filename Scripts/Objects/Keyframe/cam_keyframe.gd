@@ -25,6 +25,7 @@ var easeDirection: Globals.EaseDirection:
 			easeDirection = value
 var cameraPoint: Point
 var targetPoint: Point
+var index: int	## Used for undo/redoing. Not always an accurate potrayal of this Keyframe's index!
 signal keyframeChanged(keyframe: CamKeyframe)	## Emitted to let the GUI know it needs to update
 
 ### Private Vars ###
@@ -70,6 +71,8 @@ func _ready() -> void:
 	targetPoint.connect("pointSelected", _on_point_selected)
 	cameraPoint.connect("selectParentKeyframe", _on_request_selected)
 	targetPoint.connect("selectParentKeyframe", _on_request_selected)
+	
+	index = get_index()
 
 
 func _process(_delta: float) -> void:
