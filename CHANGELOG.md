@@ -6,6 +6,7 @@
   - "Point" now refers to Camera Position and Target Position.
   - Removed the "Fix Camera" button. SMSCT will now automatically do that once Preview Mode is disabled, or a Playback has finished. The camera will still not immediately fix itself because of JIT caching.
   - The GUI got a bit of reorganization, but nothing drastic.
+  - ***Due to savefile changes, b1.0.1 saves will not be compatabile with b2.0.0 saves!***
 
 - Added a 3D View where you can see you can visually see each Keyframe's Points.
   - Points can be moved in the 3D view by dragging them or the colord arrows attached to them.
