@@ -424,20 +424,19 @@ func _on_ease_direction_changed(value: int) -> void:
 
 
 func _on_set_camera_axis(axis: String) -> void:
-	
 	match (axis):
 		"X+":
-			%Camera3D.look_at(%Camera3D.position + Vector3.RIGHT)
-		"X-":
 			%Camera3D.look_at(%Camera3D.position + Vector3.LEFT)
+		"X-":
+			%Camera3D.look_at(%Camera3D.position + Vector3.RIGHT)
 		"Y+":
-			%Camera3D.look_at(%Camera3D.position + Vector3.UP)
-		"Y-":
 			%Camera3D.look_at(%Camera3D.position + Vector3.DOWN)
+		"Y-":
+			%Camera3D.look_at(%Camera3D.position + Vector3.UP)
 		"Z+":
-			%Camera3D.look_at(%Camera3D.position + Vector3.BACK)
-		"Z-":
 			%Camera3D.look_at(%Camera3D.position + Vector3.FORWARD)
+		"Z-":
+			%Camera3D.look_at(%Camera3D.position + Vector3.BACK)
 
 
 ### Toolbar Signal Receivers ###
