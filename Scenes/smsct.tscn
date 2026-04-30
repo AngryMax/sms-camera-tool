@@ -33,9 +33,11 @@ script = ExtResource("1_a8iap")
 [node name="Camera3D" type="Camera3D" parent="." unique_id=540177063]
 unique_name_in_owner = true
 transform = Transform3D(0.17364822, 0.45473358, -0.8735351, 0, 0.8870108, 0.4617486, 0.9848077, -0.08018182, 0.15402785, -10, 10, 10)
+cull_mask = 1048573
 current = true
 far = 40000.0
 script = ExtResource("2_a8iap")
+MAX_VERT_ANGLE = 1.5707963267948966
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1801204254]
 environment = SubResource("Environment_kmq1t")
@@ -66,7 +68,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.2652159)
 curve = SubResource("Curve3D_o6pwk")
 debug_custom_color = Color(1, 0, 0, 1)
 
-[node name="GUI" parent="." unique_id=700733280 instance=ExtResource("3_1jbuc")]
+[node name="GUI" parent="." unique_id=700733280 node_paths=PackedStringArray("editViewportCamera") instance=ExtResource("3_1jbuc")]
 unique_name_in_owner = true
 anchors_preset = 11
 anchor_left = 1.0
@@ -74,6 +76,7 @@ offset_left = -960.0
 offset_right = -960.0
 offset_bottom = -540.0
 grow_horizontal = 0
+editViewportCamera = NodePath("../Camera3D")
 
 [node name="Toolbar" parent="." unique_id=1592379772 instance=ExtResource("4_r6bid")]
 unique_name_in_owner = true

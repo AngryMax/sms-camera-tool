@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://b36rnoiilwnxm"]
+
+[ext_resource type="Script" uid="uid://jm07mxuxgq83" path="res://Scripts/viewport_orientation.gd" id="1_e5m1a"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_67q6o"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qqk5e"]
+specular_mode = 2
+disable_specular_occlusion = true
+albedo_color = Color(1, 0, 0, 1)
+stencil_flags = 4
+
+[sub_resource type="BoxMesh" id="BoxMesh_gowde"]
+material = SubResource("StandardMaterial3D_qqk5e")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5m1a"]
+specular_mode = 2
+disable_specular_occlusion = true
+albedo_color = Color(0.50980395, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qqk5e"]
+material = SubResource("StandardMaterial3D_e5m1a")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fn5tv"]
+specular_mode = 2
+disable_specular_occlusion = true
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0cjx5"]
+material = SubResource("StandardMaterial3D_fn5tv")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gowde"]
+specular_mode = 2
+disable_specular_occlusion = true
+albedo_color = Color(0, 0.50980395, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_67q6o"]
+material = SubResource("StandardMaterial3D_gowde")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eoeo3"]
+specular_mode = 2
+disable_specular_occlusion = true
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_310su"]
+material = SubResource("StandardMaterial3D_eoeo3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0cjx5"]
+specular_mode = 2
+disable_specular_occlusion = true
+albedo_color = Color(0, 0, 0.50980395, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eoeo3"]
+material = SubResource("StandardMaterial3D_0cjx5")
+
+[node name="ViewportOrientation" type="Node3D" unique_id=5569070]
+script = ExtResource("1_e5m1a")
+
+[node name="Area3DX+" type="Area3D" parent="." unique_id=1442649042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3DX+" unique_id=2009184674]
+shape = SubResource("BoxShape3D_67q6o")
+
+[node name="X+" type="MeshInstance3D" parent="Area3DX+" unique_id=1861310856]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+layers = 2
+mesh = SubResource("BoxMesh_gowde")
+
+[node name="Area3DX-" type="Area3D" parent="." unique_id=1358300122]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3DX-" unique_id=1358236353]
+shape = SubResource("BoxShape3D_67q6o")
+
+[node name="X-" type="MeshInstance3D" parent="Area3DX-" unique_id=870318426]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+layers = 2
+mesh = SubResource("BoxMesh_qqk5e")
+
+[node name="Area3DY+" type="Area3D" parent="." unique_id=1820097590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3DY+" unique_id=1920219522]
+shape = SubResource("BoxShape3D_67q6o")
+
+[node name="Y+" type="MeshInstance3D" parent="Area3DY+" unique_id=1288768410]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+layers = 2
+mesh = SubResource("BoxMesh_0cjx5")
+
+[node name="Area3DY-" type="Area3D" parent="." unique_id=1819966141]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3DY-" unique_id=926262400]
+shape = SubResource("BoxShape3D_67q6o")
+
+[node name="Y-" type="MeshInstance3D" parent="Area3DY-" unique_id=325848628]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+layers = 2
+mesh = SubResource("BoxMesh_67q6o")
+
+[node name="Area3DZ+" type="Area3D" parent="." unique_id=1389055162]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3DZ+" unique_id=240701973]
+shape = SubResource("BoxShape3D_67q6o")
+
+[node name="Z+" type="MeshInstance3D" parent="Area3DZ+" unique_id=2079387810]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+layers = 2
+mesh = SubResource("BoxMesh_310su")
+
+[node name="Area3DZ-" type="Area3D" parent="." unique_id=748164582]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3DZ-" unique_id=120135549]
+shape = SubResource("BoxShape3D_67q6o")
+
+[node name="Z-" type="MeshInstance3D" parent="Area3DZ-" unique_id=843941115]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+layers = 2
+mesh = SubResource("BoxMesh_eoeo3")

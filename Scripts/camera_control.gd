@@ -5,7 +5,7 @@ extends Camera3D
 
 @export var MOUSE_SENS: float = 0.005
 @export_range(-180, 0.0, 0.1, "radians_as_degrees") var MIN_VERT_ANGLE = -PI/2
-@export_range(0.0, 90.0, 0.1, "radians_as_degrees") var MAX_VERT_ANGLE = PI/4
+@export_range(0.0, -180.0, 0.1, "radians_as_degrees") var MAX_VERT_ANGLE = PI/4
 
 
 func _ready() -> void:

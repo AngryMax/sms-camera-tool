@@ -54,6 +54,7 @@ func _connectGUISignals() -> void:
 	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
 	%GUI/%TravelTimeInput.connect("value_changed", _on_transition_time_changed)
 	%GUI/%EasingOptions.connect("item_selected", _on_ease_direction_changed)
+	%GUI/%ViewportOrientation.connect("request_rotate_camera", _on_set_camera_axis)
 	
 	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
 		button.toggled.connect(_on_grab_from_target_toggled)
@@ -79,11 +80,11 @@ func _connectSettingsSignals() -> void:
 func _control() -> void:
 	
 	if not Input.is_action_pressed("mouse_click_right"):
-		%GUI.process_mode = Node.PROCESS_MODE_ALWAYS
+		#%GUI.process_mode = Node.PROCESS_MODE_ALWAYS
 		return
 	
 	
-	%GUI.process_mode = Node.PROCESS_MODE_DISABLED
+	#%GUI.process_mode = Node.PROCESS_MODE_DISABLED
 	
 	var horzInputDir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var vertInputDir := 0.0
@@ -422,6 +423,23 @@ func _on_ease_direction_changed(value: int) -> void:
 	%GUI.keyframe = Globals.currentKeyframe
 
 
+func _on_set_camera_axis(axis: String) -> void:
+	
+	match (axis):
+		"X+":
+			%Camera3D.look_at(%Camera3D.position + Vector3.RIGHT)
+		"X-":
+			%Camera3D.look_at(%Camera3D.position + Vector3.LEFT)
+		"Y+":
+			%Camera3D.look_at(%Camera3D.position + Vector3.UP)
+		"Y-":
+			%Camera3D.look_at(%Camera3D.position + Vector3.DOWN)
+		"Z+":
+			%Camera3D.look_at(%Camera3D.position + Vector3.BACK)
+		"Z-":
+			%Camera3D.look_at(%Camera3D.position + Vector3.FORWARD)
+
+
 ### Toolbar Signal Receivers ###
 
 func _on_file_saved(path: String) -> void:
@@ -498,6 +516,7 @@ func _on_toggle_grid(toggle: bool) -> void:
 
 func _on_toggle_axes(toggle: bool) -> void:
 	_axis.toggleVisible(toggle)
+
 
 
 ### Settings Signal Receive Funcs ###

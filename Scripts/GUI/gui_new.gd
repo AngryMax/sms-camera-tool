@@ -1,5 +1,7 @@
 extends Control
 
+@export var editViewportCamera: Camera3D
+
 var keyframe: CamKeyframe:
 	set(value):
 		keyframe = value
@@ -33,6 +35,10 @@ var targetField: Vector3:
 func _ready() -> void:
 	%BG.size.x = %KeyframeGUI.size.x
 	%BG.size.y = DisplayServer.window_get_size().y
+
+
+func _process(_delta: float) -> void:
+	%SpringArm3D.rotation = editViewportCamera.rotation
 
 
 func _on_shrink_button_toggled(toggled_on: bool) -> void:
