@@ -480,8 +480,8 @@ func _on_file_opened(path: String) -> void:
 
 
 func _on_new_file() -> void:
-	Globals.curFileName = "Untitled"
 	Globals.curFile = ""
+	Globals.curFileName = "Untitled"
 	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
 	_addKeyframe()
