@@ -2,7 +2,9 @@
 
 SMSCT is a tool used for getting clean, on-a-rail camera shots in Super Mario Sunshine. It's intended use is for making videos or mod trailers, but it's pretty fun to mess around with too! <br/><br/>
 
-SMSCT Beta 2.0.0 has changed a LOT since the last release, Beta 1.0.1! Read the complete changelog [here!](INSERT CHANGELOG LINK HERE!)<br/><br/>
+SMSCT Beta 2.0.0 has changed a LOT since the last release, Beta 1.0.1! [**Read the complete changelog here!**](https://github.com/AngryMax/sms-camera-tool/blob/dev/CHANGELOG.md)<br/><br/>
+
+**IMPORTANT!** Due to changes in how files are saved, Beta 1.0.1 saves will not open in Beta 2.0.0! (*if you're really attached, you may be able to text edit b1.0.1 saves, but that's up to you to figure out!*)
 
 ## Installation
 
