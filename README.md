@@ -7,7 +7,7 @@ SMSCT Beta 2.0.0 has changed a LOT since the last release, Beta 1.0.1! Read the 
 ## Installation
 
 Just navigate to the downloads page, and download the latest version. Unzip the contents into a folder, and you should be able to just run it! It should be compatible with any NTSC-U version of Sunshine, 
-even if it's modded (as long as the mod doesn't do anything *too* funky with the camera. *NOTE: unzipping will probably take longer than you're expecting, because of the about 2,000 files Py4Godot needs! They don't take a lot of space, but they take a lot of time to be unzipped!* <br/><br/>
+even if it's modded (as long as the mod doesn't do anything *too* funky with the camera. *NOTE: unzipping will probably take longer than you're expecting, because of Py4Godot's ~2,000 files! They don't take a lot of space, but they take a lot of time to be unzipped!* <br/><br/>
 
 ## How to use
 
