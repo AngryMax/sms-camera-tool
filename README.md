@@ -1,6 +1,8 @@
-# SMS Camera Tool
+# SMS Camera Tool Beta 2.0.0
 
-SMSCT is a tool used for getting clean, on-a-rail camera shots in Super Mario Sunshine. It's intended use is for making videos or mod trailers, but it's pretty fun to mess around with too!
+SMSCT is a tool used for getting clean, on-a-rail camera shots in Super Mario Sunshine. It's intended use is for making videos or mod trailers, but it's pretty fun to mess around with too! <br/><br/>
+
+SMSCT Beta 2.0.0 has changed a LOT since the last release, Beta 1.0.1! Read the complete changelog [here!](INSERT CHANGELOG LINK HERE!)<br/><br/>
 
 ## Installation
 
@@ -9,64 +11,79 @@ even if it's modded (as long as the mod doesn't do anythign *too* funky with the
 
 ## How to use
 
-If you'd prefer to watch a video, [here's a tutorial on how to use SMSCT](https://youtu.be/fE53T9BcNkA)
+If you'd prefer to watch a video, [here's a tutorial on how to use SMSCT](https://youtu.be/fE53T9BcNkA) | OLD! New tutorial coming very soon!
 
 ## Launch
-First, you need to launch your legally obtained copy of Sunshine via Dolphin Emulator. Once you're in the game, you can then run SMS-Camera-Tool.exe. As of current version, it *must* be in this order.
+First, you need to launch your legally obtained copy of Sunshine via Dolphin Emulator. Once you're in the game, you can then run SMS-Camera-Tool.exe. As of current version, it *must* be in this order. *NOTE: your first launching may take a bit of time, since your antivirus will probably want to scan it!*
 
 ## Overview
-SMSCT works by storing both the Camera's position and the Camera's target together as a single "Point." You can save multiple of these Points so that later you can "replay" these points, which means
-the in-game camera will move from point to point in order.
+SMSCT works by storing both the Camera's position and the Camera's target together as a single "Keyframe." You can save multiple of these Keyframes so that later you can play Sunshine's camera back over these Keyframes, in order.
 
-## GUI Tour
-In this section, I will add a description for what each button/input field does.
+## Tour
+### General Layout
+SMSCT's window is split into four main sections: The 3D View, the Keyframe Editor, the Toolbar, and the Camera Orientation Widget.
+<img width="960" height="568" alt="image" src="https://github.com/user-attachments/assets/789b9af0-78ef-4056-9135-5eeb085cef73" />
+*Note that the 3D viewport is not highlighted, since it's basically just the whole window!*
 
-### Current Point, Add Point, Duplicate Point, and Delete Point
-<img width="463" height="48" alt="image" src="https://github.com/user-attachments/assets/58747f59-6eb9-4d31-bc9e-434e19669d7d" />
-Current Point is the Point you're currently working with. You will only start with one. You can add a point by pressing "Add Point," or "Duplicate Point."
-Add Point will make a new Point filled with zeros, Duplicate Point will make a new Point copied from your current Point. Use the arrow on the Current Point filed to navigate your Points.<br/>
+### The 3D Viewport
+The 3D View offers a visual representation of where your saved Keyframe's Camera Position and Camera Target are. More info about what that means in the [Keyframe Editor section](https://github.com/AngryMax/sms-camera-too#Keyframe-Editor)
+
+Your Keyframe's Camera Position and Target are represented by these little icons, called "**Points**":
+<img width="956" height="537" alt="image" src="https://github.com/user-attachments/assets/62b438e5-44af-4486-af16-7e06e7995cc0" />
+*Tip! This Keyframe is **unselected**, which usually means that its Camera Target Point is invisible! You can make Camera Target Points that belong to unselected Keyframes always visible by checking "Always Show Targets" in the Toolbar's View menu!*<br/>
+
+However, by defualt, your first Keyframe will be selected, and when a Keyframe is selected, its Points will have these arrow handles. By clicking and dragging these handles, you can move your Points along the handle's axis! Alternatively, by clicking on a Point to select it, upon which it'll turn green, you can drag the Point around to move it horizontally.
+
+INSERT ARROW DRAGGING GIF
+INSERT POINT DRAGGING GIF
+
+You may want to move around in the 3D View. To do so, hold right click, then you can fly around with WASD and mouse controls, along with E to move up, or Q/LCtrl to move down.
+
+INSERT GIF OF MOVING WITH INPUT DISPLAY
+*Tip! If you get lost: in the Toolbar, go to View, then either click "Reset Camera," or "Go to selected Keyframe."*
+
+### The Keyframe Editor
+Editing your singular Keyframe in the 3D View is all well and good, but if you want to actually engage with the intended purpose of SMSCT, then you will need to know how to use the Keyframe editor! At first glance, it may look complex, but it's actually pretty simple! Starting from top to bottom, left to right, here's a brief description of what everything does:
+
+- "Current Keyframe" is your currently selected Keyframe. The number will correspond with the number that appears next to the Keyframe's Points in the 3D View.
+- "Add Keyframe" adds a new Keyframe. The newly added Keyframe will always be the last one. Inserting Keyframes inbetween other Keyframes/Keyframe reordering is yet to be added!
+- "Duplicate Keyframe" adds a duplicate of your currently selected Keyframe as the last Keyframe. Inserting Keyframes inbetween other Keyframes/Keyframe reordering is yet to be added!
+<img width="439" height="80" alt="image" src="https://github.com/user-attachments/assets/af1aa8fb-6937-4712-9660-fcec4141b3ec" /><br/>
+
+
+- "Position" is your Keyframe's Camera Position, ordered by X, Y, then Z.
+<img width="341" height="115" alt="image" src="https://github.com/user-attachments/assets/8be3c41b-3848-4380-aea6-490347a48056" /><br/>
+
+
+- "Target" is the position of your Keyframe's Camera Target, ordered by X, Y, then Z.
+<img width="342" height="114" alt="image" src="https://github.com/user-attachments/assets/1566d70d-a15e-43cd-bde7-7e3614b689f3" /><br/>
+
+- The repeated buttons to the right of each coordinate axis for the Position and Target fields will copy value straight from Sunshine into their respective field. Pressing the target icon will copy from the position Sunshine's camera is targeting, and pressing the blue camera icon will copy from Sunshine's camera position. These buttons are especially handy with something like Better Sunshine Engine's noclip mode.
+INSERT GIF OF COPYING VALUES FROM SUNSHINE
+
+- "Copy ALL From Game" will directly copy Sunshine's Camera and Target positions into SMSCT's. You'll probably be using this button a lot!
+
+- "Transition Time" is the time it takes in seconds for this Keyframe to transition to the next one during playback. *This means that the Transition Time for the last Keyframe is meaningless!*
+
+- The dropdown that by defualt reads "No Easing" is your Keyframe's easing. Your options are "No Easing," "Ease In," "Ease Out," and "Ease in and Out." No easing means that the this Keyframe will move to the next Keyframe at a constant rate during playback, while the other options will make it speed up and slow down at different points.
+
+- "Preview Keyframe" will update Sunshine's camera's position and target position to be that of your current Keyframe's. **IMPORTANT NOTE: Since Dolphin Emulator is not expecting and outside program to change Sunshine's code, in Dolphin you have to go to the JIT dropdown, then press "Clear Cache" in order for Sunshine's camera to not fight with SMSCT! As long as you don't load a savestate, restart the game, etc., you should only have to do this once, but only after you're already in SMSCT's Preview Mode!**
+
+- "Delete Keyframe" will delete the current Keyframe.
+
+- "Play Back Keyframes!" will play your Keyframes back, in order, in Super Mario Sunshine. **IMPORTANT NOTE: The same important note about the Preview Keyframe button applies here!** <br/>
+
+### The Toolbar and Camera Orientation Widget
 <br/>
-<img width="150" height="44" alt="image" src="https://github.com/user-attachments/assets/1a2d393d-0f5a-4835-8536-d247db1cebe6" />
-Further down and purposely out of the way is the "Delete Point" button, which will delete your current Point.
+- The Toolbar has most of the features you'd expect from a toolbar: saving and opening files, undo and redo, various info, and helpful settings and tools. Your standard keyboard shortcuts are also here, like ctrl + s, ctrl + z, etc.
+ - The "Tools" dropdown in the Toolbar has 3 helpful features:
+     - "Enable Snapping" makes Points dragged in the 3D View snap onto nearby Points.
+     - "Camera Point Follows Editor Cam" continually brings the current Keyframe's Camera Position Point to the 3D Editors Camera
+     - "Target Point Follows Editor Cam" continually brings the current Keyframe's Target Position Point to the 3D Editors Camera <br/>
+     *Tip! By enabling Preview Keyframe, you can move Sunshine's Camera and/or Target Points around LIVE as you move around the 3D Viewport*
+  - The other Toolbar dropdowns are all pretty self-explanitory, or have already been explained in a tip!
+- The Camera Orientation Widget not only acts as a sort of 3D compass, but by clicking on the colored cube that corresponds to an axis and direction, you can orient your camera along a specific axis! In the future, this will also change the 3D View's camera to be orthogonal!
 
-### Position, Target and the Copy Buttons
-<img width="507" height="271" alt="image" src="https://github.com/user-attachments/assets/634a12d3-8b8a-46f3-aefc-b6e7f7da0b48" />
-The three fields following "Position:" are the X, Y, and Z coordinates for the Camera's position. The Three fields folling "Target:" are the X, Y, and Z coordinates for the Camera's *Target* position.
-During normal gameplay, the target position is Mario's position (technically I think it's a bit above Mario but that's not important). <br/> <br/>
-
-Below those fields is the "Copy ALL From Game" button. Pressing this button will copy the Camera's position and target position directly into the relative fields. If you want more specificity, you can
-use the buttons to the *right* of each individual coordinate field to copy from the specific axis of either the in-game Camera's target position (the target icon), or the in-game Camera's position (the 
-blue camera icon). <br/> <br/>
-
-The broken chain-link icon all the way to the right currently does nothing functional, so don't worry about it.
-
-### Transition Time and Easing
-<img width="461" height="46" alt="image" src="https://github.com/user-attachments/assets/fe7100f3-f286-4103-ae5f-e0dbda2a97f3" />
-"Transition Time:" is the time in seconds it takes the Current Point to transition to the next Point. This means that the Transition Time for the final point is more or less irrelevant! <br/> <br/>
-
-The dropdown menu to the right that has "Linear" selected in the screenshot sets the easing type for the transition from the Current Point to the next Point. This feature is still WIP, so Linear
-is the only option that works fully as intended at the moment. Selecting Cubic can still make nice looking camera sweeps, it's just not working fully as intended, yet!
-
-## Preview Point
-<img width="173" height="45" alt="image" src="https://github.com/user-attachments/assets/a6678ad1-049a-48c4-923c-205f3038a1ee" />
-Enabling this switch will set Sunshine's Camera to your Current Point. This is useful for editing and tweaking your Point to look exactly how you'd like it to!
-
-### Replay Points
-<img width="468" height="63" alt="image" src="https://github.com/user-attachments/assets/7aaf0be7-abbf-4211-8b32-bbded17e1049" />
-Finally, we have the "Replay Points!" button. This button will begin the process of moving Sunshine's camera to your defined Points! <br/> <br/>
-**IMPORTANT 1**: Sunshine's camera will fight with SMSCT, which makes everthing look jittery and bad! SMSCT automatically "blocks" the code in Sunshine responsible for doing this, however, since
-Dolphin doesn't expect an outside program to change Sunshine's code, it may not react! In order to fix this, you must click [ Dolphin -> JIT -> Clear Cache ] _after_ you've either already started
-a Point reply, or after you've enabled "Preview Point." You should only have to do this once, unless you click the "Restore Camera" button, more on that below. <br/> <br/>
-**IMPORTANT 2**: Currently, the SMS-Camera-Tool window will hang
-while it's replaying back your points due to being hastily coded. It'll return to being usable once it's done playing your Points back. 
-
-### Restore Camera
-<img width="459" height="49" alt="image" src="https://github.com/user-attachments/assets/0257ab64-bd2f-430f-b2fc-f242f72bf036" />
-The "Restore Camera" button will restore vanilla functionality to Sunshine's camera. Just like with getting the camera to work with the "Replay Points!" button, you have to clear the JIT cache
-to get this button to work.
-
-### Misc
-Up top, there's a standard toolbar with saving and loading functionality, as well as other self explanitory buttons.
 
 
 ## Building
@@ -75,10 +92,15 @@ This is a Godot 4.6.2 project. Download the project, then import it through the 
 
 ## Planned Features
 I'd like to work more on this project. If I do, here's what you can expect: <br/>
-- Cleaned up, easier to read GUI <br/>
-- A Point list to replace the Current Point selection box. You will also be able to visually re-order the Points from the list.
-- A "Camera Control Mode." When enabled, the program will accept keyboard inputs to move the camera around, similar to Dolphin's free cam feature.
-- An Undo/Redo button and Undo history
-- A Spline-based system to potentially replace the Point system (needs more research)
-- A 3D, editable view of your Points
-- Longshot, but perhaps a way to extract the current level's geometry data for the 3D view
+- !! BCK importing and exporting.
+- Cleaned up, easier to read GUI.
+- A Keyframe list where you can select and reorder Keyframes.
+- Grid snapping.
+- Separately toggleable horizontal grid.
+- Add FOV to Keyframes.
+- Add camera tilt to Keyframes.
+- Easing with more customization!
+- A corner rounding option for each Keyframe.
+- Orthogonal view option.
+- Customizable hotkeys.
+- Longshot, but perhaps a way to extract the current level's geometry data for the 3D View.
