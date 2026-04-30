@@ -413,6 +413,7 @@ size_flags_vertical = 3
 text = "Play Back Keyframes! 🎥"
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=233617153]
+unique_name_in_owner = true
 layout_mode = 0
 offset_top = 440.0
 offset_right = 100.0

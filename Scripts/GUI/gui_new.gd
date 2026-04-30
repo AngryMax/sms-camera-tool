@@ -38,7 +38,13 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	
 	%SpringArm3D.rotation = editViewportCamera.rotation
+	
+	# I for the life of me couldn't get anchoring to work with the SubViewportContainer,
+	# so we're just doing it through code. I think it might be bugged.
+	%SubViewportContainer.global_position.y = DisplayServer.window_get_size().y - 100
+	%SubViewportContainer.global_position.x = 0
 
 
 func _on_shrink_button_toggled(toggled_on: bool) -> void:
