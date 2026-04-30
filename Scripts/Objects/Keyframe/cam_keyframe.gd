@@ -15,8 +15,14 @@ var isSelected: bool:
 			targetPoint.isSelected = false
 		isSelected = value
 		keyframeChanged.emit(self)
-var transitionTime: float
-var easeDirection: Globals.EaseDirection
+var transitionTime: float:
+		set(value):
+			_markUnsaved()
+			transitionTime = value
+var easeDirection: Globals.EaseDirection:
+		set(value):
+			_markUnsaved()
+			easeDirection = value
 var cameraPoint: Point
 var targetPoint: Point
 signal keyframeChanged(keyframe: CamKeyframe)	## Emitted to let the GUI know it needs to update
@@ -104,6 +110,15 @@ func _toggleArrowVisibility(toggle: bool) -> void:
 	targetPoint.dragArrowZ.visible = toggle
 
 
+## Called in CamKeyframe's member's var setters. 
+func _markUnsaved() -> void:
+	
+	if Globals.curFileName.ends_with("*"):
+		return
+	
+	Globals.curFileName = Globals.curFileName + "*"
+
+
 ## NOTE: DO NOT CALL THIS FUNC!! IT'S CALLED IN isSelected's SET!
 func _deactivateOtherKeyframes() -> void:
 	var _camKeyframes: Node3D = get_parent()
@@ -138,6 +153,7 @@ func _on_body_mouse_input(_camera: Node, event: InputEvent, _event_position: Vec
 
 func _on_point_updated() -> void:
 	keyframeChanged.emit(self)
+	_markUnsaved()
 
 
 ## For making this the selected keyframe from child nodes (IE: when a point gets ctrl + z'd)

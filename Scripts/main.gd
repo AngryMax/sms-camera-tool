@@ -463,7 +463,7 @@ func _on_file_opened(path: String) -> void:
 	_clearUndoRedoProcess()
 	_deleteAllKeyframes()
 	
-	Globals.curFile = path
+	(func(): Globals.curFile = path).call_deferred()
 	
 	var file: SaveFile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 	

@@ -320,7 +320,6 @@ func _on_undo_redo() -> void:	## Called *ANY* TIME the Undo or Redo action is us
 			return
 		
 	
-	print(self)
 	pointUpdated.emit()
 	selectParentKeyframe.emit()
 	undoPos = position
