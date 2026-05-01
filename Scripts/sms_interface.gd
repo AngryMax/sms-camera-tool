@@ -72,11 +72,14 @@ func _replayKeyframes(delta: float):
 	
 	var curPos: Vector3
 	var curTarget: Vector3
-	#curPos = _fromKeyframe.cameraPoint.smsPosition.lerp(_toKeyframe.cameraPoint.smsPosition, _lerpPow)
-	#curTarget = _fromKeyframe.targetPoint.smsPosition.lerp(_toKeyframe.targetPoint.smsPosition, _lerpPow)
 	
-	curPos = _interpolateCubic(_fromKeyframe.cameraPoint.smsPosition, _toKeyframe.cameraPoint.smsPosition, _lerpPow)
-	curTarget = _interpolateCubic(_fromKeyframe.targetPoint.smsPosition, _toKeyframe.targetPoint.smsPosition, _lerpPow)
+	if _fromKeyframe.easeDirection == Globals.EaseDirection.NONE:
+			curPos = _interpolateLinear(_fromKeyframe.cameraPoint.smsPosition, _toKeyframe.cameraPoint.smsPosition, _lerpPow)
+			curTarget = _interpolateLinear(_fromKeyframe.targetPoint.smsPosition, _toKeyframe.targetPoint.smsPosition, _lerpPow)
+	else:
+			curPos = _interpolateCubic(_fromKeyframe.cameraPoint.smsPosition, _toKeyframe.cameraPoint.smsPosition, _lerpPow, _fromKeyframe.easeDirection)
+			curTarget = _interpolateCubic(_fromKeyframe.targetPoint.smsPosition, _toKeyframe.targetPoint.smsPosition, _lerpPow, _fromKeyframe.easeDirection)
+	
 	
 	GDInterface.writeCamData(curPos, curTarget)
 	setSMSCamRepTransform(curPos / Globals.UNIT_DIVIDE_RATIO, curTarget / Globals.UNIT_DIVIDE_RATIO)
@@ -176,6 +179,8 @@ func _interpolateCubic(from: Vector3, to: Vector3, lerpPow: float, easeDirection
 		Globals.EaseDirection.BOTH:
 			pre_from += Vector3.ONE
 			pre_to += Vector3.ONE
+		_:
+			push_error("Gave a non-eased Keyframe to _interpolateCubic! Please use _interpolateLinear!")
 		
 	return from.cubic_interpolate(to, pre_from, pre_to, lerpPow)
 
