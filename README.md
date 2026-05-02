@@ -102,6 +102,7 @@ This is a Godot 4.6.2 project. Download the project, then import it through the 
 ## Planned Features
 I'd like to work more on this project. If I do, here's what you can expect: <br/>
 - !! BCK importing and exporting.
+- An option for the camera to play back over all Keyframes at a consistent speed. This would override all Transition Times.
 - Cleaned up, easier to read GUI.
 - A Keyframe list where you can select and reorder Keyframes.
 - Grid snapping.
