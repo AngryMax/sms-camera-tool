@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://uf3fc7jnxu1x" path="res://Scripts/GUI/toolbar.gd" id="1_vmn2u"]
 [ext_resource type="PackedScene" uid="uid://01pmgqf4fde" path="res://Scenes/about.tscn" id="2_5g788"]
-[ext_resource type="Script" uid="uid://cupikalhqfxl7" path="res://Scripts/Objects/file_dialog_custom.gd" id="2_ia074"]
 [ext_resource type="PackedScene" uid="uid://nxugwcbog76n" path="res://Scenes/website_prompt.tscn" id="3_qlqgh"]
 [ext_resource type="PackedScene" uid="uid://dl2mrowghweij" path="res://Scenes/settings.tscn" id="4_nc5mq"]
 
@@ -27,18 +26,16 @@ popup/item_3/id = 2
 popup/item_4/text = "Quit"
 popup/item_4/id = 3
 
-[node name="SaveAsFile" type="FileDialog" parent="File" unique_id=1701862620 node_paths=PackedStringArray("okButton")]
+[node name="SaveAsFile" type="FileDialog" parent="File" unique_id=1911553478]
 unique_name_in_owner = true
 oversampling_override = 1.0
 initial_position = 2
 display_mode = 1
 access = 2
 filters = PackedStringArray("*.tres")
-script = ExtResource("2_ia074")
-okButton = NodePath("InvalidFilePopup/VBoxContainer/OkButton")
-metadata/_custom_type_script = "uid://cupikalhqfxl7"
 
 [node name="InvalidFilePopup" type="PopupPanel" parent="File/SaveAsFile" unique_id=2129517623]
+editor_description = "This and its children are unused! Read file_dialog_custom.gd's header comment for more info."
 oversampling_override = 1.0
 title = "Invalid File name!"
 initial_position = 1

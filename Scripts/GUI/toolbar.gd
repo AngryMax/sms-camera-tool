@@ -6,7 +6,7 @@ enum ToolsOptions {TOGGLE_SNAP, TOGGLE_CAM_FOLLOW, TOGGLE_TARGET_FOLLOW}
 enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
 
-var _isPopupVisible := false	# Be highly suspicious of this if any bug relating to keyboard shortcuts arises...
+var _isPopupVisible := false	# NOTE: Be highly suspicious of this if any bug relating to keyboard shortcuts arises...
 
 signal newFile
 signal resetCam
@@ -23,6 +23,9 @@ func _ready() -> void:
 	%Tools.get_popup().id_pressed.connect(_on_tools_menu)
 	%View.get_popup().id_pressed.connect(_on_view_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
+	
+	%OpenFile.use_native_dialog = true
+	%SaveAsFile.use_native_dialog = true
 	
 	_checkForPopupOrFileDialogChildAndConnect()
 
@@ -137,5 +140,6 @@ func _on_help_menu(id: int) -> void:
 
 
 func _on_popup_visibility_changed() -> void:
+	print(_isPopupVisible)
 	isPopupWindow.emit(_isPopupVisible)
 	_isPopupVisible = not _isPopupVisible
