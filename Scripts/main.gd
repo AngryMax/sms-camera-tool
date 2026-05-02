@@ -9,6 +9,7 @@ var _SMSCamera: SMSCameraInterface
 var _axis: axisGizmo
 var _grid: gridGizmo
 var _addFromButton := false	## Tracks when a Keyframe is being added via clicking the Add Keyframe button, or via undoing a deleted keyframe
+var _acceptInput := true
 
 
 ### Override Funcs ###
@@ -31,6 +32,10 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	
+	if not _acceptInput:
+		return
+	
 	_control()
 	_keyboardShortcuts()
 
@@ -69,6 +74,7 @@ func _connectToolbarSignals() -> void:
 	%Toolbar.connect("toggleGrid", _on_toggle_grid)
 	%Toolbar.connect("toggleAxes", _on_toggle_axes)
 	%Toolbar.connect("save", _on_file_saved)
+	%Toolbar.connect("isPopupWindow", _on_popup_window)
 	%Toolbar/%SaveAsFile.connect("file_selected", _on_file_saved)
 	%Toolbar/%OpenFile.connect("file_selected", _on_file_opened)
 
@@ -516,6 +522,10 @@ func _on_toggle_grid(toggle: bool) -> void:
 
 func _on_toggle_axes(toggle: bool) -> void:
 	_axis.toggleVisible(toggle)
+
+
+func _on_popup_window(toggle: bool) -> void:
+	_acceptInput = toggle
 
 
 

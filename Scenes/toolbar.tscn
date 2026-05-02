@@ -155,3 +155,5 @@ unique_name_in_owner = true
 [node name="Settings" parent="." unique_id=2027716955 instance=ExtResource("4_nc5mq")]
 unique_name_in_owner = true
 visible = false
+
+[connection signal="focus_exited" from="Settings" to="." method="_on_popup_focus_exited"]

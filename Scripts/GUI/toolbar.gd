@@ -6,12 +6,15 @@ enum ToolsOptions {TOGGLE_SNAP, TOGGLE_CAM_FOLLOW, TOGGLE_TARGET_FOLLOW}
 enum ViewOptions {TOGGLE_GRID, TOGGLE_AXES, TOGGLE_TARGETS, RESET_CAMERA, GOTO_POINT}
 enum HelpOptions {BUG, GUIDE, LICENSE, ABOUT}
 
+var _isPopupVisible := false	# Be highly suspicious of this if any bug relating to keyboard shortcuts arises...
+
 signal newFile
 signal resetCam
 signal gotoPoint
 signal toggleGrid
 signal toggleAxes
 signal save
+signal isPopupWindow
 
 
 func _ready() -> void:
@@ -20,7 +23,20 @@ func _ready() -> void:
 	%Tools.get_popup().id_pressed.connect(_on_tools_menu)
 	%View.get_popup().id_pressed.connect(_on_view_menu)
 	%Help.get_popup().id_pressed.connect(_on_help_menu)
+	
+	_checkForPopupOrFileDialogChildAndConnect()
 
+## Worlds most verbose function name lol. Recursively connects all Popup and FileDialog
+## visiblity_changed signals in the Toolbar.tscn tree to _on_popup_visibility_changed()
+func _checkForPopupOrFileDialogChildAndConnect(node: Node = self) -> void:
+	
+	for child in node.get_children():
+		if child is Popup or child is FileDialog:
+			if child.get_parent() is Popup or child.get_parent() is FileDialog:	# don't connect signal or check children of child if parent was already connected
+				continue
+			child.connect("visibility_changed", _on_popup_visibility_changed)
+		
+		_checkForPopupOrFileDialogChildAndConnect(child)
 
 func _on_file_menu(id: int) -> void:
 	
@@ -118,3 +134,8 @@ func _on_help_menu(id: int) -> void:
 			return
 	
 	%"Website Prompt".show()
+
+
+func _on_popup_visibility_changed() -> void:
+	isPopupWindow.emit(_isPopupVisible)
+	_isPopupVisible = not _isPopupVisible
