@@ -207,12 +207,6 @@ func _deleteKeyframe() -> void:
 	else:
 		keyframeToDelete = %CamKeyframes.camKeyframeOrder.back()
 	
-	#print('here1')
-	#if deleteFromAddUndo:	# TODO: The lazy way to handle undos... it works until you can add keyframes at any index or rearrange them lol
-		#keyframeToDelete = %CamKeyframes.get_child(-1)
-		#print("here2")
-	#else:
-	
 	
 	#keyframeToDelete.free()
 	%CamKeyframes.remove_child(keyframeToDelete)
