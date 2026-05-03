@@ -140,6 +140,5 @@ func _on_help_menu(id: int) -> void:
 
 
 func _on_popup_visibility_changed() -> void:
-	print(_isPopupVisible)
 	isPopupWindow.emit(_isPopupVisible)
 	_isPopupVisible = not _isPopupVisible

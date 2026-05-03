@@ -196,16 +196,23 @@ func _readdKeyframe() -> void:
 	keyframe.isSelected = true
 
 
-func _deleteKeyframe(deleteFromAddUndo := false) -> void:
+func _deleteKeyframe() -> void:
 	
 	var keyframesLeft := %CamKeyframes.get_child_count()
 	
 	var keyframeToDelete: CamKeyframe
 	
-	if deleteFromAddUndo:	# TODO: The lazy way to handle undos... it works until you can add keyframes at any index or rearrange them lol
-		keyframeToDelete = %CamKeyframes.get_child(-1)
-	else:
+	if _deleteFromButton:
 		keyframeToDelete = _getSelectedkeyframe()
+	else:
+		keyframeToDelete = %CamKeyframes.camKeyframeOrder.back()
+	
+	#print('here1')
+	#if deleteFromAddUndo:	# TODO: The lazy way to handle undos... it works until you can add keyframes at any index or rearrange them lol
+		#keyframeToDelete = %CamKeyframes.get_child(-1)
+		#print("here2")
+	#else:
+	
 	
 	#keyframeToDelete.free()
 	%CamKeyframes.remove_child(keyframeToDelete)
@@ -227,8 +234,8 @@ func _deleteKeyframe(deleteFromAddUndo := false) -> void:
 
 
 ## "Deletes" added Keyframes via ctrl + z (undo)
-func _deleteKeyframeUndo() -> void:
-	var keyframe = _getSelectedkeyframe()
+func _deleteKeyframeUndo(delIdx: int) -> void:
+	var keyframe = %CamKeyframes.get_child(delIdx)
 	%CamKeyframes.remove_child(keyframe)
 	%DeleteUndoKeyframes.add_child(keyframe)
 	keyframe.process_mode = Node.PROCESS_MODE_DISABLED
@@ -326,15 +333,20 @@ func _on_add_point_pressed() -> void:
 	
 	_addFromButton = true
 	
+	var delIdx := %CamKeyframes.get_child_count()
+	
 	Globals.undoRedo.create_action("Add Keyframe")
 	Globals.undoRedo.add_do_method(_addKeyframe)
-	Globals.undoRedo.add_undo_method(_deleteKeyframeUndo)
+	Globals.undoRedo.add_undo_method(_deleteKeyframeUndo.bind(delIdx))
 	Globals.undoRedo.commit_action()
 	
 	_addFromButton = false
 
 
+var _deleteFromButton := false
 func _on_delete_keyframe_pressed() -> void:
+	
+	_deleteFromButton = true
 	
 	var keyframesLeft := %CamKeyframes.get_child_count()
 	if keyframesLeft == 1:
@@ -344,6 +356,8 @@ func _on_delete_keyframe_pressed() -> void:
 	Globals.undoRedo.add_do_method(_deleteKeyframe)
 	Globals.undoRedo.add_undo_method(_undoDeletedKeyframe.bind())
 	Globals.undoRedo.commit_action()
+	
+	_deleteFromButton = false
 
 
 func _on_duplicate_keyframe_pressed() -> void:
