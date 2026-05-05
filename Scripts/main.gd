@@ -10,6 +10,7 @@ var _axis: axisGizmo
 var _grid: gridGizmo
 var _addFromButton := false	## Tracks when a Keyframe is being added via clicking the Add Keyframe button, or via undoing a deleted keyframe
 var _acceptInput := true
+var _GUIFocused := true
 
 
 ### Override Funcs ###
@@ -36,7 +37,16 @@ func _process(_delta: float) -> void:
 	if not _acceptInput:
 		return
 	
-	_control()
+	if _control():
+		%GUI.process_mode = Node.PROCESS_MODE_DISABLED
+		return
+	
+	%GUI.process_mode = Node.PROCESS_MODE_ALWAYS
+	
+	#if _GUIFocused:
+		#return
+	
+	
 	_keyboardShortcuts()
 
 
@@ -84,14 +94,11 @@ func _connectSettingsSignals() -> void:
 	%Toolbar/%Settings.connect("reloadMat", _on_reload_mat)
 
 
-func _control() -> void:
+## Responsible for the 3D View's controls. Returns false if no control input is being made.
+func _control() -> bool:
 	
 	if not Input.is_action_pressed("mouse_click_right"):
-		#%GUI.process_mode = Node.PROCESS_MODE_ALWAYS
-		return
-	
-	
-	#%GUI.process_mode = Node.PROCESS_MODE_DISABLED
+		return false
 	
 	var horzInputDir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var vertInputDir := 0.0
@@ -109,6 +116,8 @@ func _control() -> void:
 		relativeDir *= 2
 	
 	$Camera3D.position += relativeDir
+	
+	return true
 
 
 func _keyboardShortcuts() -> void:

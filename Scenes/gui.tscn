@@ -114,7 +114,6 @@ text = ">"
 
 [node name="VSplitContainer" type="VSplitContainer" parent="KeyframeGUI" unique_id=96502764]
 layout_mode = 2
-size_flags_horizontal = 3
 split_offsets = PackedInt32Array(374, 420)
 split_offset = 374
 
@@ -144,18 +143,19 @@ allow_lesser = true
 
 [node name="AddOrDupe" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=776201505]
 layout_mode = 2
-split_offsets = PackedInt32Array(0, 0)
+split_offsets = PackedInt32Array(118, 291)
+split_offset = 118
 
 [node name="AddPointButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/AddOrDupe" unique_id=1966676548]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 text = "Add Keyframe"
 
 [node name="DuplicatePointButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/AddOrDupe" unique_id=1488294071]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
 text = "Duplicate Keyframe"
 
 [node name="DeleteButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/AddOrDupe" unique_id=1384828627]
