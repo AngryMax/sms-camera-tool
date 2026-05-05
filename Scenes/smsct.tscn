@@ -18,8 +18,6 @@ ambient_light_color = Color(0.4862745, 0.70980394, 1, 1)
 ambient_light_energy = 0.34
 reflected_light_source = 1
 
-[sub_resource type="Curve3D" id="Curve3D_o6pwk"]
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1jbuc"]
 albedo_color = Color(1, 0, 0, 1)
 
@@ -27,6 +25,10 @@ albedo_color = Color(1, 0, 0, 1)
 material = SubResource("StandardMaterial3D_1jbuc")
 radial_segments = 32
 rings = 16
+
+[sub_resource type="Curve3D" id="Curve3D_o6pwk"]
+
+[sub_resource type="Curve3D" id="Curve3D_r6bid"]
 
 [node name="SMSCT" type="Node3D" unique_id=917104174]
 script = ExtResource("1_a8iap")
@@ -64,12 +66,6 @@ process_mode = 4
 editor_description = "Keyframes deleted via the delete button are put in here in case of potential \"creation\" via redo. So delete -> redo hence \"DeleteRedo\""
 visible = false
 
-[node name="Path3D" type="Path3D" parent="." unique_id=479842117]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.2652159)
-curve = SubResource("Curve3D_o6pwk")
-debug_custom_color = Color(1, 0, 0, 1)
-
 [node name="GUI" parent="." unique_id=700733280 node_paths=PackedStringArray("editViewportCamera") instance=ExtResource("3_1jbuc")]
 unique_name_in_owner = true
 anchors_preset = 11
@@ -104,6 +100,26 @@ surface_material_override/0 = ExtResource("7_1jbuc")
 
 [node name="Timer" type="Timer" parent="SMSCameraInterface" unique_id=673486839]
 unique_name_in_owner = true
+
+[node name="CameraRail" type="Path3D" parent="SMSCameraInterface" unique_id=479842117]
+unique_name_in_owner = true
+curve = SubResource("Curve3D_o6pwk")
+debug_custom_color = Color(1, 0.5783682, 0.51682353, 1)
+
+[node name="CamRailFollow" type="PathFollow3D" parent="SMSCameraInterface/CameraRail" unique_id=1771605517]
+unique_name_in_owner = true
+loop = false
+tilt_enabled = false
+
+[node name="TargetRail" type="Path3D" parent="SMSCameraInterface" unique_id=1756792530]
+unique_name_in_owner = true
+curve = SubResource("Curve3D_r6bid")
+debug_custom_color = Color(1, 0, 0, 1)
+
+[node name="TargetRailFollow" type="PathFollow3D" parent="SMSCameraInterface/TargetRail" unique_id=1560837035]
+unique_name_in_owner = true
+loop = false
+tilt_enabled = false
 
 [node name="GDInterface" type="Node" parent="." unique_id=1955610450]
 unique_name_in_owner = true

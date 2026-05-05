@@ -8,6 +8,7 @@ extends Resource
 @export var targets: Array[Vector3]
 @export var times: Array[float]
 @export var ease: Array[Globals.EaseDirection]
+@export var playbackTime: float
 
 func _init() -> void:
 	_reset()
@@ -18,6 +19,7 @@ func _reset() -> void:
 	targets.clear()
 	times.clear()
 	ease.clear()
+	playbackTime = 1.0
 
 
 func saveFile(path: String) -> void:

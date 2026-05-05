@@ -57,7 +57,8 @@ func _connectGUISignals() -> void:
 	%GUI/%CopyFromGameButton.connect("pressed", _on_copy_all_pressed)
 	%GUI/%PreviewPoint.connect("pressed", _on_preview_pressed)
 	%GUI/%PlayBackKeyframes.connect("pressed", _on_play_keyframes_pressed)
-	%GUI/%TravelTimeInput.connect("value_changed", _on_transition_time_changed)
+	#%GUI/%TravelTimeInput.connect("value_changed", _on_transition_time_changed)
+	%GUI/%PlaybackTimeInput.connect("value_changed", _on_playback_time_changed)
 	%GUI/%EasingOptions.connect("item_selected", _on_ease_direction_changed)
 	%GUI/%ViewportOrientation.connect("request_rotate_camera", _on_set_camera_axis)
 	
@@ -207,8 +208,6 @@ func _deleteKeyframe() -> void:
 	else:
 		keyframeToDelete = %CamKeyframes.camKeyframeOrder.back()
 	
-	
-	#keyframeToDelete.free()
 	%CamKeyframes.remove_child(keyframeToDelete)
 	%UndoRedoKeyframes.add_child(keyframeToDelete)
 	keyframeToDelete.process_mode = Node.PROCESS_MODE_DISABLED
@@ -410,9 +409,13 @@ func _on_play_keyframes_pressed() -> void:
 	_SMSCamera.playbackMode = true
 
 
-func _on_transition_time_changed(value: float) -> void:
-	var keyframe := _getSelectedkeyframe()
-	keyframe.transitionTime = value
+#func _on_transition_time_changed(value: float) -> void:
+	#var keyframe := _getSelectedkeyframe()
+	#keyframe.transitionTime = value
+
+
+func _on_playback_time_changed(value: float) -> void:
+	_SMSCamera.playbackTime = value
 
 
 func _on_grab_from_target_toggled(_toggle: bool):
@@ -468,6 +471,7 @@ func _on_file_saved(path: String) -> void:
 		saveFile.targets.append(keyframe.targetPoint.smsPosition)
 		saveFile.times.append(keyframe.transitionTime)
 		saveFile.ease.append(keyframe.easeDirection)
+	saveFile.playbackTime = _SMSCamera.playbackTime
 	
 	saveFile.saveFile(path)
 
@@ -488,6 +492,8 @@ func _on_file_opened(path: String) -> void:
 		keyframe.targetPoint.smsPosition = file.targets[i]
 		keyframe.transitionTime = file.times[i]
 		keyframe.easeDirection = file.ease[i]
+	_SMSCamera.playbackTime = file.playbackTime
+	%GUI/%PlaybackTimeInput.value = _SMSCamera.playbackTime
 	
 	Globals.currentKeyframe = _getSelectedkeyframe()	# TODO: perhaps just set %GUI.keyframe from Globals.currentKeyframe's setter
 	%GUI.keyframe = Globals.currentKeyframe

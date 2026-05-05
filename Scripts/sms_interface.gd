@@ -10,6 +10,7 @@ class_name SMSCameraInterface
 
 
 var previewMode := false		# TODO: make previewMode and playbackMode into a state machine
+var playbackTime := 1.0
 var playbackMode := false:
 	set(value):
 		playbackMode = value
@@ -28,16 +29,7 @@ var _preparingPlayback := true	## Used in _replayKeyframes to track state. This 
 var _lerpPow := 0.0:				## lerpPow is my personal convention for what to call t in the lerp() equation.
 	set(value):
 		_lerpPow = clampf(value, 0.0, 1.0)	# Perhaps unnecessary, since the way I'm coding this it should basically be auto-clamped
-var _fromKeyframe: CamKeyframe	## The keyframe we're lerping from. Set through _keyframeIdx's setter
-var _toKeyframe: CamKeyframe	## The keyframe we're lerping to. Set through _keyframeIdx's setter
-var _keyframeIdx := 0:
-	set(value):
-		value = clampi(value, 0, _keyframes.size() - 1)
-		if _toKeyframe == null:
-			_fromKeyframe = _keyframes[0]
-		else: _fromKeyframe = _toKeyframe
-		_toKeyframe = _keyframes[value]
-		_keyframeIdx = value
+
 var _playbackStartTimer := 0.0
 
 ### Override Funcs ##
@@ -73,32 +65,31 @@ func _replayKeyframes(delta: float):
 	var curPos: Vector3
 	var curTarget: Vector3
 	
-	if _fromKeyframe.easeDirection == Globals.EaseDirection.NONE:
-			curPos = _interpolateLinear(_fromKeyframe.cameraPoint.smsPosition, _toKeyframe.cameraPoint.smsPosition, _lerpPow)
-			curTarget = _interpolateLinear(_fromKeyframe.targetPoint.smsPosition, _toKeyframe.targetPoint.smsPosition, _lerpPow)
-	else:
-			curPos = _interpolateCubic(_fromKeyframe.cameraPoint.smsPosition, _toKeyframe.cameraPoint.smsPosition, _lerpPow, _fromKeyframe.easeDirection)
-			curTarget = _interpolateCubic(_fromKeyframe.targetPoint.smsPosition, _toKeyframe.targetPoint.smsPosition, _lerpPow, _fromKeyframe.easeDirection)
 	
+	%CamRailFollow.progress_ratio = _lerpPow
+	%TargetRailFollow.progress_ratio = _lerpPow
+	
+	curPos = %CamRailFollow.position * Globals.UNIT_DIVIDE_RATIO
+	curTarget = %TargetRailFollow.position * Globals.UNIT_DIVIDE_RATIO
+	
+	
+	
+	#curPos = curPos.lerp(_toKeyframe.cameraPoint.smsPosition, _lerpPow)
+	#curTarget = curTarget.lerp(_toKeyframe.targetPoint.smsPosition, _lerpPow)
 	
 	GDInterface.writeCamData(curPos, curTarget)
 	setSMSCamRepTransform(curPos / Globals.UNIT_DIVIDE_RATIO, curTarget / Globals.UNIT_DIVIDE_RATIO)
 	
 	const WAIT_AT_START_TIMER = 0.5
 	if _playbackStartTimer > WAIT_AT_START_TIMER:	# Hold 0.5 seconds on the first keyframe before moving
-		_lerpPow += delta / _fromKeyframe.transitionTime	# It's kinda weird but we want to add on delta AFTER doing our lerping
+		_lerpPow += delta / playbackTime	# It's kinda weird but we want to add on delta AFTER doing our lerping
 	
 	_playbackStartTimer += delta
 	
-	
-	if _toKeyframe == _keyframes.back() and _lerpPow >= 1.0:
+	if _lerpPow >= 1.0:
+		_lerpPow = 0.0
 		GDInterface.restoreCameraCode()
 		playbackMode = false
-		return
-	
-	if _lerpPow >= 1.0:
-		_keyframeIdx += 1
-		_lerpPow = 0.0
 		return
 
 
@@ -106,7 +97,6 @@ func setSMSCamRepTransform(setPos: Vector3, setTarget: Vector3) -> void:
 	%Timer.start()
 	if not %SMSCameraRepresantation.visible:
 		%SMSCameraRepresantation.visible = true
-		print("vis")
 	%CamModel.position = setPos
 	%CamModel.look_at(setTarget)
 	%TargetModel.position = setTarget
@@ -126,11 +116,21 @@ func _preparePlayback() -> void:
 	GDInterface.nopOutCameraCode()
 	_preparingPlayback = false
 	_lerpPow = 0
-	_toKeyframe = null
-	_fromKeyframe = null
-	_keyframeIdx = 1
 	previewMode = false
 	_playbackStartTimer = 0.0
+	
+	var camCurve: Curve3D = %CameraRail.curve
+	var targetCurve: Curve3D = %TargetRail.curve
+	camCurve.clear_points()
+	targetCurve.clear_points()
+	for keyframe: CamKeyframe in _keyframes:
+		camCurve.add_point(keyframe.cameraPoint.position)
+		targetCurve.add_point(keyframe.targetPoint.position)
+	
+	
+	if camCurve.point_count == 1:
+		camCurve.add_point(camCurve.get_point_position(0))
+		targetCurve.add_point(targetCurve.get_point_position(0))
 
 
 var _lastState := false
@@ -157,7 +157,18 @@ func _getCameraPosition() -> Vector3:
 ## Get's Sunshine's camera target position
 func _getCameraTargetPosition() -> Vector3:
 	return Vector3(GDInterface.getCamTargetX(), GDInterface.getCamTargetY(), GDInterface.getCamTargetZ())
+
+
+## direction should either be Vector3.UP or Vector3.DOWN
+func _getEasingHandle(from: Vector3, to: Vector3, direction: Vector3) -> Vector3:
 	
+	var mid := (from + to) / 2.0
+	var ab := to - from
+	var perp := ab.cross(Vector3.DOWN).normalized()
+	var offset := perp * ab.length() / 2.0
+	var handle := mid + offset
+	
+	return handle
 
 ## Linear camera interpolation | Only to be called by replayPoints()
 func _interpolateLinear(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
@@ -165,23 +176,7 @@ func _interpolateLinear(from: Vector3, to: Vector3, lerpPow: float) -> Vector3:
 
 
 ## Cubic camera interpolation | Only to be called by replayPoints()
-func _interpolateCubic(from: Vector3, to: Vector3, lerpPow: float, easeDirection := Globals.EaseDirection.NONE) -> Vector3:	# TODO: actually figure this out lol
-	
-	var pre_from := from
-	var pre_to := to
-	
-	match easeDirection:
-		
-		Globals.EaseDirection.IN:
-			pre_from += Vector3.ONE
-		Globals.EaseDirection.OUT:
-			pre_to += Vector3.ONE
-		Globals.EaseDirection.BOTH:
-			pre_from += Vector3.ONE
-			pre_to += Vector3.ONE
-		_:
-			push_error("Gave a non-eased Keyframe to _interpolateCubic! Please use _interpolateLinear!")
-		
+func _interpolateCubic(from: Vector3, to: Vector3, pre_from: Vector3, pre_to: Vector3, lerpPow: float) -> Vector3:	# TODO: actually figure this out lol
 	return from.cubic_interpolate(to, pre_from, pre_to, lerpPow)
 
 

@@ -15,7 +15,7 @@ var isSelected: bool:
 			targetPoint.isSelected = false
 		isSelected = value
 		keyframeChanged.emit(self)
-var transitionTime: float:
+var transitionTime: float:	## NOTE: CURRENTLY UNUSED!!
 		set(value):
 			_markUnsaved()
 			transitionTime = value

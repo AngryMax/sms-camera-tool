@@ -12,7 +12,7 @@ var keyframe: CamKeyframe:
 		%Target/X/Input.set_value_no_signal(value.targetPoint.smsPosition.x)
 		%Target/Y/Input.set_value_no_signal(value.targetPoint.smsPosition.y)
 		%Target/Z/Input.set_value_no_signal(value.targetPoint.smsPosition.z)
-		%TravelTimeInput.set_value_no_signal(value.transitionTime)
+		#%TravelTimeInput.set_value_no_signal(value.transitionTime)
 		%EasingOptions.select(value.easeDirection)
 
 var posField: Vector3:
@@ -30,7 +30,6 @@ var targetField: Vector3:
 		%Target/Z/Input.value = value.z
 	get:
 		return Vector3(%Target/X/Input.value, %Target/Y/Input.value, %Target/Z/Input.value)
-
 
 func _ready() -> void:
 	%BG.size.x = %KeyframeGUI.size.x
