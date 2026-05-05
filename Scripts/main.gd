@@ -10,13 +10,14 @@ var _axis: axisGizmo
 var _grid: gridGizmo
 var _addFromButton := false	## Tracks when a Keyframe is being added via clicking the Add Keyframe button, or via undoing a deleted keyframe
 var _acceptInput := true
-var _GUIFocused := true
-
+var _lineEditArray: Array[LineEdit]
+var _isTyping := false
 
 ### Override Funcs ###
 
 func _ready() -> void:
 	
+	_findAllLineEdits()
 	_connectGUISignals()
 	_connectToolbarSignals()
 	_connectSettingsSignals()
@@ -38,21 +39,32 @@ func _process(_delta: float) -> void:
 		return
 	
 	if _control():
-		%GUI.process_mode = Node.PROCESS_MODE_DISABLED
 		return
 	
-	%GUI.process_mode = Node.PROCESS_MODE_ALWAYS
-	
-	#if _GUIFocused:
-		#return
-	
+	if _isTyping:
+		return
 	
 	_keyboardShortcuts()
 
 
 ### Private Funcs ###
 
+# Recursively finds all LineEdits attached to SpinBoxes in %GUI
+func _findAllLineEdits(parent: Control = %GUI) -> void:
+	for child in parent.get_children():
+		if child is not Control:
+			continue
+		if child is SpinBox:
+			var lineEdit = child.get_line_edit()
+			if not _lineEditArray.has(lineEdit):
+				_lineEditArray.append(lineEdit)
+		_findAllLineEdits(child)
+	
+
 func _connectGUISignals() -> void:
+	
+	for lineEdit in _lineEditArray:
+		lineEdit.connect("editing_toggled", Callable(func(toggle: bool): _isTyping = toggle))
 	
 	%GUI/%AddPointButton.connect("pressed", _on_add_point_pressed)
 	%GUI/%DuplicatePointButton.connect("pressed", _on_duplicate_keyframe_pressed)
@@ -99,6 +111,10 @@ func _control() -> bool:
 	
 	if not Input.is_action_pressed("mouse_click_right"):
 		return false
+	
+	for lineEdit in _lineEditArray:
+		lineEdit.unedit()
+	_isTyping = false
 	
 	var horzInputDir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var vertInputDir := 0.0
