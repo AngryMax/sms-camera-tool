@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://orw6sv2lcwjb" path="res://Scripts/GUI/gui_new.gd" id="1_3w84o"]
 [ext_resource type="Texture2D" uid="uid://bycf4itydc703" path="res://Resources/Images/target_icon.png" id="2_wi63h"]
+[ext_resource type="Texture2D" uid="uid://c7rcthka65esf" path="res://Resources/Images/add_kf_icon.png" id="2_xnb2j"]
 [ext_resource type="Texture2D" uid="uid://2afrsxxu7trg" path="res://Resources/Images/camera_icon.png" id="3_d1lea"]
-[ext_resource type="Texture2D" uid="uid://celwy614803e6" path="res://Resources/Images/trash_icon.png" id="4_d1lea"]
+[ext_resource type="Texture2D" uid="uid://cgh662fi3fbd6" path="res://Resources/Images/duplicate_kf_icon.png" id="3_gnd4w"]
+[ext_resource type="Texture2D" uid="uid://btx0delv3hw04" path="res://Resources/Images/delete_kf_icon.png" id="4_bf1fa"]
 [ext_resource type="PackedScene" uid="uid://b36rnoiilwnxm" path="res://Scenes/viewport_orientation.tscn" id="5_8kag3"]
 
 [sub_resource type="Animation" id="Animation_8kag3"]
@@ -18,7 +20,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(522, 10)]
+"values": [Vector2(555, 10)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -30,7 +32,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(522, 0)]
+"values": [Vector2(555, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_3w84o"]
@@ -45,7 +47,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(2, 2),
 "update": 0,
-"values": [Vector2(522, 10), Vector2(942, 10)]
+"values": [Vector2(555, 10), Vector2(942, 10)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -57,7 +59,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(2, 2),
 "update": 0,
-"values": [Vector2(522, 0), Vector2(942, 0)]
+"values": [Vector2(555, 0), Vector2(942, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xnb2j"]
@@ -92,17 +94,17 @@ libraries/ = SubResource("AnimationLibrary_xnb2j")
 [node name="BG" type="Panel" parent="." unique_id=659540221]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 522.0
-offset_right = 865.0
+offset_left = 555.0
+offset_right = 898.0
 offset_bottom = 370.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_8kag3")
 
 [node name="KeyframeGUI" type="HBoxContainer" parent="." unique_id=641217207]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 522.0
+offset_left = 555.0
 offset_top = 10.0
-offset_right = 1014.0
+offset_right = 1046.9976
 offset_bottom = 525.0
 
 [node name="ShrinkButton" type="Button" parent="KeyframeGUI" unique_id=1042687092]
@@ -114,8 +116,8 @@ text = ">"
 
 [node name="VSplitContainer" type="VSplitContainer" parent="KeyframeGUI" unique_id=96502764]
 layout_mode = 2
-split_offsets = PackedInt32Array(374, 420)
-split_offset = 374
+split_offsets = PackedInt32Array(338, 381)
+split_offset = 338
 
 [node name="PointEdit" type="VBoxContainer" parent="KeyframeGUI/VSplitContainer" unique_id=450155661]
 layout_mode = 2
@@ -123,8 +125,7 @@ theme_override_constants/separation = 5
 
 [node name="CurPoint" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=1148527782]
 layout_mode = 2
-size_flags_horizontal = 4
-split_offsets = PackedInt32Array(109)
+split_offsets = PackedInt32Array(109, 0)
 split_offset = 109
 
 [node name="Label" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/CurPoint" unique_id=502225898]
@@ -141,29 +142,36 @@ rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="AddOrDupe" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=776201505]
+[node name="AddDupeRemove" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/CurPoint" unique_id=776201505]
 layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
 split_offsets = PackedInt32Array(118, 291)
 split_offset = 118
 
-[node name="AddPointButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/AddOrDupe" unique_id=1966676548]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Add Keyframe"
-
-[node name="DuplicatePointButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/AddOrDupe" unique_id=1488294071]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Duplicate Keyframe"
-
-[node name="DeleteButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/AddOrDupe" unique_id=1384828627]
+[node name="AddPointButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CurPoint/AddDupeRemove" unique_id=1966676548]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
-text = "Delete Keyframe"
-icon = ExtResource("4_d1lea")
+size_flags_vertical = 4
+tooltip_text = "Add Keyframe"
+icon = ExtResource("2_xnb2j")
+
+[node name="DuplicatePointButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CurPoint/AddDupeRemove" unique_id=1488294071]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Duplicate Current Keyframe"
+icon = ExtResource("3_gnd4w")
+
+[node name="DeleteButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CurPoint/AddDupeRemove" unique_id=1384828627]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete Current Keyframe"
+icon = ExtResource("4_bf1fa")
 icon_alignment = 2
 
 [node name="PosEdit" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=1075222597]
@@ -445,7 +453,7 @@ projection = 1
 size = 3.2392805
 
 [connection signal="toggled" from="KeyframeGUI/ShrinkButton" to="." method="_on_shrink_button_toggled"]
-[connection signal="pressed" from="KeyframeGUI/VSplitContainer/PointEdit/AddOrDupe/DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="pressed" from="KeyframeGUI/VSplitContainer/PointEdit/CurPoint/AddDupeRemove/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/X/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Y/Input" to="." method="_on_any_point_field_changed"]
 [connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Z/Input" to="." method="_on_any_point_field_changed"]
