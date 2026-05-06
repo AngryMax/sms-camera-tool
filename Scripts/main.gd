@@ -235,6 +235,7 @@ func _deleteKeyframe() -> void:
 	
 	%CamKeyframes.remove_child(keyframeToDelete)
 	%UndoRedoKeyframes.add_child(keyframeToDelete)
+	keyframeToDelete.isSelected = false
 	keyframeToDelete.process_mode = Node.PROCESS_MODE_DISABLED
 	
 	if keyframesLeft > 0:
@@ -249,6 +250,9 @@ func _deleteKeyframe() -> void:
 		var updateTargetLabel = Callable(keyframe.targetPoint, "updateLabel")
 		updateCamPosLabel.call_deferred()
 		updateTargetLabel.call_deferred()
+	
+	#Globals.currentKeyframe = _getSelectedkeyframe()
+	#%GUI.keyframe = Globals.currentKeyframe
 
 
 ## "Deletes" added Keyframes via ctrl + z (undo)
@@ -343,6 +347,8 @@ func _deleteAllKeyframes() -> void:
 ### GUI Signal Receive Funcs ###
 
 func _on_keyframe_changed(keyframe: CamKeyframe) -> void:
+	if keyframe.get_parent()!= %CamKeyframes:
+		return
 	%GUI.keyframe = keyframe
 	Globals.currentKeyframe = keyframe
 

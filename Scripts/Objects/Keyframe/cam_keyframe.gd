@@ -5,6 +5,8 @@ class_name CamKeyframe
 
 var isSelected: bool:
 	set(value):
+		if get_parent().name != "CamKeyframes":
+			value = false
 		targetPoint.visible = value or Globals.showTargets
 		_pointLink.visible = value
 		_toggleArrowVisibility(value)
@@ -71,6 +73,7 @@ func _ready() -> void:
 	targetPoint.connect("pointSelected", _on_point_selected)
 	cameraPoint.connect("selectParentKeyframe", _on_request_selected)
 	targetPoint.connect("selectParentKeyframe", _on_request_selected)
+	self.connect("tree_exiting", _on_tree_exiting)
 	
 	index = get_index()
 
@@ -181,3 +184,10 @@ func _on_point_selected(point: Point) -> void:
 	else:
 		cameraPoint.isSelected = false
 		targetPoint.isSelected = true
+
+
+func _on_tree_exiting() -> void:
+	print("here")
+	cameraPoint.isSelected = false
+	targetPoint.isSelected = false
+	isSelected = false
