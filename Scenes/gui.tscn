@@ -105,7 +105,7 @@ layout_mode = 0
 offset_left = 555.0
 offset_top = 10.0
 offset_right = 1046.9976
-offset_bottom = 525.0
+offset_bottom = 528.0
 
 [node name="ShrinkButton" type="Button" parent="KeyframeGUI" unique_id=1042687092]
 unique_name_in_owner = true
@@ -116,14 +116,15 @@ text = ">"
 
 [node name="VSplitContainer" type="VSplitContainer" parent="KeyframeGUI" unique_id=96502764]
 layout_mode = 2
-split_offsets = PackedInt32Array(338, 381)
-split_offset = 338
+split_offsets = PackedInt32Array(340, 460)
+split_offset = 340
 
 [node name="PointEdit" type="VBoxContainer" parent="KeyframeGUI/VSplitContainer" unique_id=450155661]
 layout_mode = 2
 theme_override_constants/separation = 5
 
 [node name="CurPoint" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=1148527782]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 split_offsets = PackedInt32Array(109, 0)
 split_offset = 109
@@ -138,6 +139,7 @@ horizontal_alignment = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
 rounded = true
 allow_greater = true
 allow_lesser = true
@@ -174,25 +176,45 @@ tooltip_text = "Delete Current Keyframe"
 icon = ExtResource("4_bf1fa")
 icon_alignment = 2
 
-[node name="PosEdit" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=1075222597]
+[node name="CamEdit" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=1075222597]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-split_offsets = PackedInt32Array(67)
-split_offset = 67
+split_offsets = PackedInt32Array(127)
+split_offset = 127
 
-[node name="Label" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit" unique_id=991476986]
+[node name="LabelAndHold" type="VBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit" unique_id=1206267438]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CamLabel" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/LabelAndHold" unique_id=991476986]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 0
-text = "Position:"
+text = "Camera:"
 
-[node name="Pos" type="VBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit" unique_id=276968196]
+[node name="HoldLabel" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/LabelAndHold" unique_id=458235462]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Hold:"
+
+[node name="HoldField" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/LabelAndHold" unique_id=594551666]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 2
+tooltip_text = "If greater than 0, then the Camera will stop at this point for the given time in seconds."
+max_value = 1000000.0
+step = 0.001
+
+[node name="Pos" type="VBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit" unique_id=276968196]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="X" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos" unique_id=997250879]
+[node name="X" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos" unique_id=997250879]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Input" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/X" unique_id=947241130]
+[node name="Input" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/X" unique_id=947241130]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/field_and_buttons_separation = 2
@@ -201,7 +223,7 @@ max_value = 1000000.0
 step = 0.001
 custom_arrow_step = 1.0
 
-[node name="GrabFromMario" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/X" unique_id=302417735 groups=["GrabFromMario"]]
+[node name="GrabFromMario" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/X" unique_id=302417735 groups=["GrabFromMario"]]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -210,17 +232,17 @@ toggle_mode = true
 icon = ExtResource("2_wi63h")
 icon_alignment = 1
 
-[node name="GrabFromCamera" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/X" unique_id=202158486 groups=["GrabFromCamera"]]
+[node name="GrabFromCamera" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/X" unique_id=202158486 groups=["GrabFromCamera"]]
 layout_mode = 2
 tooltip_text = "Copy from camera's position"
 toggle_mode = true
 icon = ExtResource("3_d1lea")
 icon_alignment = 1
 
-[node name="Y" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos" unique_id=1750578416]
+[node name="Y" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos" unique_id=1750578416]
 layout_mode = 2
 
-[node name="Input" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Y" unique_id=336885338]
+[node name="Input" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Y" unique_id=336885338]
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = -1000000.0
@@ -228,7 +250,7 @@ max_value = 1000000.0
 step = 0.001
 custom_arrow_step = 1.0
 
-[node name="GrabFromMario" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Y" unique_id=489481807 groups=["GrabFromMario"]]
+[node name="GrabFromMario" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Y" unique_id=489481807 groups=["GrabFromMario"]]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -237,17 +259,17 @@ toggle_mode = true
 icon = ExtResource("2_wi63h")
 icon_alignment = 1
 
-[node name="GrabFromCamera" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Y" unique_id=2054828738 groups=["GrabFromCamera"]]
+[node name="GrabFromCamera" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Y" unique_id=2054828738 groups=["GrabFromCamera"]]
 layout_mode = 2
 tooltip_text = "Copy from camera's position"
 toggle_mode = true
 icon = ExtResource("3_d1lea")
 icon_alignment = 1
 
-[node name="Z" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos" unique_id=1657371543]
+[node name="Z" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos" unique_id=1657371543]
 layout_mode = 2
 
-[node name="Input" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Z" unique_id=983836358]
+[node name="Input" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Z" unique_id=983836358]
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = -1000000.0
@@ -255,7 +277,7 @@ max_value = 1000000.0
 step = 0.001
 custom_arrow_step = 1.0
 
-[node name="GrabFromMario" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Z" unique_id=785631487 groups=["GrabFromMario"]]
+[node name="GrabFromMario" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Z" unique_id=785631487 groups=["GrabFromMario"]]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -264,7 +286,7 @@ toggle_mode = true
 icon = ExtResource("2_wi63h")
 icon_alignment = 1
 
-[node name="GrabFromCamera" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Z" unique_id=418106312 groups=["GrabFromCamera"]]
+[node name="GrabFromCamera" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Z" unique_id=418106312 groups=["GrabFromCamera"]]
 layout_mode = 2
 tooltip_text = "Copy from camera's position"
 toggle_mode = true
@@ -272,14 +294,34 @@ icon = ExtResource("3_d1lea")
 icon_alignment = 1
 
 [node name="TargetEdit" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=514734251]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-split_offsets = PackedInt32Array(67)
-split_offset = 67
+split_offsets = PackedInt32Array(127)
+split_offset = 127
 
-[node name="Label" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/TargetEdit" unique_id=545577735]
+[node name="LabelAndHold" type="VBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/TargetEdit" unique_id=1923727491]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="TargetLabel" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/TargetEdit/LabelAndHold" unique_id=1680427883]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 0
-text = "Target:   "
+text = "Target:"
+
+[node name="HoldEnable" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/TargetEdit/LabelAndHold" unique_id=562489385]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Hold:"
+
+[node name="HoldField" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/TargetEdit/LabelAndHold" unique_id=1476730054]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 2
+tooltip_text = "If greater than 0, then the Target will stop at this point for the given time in seconds."
+max_value = 1000000.0
+step = 0.001
 
 [node name="Target" type="VBoxContainer" parent="KeyframeGUI/VSplitContainer/PointEdit/TargetEdit" unique_id=1702046148]
 unique_name_in_owner = true
@@ -370,30 +412,30 @@ icon_alignment = 1
 [node name="CopyFromGameButton" type="Button" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=500420642]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 text = "Copy ALL From Game"
-
-[node name="Div" type="Control" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=820113058]
-layout_mode = 2
 
 [node name="TimeEdit" type="HSplitContainer" parent="KeyframeGUI/VSplitContainer/PointEdit" unique_id=1841613776]
 layout_mode = 2
+size_flags_vertical = 3
 split_offsets = PackedInt32Array(125, 259)
 split_offset = 125
 
 [node name="Label" type="Label" parent="KeyframeGUI/VSplitContainer/PointEdit/TimeEdit" unique_id=1825153809]
 layout_mode = 2
-size_flags_vertical = 0
 text = "Playback Time:"
 
 [node name="PlaybackTimeInput" type="SpinBox" parent="KeyframeGUI/VSplitContainer/PointEdit/TimeEdit" unique_id=539251501]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 step = 0.001
 value = 1.0
 
 [node name="EasingOptions" type="OptionButton" parent="KeyframeGUI/VSplitContainer/PointEdit/TimeEdit" unique_id=1280472836]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 disabled = true
 selected = 0
 item_count = 4
@@ -406,21 +448,17 @@ popup/item_2/id = 2
 popup/item_3/text = "Ease In and Out"
 popup/item_3/id = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="KeyframeGUI/VSplitContainer" unique_id=138920213]
-layout_mode = 2
-theme_override_constants/separation = 20
-alignment = 1
-
-[node name="PreviewPoint" type="CheckButton" parent="KeyframeGUI/VSplitContainer/HBoxContainer" unique_id=1934424326]
+[node name="PreviewPoint" type="CheckButton" parent="KeyframeGUI/VSplitContainer" unique_id=1934424326]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 8
 text = "Preview Keyframe:"
 
 [node name="PlayBackKeyframes" type="Button" parent="KeyframeGUI/VSplitContainer" unique_id=901089833]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 4
 text = "Play Back Keyframes! 🎥"
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=233617153]
@@ -454,7 +492,7 @@ size = 3.2392805
 
 [connection signal="toggled" from="KeyframeGUI/ShrinkButton" to="." method="_on_shrink_button_toggled"]
 [connection signal="pressed" from="KeyframeGUI/VSplitContainer/PointEdit/CurPoint/AddDupeRemove/DeleteButton" to="." method="_on_delete_button_pressed"]
-[connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/X/Input" to="." method="_on_any_point_field_changed"]
-[connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Y/Input" to="." method="_on_any_point_field_changed"]
-[connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/PosEdit/Pos/Z/Input" to="." method="_on_any_point_field_changed"]
-[connection signal="pressed" from="KeyframeGUI/VSplitContainer/HBoxContainer/PreviewPoint" to="." method="_on_preview_point_pressed"]
+[connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/X/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Y/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="value_changed" from="KeyframeGUI/VSplitContainer/PointEdit/CamEdit/Pos/Z/Input" to="." method="_on_any_point_field_changed"]
+[connection signal="pressed" from="KeyframeGUI/VSplitContainer/PreviewPoint" to="." method="_on_preview_point_pressed"]

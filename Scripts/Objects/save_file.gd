@@ -6,9 +6,11 @@ extends Resource
 
 @export var positions: Array[Vector3]
 @export var targets: Array[Vector3]
-@export var times: Array[float]
 @export var ease: Array[Globals.EaseDirection]
+@export var camHold: Array[float]
+@export var targetHold: Array[float]
 @export var playbackTime: float
+
 
 func _init() -> void:
 	_reset()
@@ -17,9 +19,10 @@ func _init() -> void:
 func _reset() -> void:
 	positions.clear()
 	targets.clear()
-	times.clear()
 	ease.clear()
 	playbackTime = 1.0
+	camHold.clear()
+	targetHold.clear()
 
 
 func saveFile(path: String) -> void:

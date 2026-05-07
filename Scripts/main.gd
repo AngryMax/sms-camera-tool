@@ -83,6 +83,8 @@ func _connectGUISignals() -> void:
 	%GUI/%PlaybackTimeInput.connect("value_changed", _on_playback_time_changed)
 	%GUI/%EasingOptions.connect("item_selected", _on_ease_direction_changed)
 	%GUI/%ViewportOrientation.connect("request_rotate_camera", _on_set_camera_axis)
+	%GUI/%CamEdit/LabelAndHold/HoldField.connect("value_changed", _on_gui_cam_hold)
+	%GUI/%TargetEdit/LabelAndHold/HoldField.connect("value_changed", _on_gui_target_hold)
 	
 	for button: Button in get_tree().get_nodes_in_group("GrabFromMario"):
 		button.toggled.connect(_on_grab_from_target_toggled)
@@ -427,6 +429,16 @@ func _on_gui_target_changed(_value: float) -> void:
 	keyframe.targetPoint.setPosition(%GUI.targetField)
 
 
+func _on_gui_cam_hold(value: float) -> void:
+	var keyframe := _getSelectedkeyframe()
+	keyframe.cameraPoint.holdTime = value
+
+
+func _on_gui_target_hold(value: float) -> void:
+	var keyframe := _getSelectedkeyframe()
+	keyframe.targetPoint.holdTime = value
+
+
 func _on_copy_all_pressed() -> void:
 	%GUI.posField = _SMSCamera.position
 	%GUI.targetField = _SMSCamera.target
@@ -500,8 +512,9 @@ func _on_file_saved(path: String) -> void:
 		var keyframe: CamKeyframe = %CamKeyframes.get_children()[i]
 		saveFile.positions.append(keyframe.cameraPoint.smsPosition)
 		saveFile.targets.append(keyframe.targetPoint.smsPosition)
-		saveFile.times.append(keyframe.transitionTime)
 		saveFile.ease.append(keyframe.easeDirection)
+		saveFile.camHold.append(keyframe.cameraPoint.holdTime)
+		saveFile.targetHold.append(keyframe.targetPoint.holdTime)
 	saveFile.playbackTime = _SMSCamera.playbackTime
 	
 	saveFile.saveFile(path)
@@ -521,8 +534,9 @@ func _on_file_opened(path: String) -> void:
 		var keyframe: CamKeyframe = %CamKeyframes.get_child(i)
 		keyframe.cameraPoint.smsPosition = file.positions[i]
 		keyframe.targetPoint.smsPosition = file.targets[i]
-		keyframe.transitionTime = file.times[i]
 		keyframe.easeDirection = file.ease[i]
+		keyframe.cameraPoint.holdTime = file.camHold[i]
+		keyframe.targetPoint.holdTime = file.targetHold[i]
 	_SMSCamera.playbackTime = file.playbackTime
 	%GUI/%PlaybackTimeInput.value = _SMSCamera.playbackTime
 	

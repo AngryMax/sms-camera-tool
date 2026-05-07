@@ -33,6 +33,7 @@ var dragArrowY: DragArrow
 var dragArrowZ: DragArrow
 var isSelected := false
 var undoPos: Vector3
+var holdTime := 0.0		## The time this Point is held on in seconds. <= 0 means do not hold.
 
 
 func _ready() -> void:
