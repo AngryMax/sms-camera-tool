@@ -45,6 +45,8 @@ func _ready() -> void:
 	colShape.shape.radius = 0.25
 	
 	body = StaticBody3D.new()
+	#body.set_collision_mask_value(3, true)
+	body.set_collision_layer_value(3, true)	# Used for the raycast during playback
 	body.add_child(colShape)
 	add_child(body)
 	

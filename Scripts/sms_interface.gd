@@ -31,6 +31,15 @@ var _lerpPow := 0.0:				## lerpPow is my personal convention for what to call t 
 		_lerpPow = clampf(value, 0.0, 1.0)	# Perhaps unnecessary, since the way I'm coding this it should basically be auto-clamped
 
 var _playbackStartTimer := 0.0
+var _cameraPlaybackTime := 0.0
+var _targetPlaybackTime := 0.0
+var _curKeyframeCamIdx := 0
+var _curKeyframeTargetIdx := 0
+
+var _camLerp := 0.0
+var _targetLerp := 0.0
+var _camHoldingFor := 0.0
+var _targetHoldingFor := 0.0
 
 ### Override Funcs ##
 
@@ -64,22 +73,44 @@ func _replayKeyframes(delta: float):
 	
 	var curPos: Vector3
 	var curTarget: Vector3
-	
-	
 	var camCurve: Curve3D = %CameraRail.curve
 	var targetCurve: Curve3D = %TargetRail.curve
+	var camRay := _makeRay()
+	var targetRay := _makeRay()
+	
+	camRay.position = %CamRailFollow.position
+	targetRay.position = %TargetRailFollow.position
 	
 	if camCurve.point_count <= 1:
 		curPos = _keyframes.front().cameraPoint.smsPosition
 	else:
-		%CamRailFollow.progress_ratio = _lerpPow
+		%CamRailFollow.progress_ratio = _camLerp
 		curPos = %CamRailFollow.position * Globals.UNIT_DIVIDE_RATIO
+	camRay.target_position = camRay.to_local(%CamRailFollow.position)
 	
 	if targetCurve.point_count <= 1:
 		curTarget = _keyframes.front().targetPoint.smsPosition
 	else:
-		%TargetRailFollow.progress_ratio = _lerpPow
+		%TargetRailFollow.progress_ratio = _targetLerp
 		curTarget = %TargetRailFollow.position * Globals.UNIT_DIVIDE_RATIO
+	targetRay.target_position = targetRay.to_local(%TargetRailFollow.position)
+	
+	if _curKeyframeCamIdx < _keyframes.size() - 1:
+		camRay.force_raycast_update()
+		if camRay.get_collider() != null:	# Checking for Point.body, which should be the only thing on collision layer 3
+			if camRay.get_collider() != _keyframes.front().cameraPoint.body:
+				_curKeyframeCamIdx += 1
+				_camHoldingFor = 0.0
+	
+	if _curKeyframeTargetIdx < _keyframes.size() - 1:
+		targetRay.force_raycast_update()
+		if targetRay.get_collider() != null:	# Checking for Point.body, which should be the only thing on collision layer 3
+			if targetRay.get_collider() != _keyframes.front().targetPoint.body:
+				_curKeyframeTargetIdx += 1
+				_targetHoldingFor = 0.0
+	
+	camRay.queue_free()
+	targetRay.queue_free()
 	
 	GDInterface.writeCamData(curPos, curTarget)
 	setSMSCamRepTransform(curPos / Globals.UNIT_DIVIDE_RATIO, curTarget / Globals.UNIT_DIVIDE_RATIO)
@@ -87,6 +118,16 @@ func _replayKeyframes(delta: float):
 	const WAIT_AT_START_TIMER = 0.5
 	if _playbackStartTimer > WAIT_AT_START_TIMER:	# Hold 0.5 seconds on the first keyframe before moving
 		_lerpPow += delta / playbackTime	# It's kinda weird but we want to add on delta AFTER doing our lerping
+		
+		if _keyframes[_curKeyframeCamIdx].cameraPoint.holdTime > _camHoldingFor:
+			_camHoldingFor += delta
+		else:
+			_camLerp += delta / _cameraPlaybackTime
+		
+		if _keyframes[_curKeyframeTargetIdx].targetPoint.holdTime > _targetHoldingFor:
+			_targetHoldingFor += delta
+		else:
+			_targetLerp += delta / _targetPlaybackTime
 	
 	_playbackStartTimer += delta
 	
@@ -122,6 +163,24 @@ func _preparePlayback() -> void:
 	_lerpPow = 0
 	previewMode = false
 	_playbackStartTimer = 0.0
+	_curKeyframeCamIdx = 0
+	_curKeyframeTargetIdx = 0
+	_camHoldingFor = 0.0
+	_targetHoldingFor = 0.0
+	_camLerp = 0.0
+	_targetLerp = 0.0
+	
+	%CamRailFollow.progress_ratio = 0
+	%TargetRailFollow.progress_ratio = 0
+	
+	# Calc Point-specific playbackTimes if any are set to hold
+	_cameraPlaybackTime = playbackTime
+	_targetPlaybackTime = playbackTime
+	for keyframe in _keyframes:
+		if keyframe.cameraPoint.holdTime > 0.0:
+			_cameraPlaybackTime -= keyframe.cameraPoint.holdTime
+		if keyframe.targetPoint.holdTime > 0.0:
+			_targetPlaybackTime -= keyframe.targetPoint.holdTime
 	
 	var camCurve: Curve3D = %CameraRail.curve
 	var targetCurve: Curve3D = %TargetRail.curve
@@ -168,6 +227,15 @@ func _previewKeyframe(keyframe: CamKeyframe):
 	
 	GDInterface.nopOutCameraCode()
 	GDInterface.writeCamData(keyframe.cameraPoint.smsPosition, keyframe.targetPoint.smsPosition)
+
+
+func _makeRay() -> RayCast3D:
+	var ray := RayCast3D.new()
+	ray.enabled = false
+	add_child(ray)
+	ray.set_collision_mask_value(1, false)
+	ray.set_collision_mask_value(3, true)
+	return ray
 
 
 ## Get's Sunshine's camera position
