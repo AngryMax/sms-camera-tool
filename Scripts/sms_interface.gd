@@ -66,16 +66,20 @@ func _replayKeyframes(delta: float):
 	var curTarget: Vector3
 	
 	
-	%CamRailFollow.progress_ratio = _lerpPow
-	%TargetRailFollow.progress_ratio = _lerpPow
+	var camCurve: Curve3D = %CameraRail.curve
+	var targetCurve: Curve3D = %TargetRail.curve
 	
-	curPos = %CamRailFollow.position * Globals.UNIT_DIVIDE_RATIO
-	curTarget = %TargetRailFollow.position * Globals.UNIT_DIVIDE_RATIO
+	if camCurve.point_count <= 1:
+		curPos = _keyframes.front().cameraPoint.smsPosition
+	else:
+		%CamRailFollow.progress_ratio = _lerpPow
+		curPos = %CamRailFollow.position * Globals.UNIT_DIVIDE_RATIO
 	
-	
-	
-	#curPos = curPos.lerp(_toKeyframe.cameraPoint.smsPosition, _lerpPow)
-	#curTarget = curTarget.lerp(_toKeyframe.targetPoint.smsPosition, _lerpPow)
+	if targetCurve.point_count <= 1:
+		curTarget = _keyframes.front().targetPoint.smsPosition
+	else:
+		%TargetRailFollow.progress_ratio = _lerpPow
+		curTarget = %TargetRailFollow.position * Globals.UNIT_DIVIDE_RATIO
 	
 	GDInterface.writeCamData(curPos, curTarget)
 	setSMSCamRepTransform(curPos / Globals.UNIT_DIVIDE_RATIO, curTarget / Globals.UNIT_DIVIDE_RATIO)
@@ -121,16 +125,33 @@ func _preparePlayback() -> void:
 	
 	var camCurve: Curve3D = %CameraRail.curve
 	var targetCurve: Curve3D = %TargetRail.curve
+	var lastCamPos: Vector3
+	var lastTargetPos: Vector3
+	var firstLoop := true
 	camCurve.clear_points()
 	targetCurve.clear_points()
+	
 	for keyframe: CamKeyframe in _keyframes:
-		camCurve.add_point(keyframe.cameraPoint.position)
-		targetCurve.add_point(keyframe.targetPoint.position)
-	
-	
-	if camCurve.point_count == 1:
-		camCurve.add_point(camCurve.get_point_position(0))
-		targetCurve.add_point(targetCurve.get_point_position(0))
+		
+		if firstLoop:
+			camCurve.add_point(keyframe.cameraPoint.position)
+			targetCurve.add_point(keyframe.targetPoint.position)
+			lastCamPos = keyframe.cameraPoint.position
+			lastTargetPos = keyframe.targetPoint.position
+			firstLoop = false
+			continue
+		
+		# NOTE: Since the Playback time system has replaced the Transition time system, this means
+		# that we're allowed to (actually, have to) SKIP adding points to our Curve3Ds that are
+		# identical to the last point! So with this implementation, our Curves can have LESS points
+		# than Keyframes! This also means that holding on points before moving to other points is
+		# currently impossible, which will have to be changed! (TODO)
+		if keyframe.cameraPoint.position != lastCamPos:
+			camCurve.add_point(keyframe.cameraPoint.position)
+			lastCamPos = keyframe.cameraPoint.position
+		if keyframe.targetPoint.position != lastTargetPos:
+			targetCurve.add_point(keyframe.targetPoint.position)
+			lastTargetPos = keyframe.targetPoint.position
 
 
 var _lastState := false
